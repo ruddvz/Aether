@@ -1,0 +1,31 @@
+{
+  "updatedAt": "2026-09-03",
+  "policy": "Research entries are not automatic dependencies. Direct reuse requires a pinned version and license review.",
+  "repositories": [
+    {"name":"OpenLightingProject/open-fixture-library","area":"fixture-data","license":"MIT","decision":"patterns-now","priority":"A"},
+    {"name":"mrdoob/three.js","area":"browser-3d","license":"MIT","decision":"core","priority":"A"},
+    {"name":"richard-viney/iesna","area":"photometry","license":"MIT","decision":"integrate","priority":"A"},
+    {"name":"donmccurdy/glTF-Transform","area":"web-geometry","license":"MIT","decision":"integrate","priority":"A"},
+    {"name":"gkjohnson/three-mesh-bvh","area":"spatial-review","license":"MIT","decision":"integrate","priority":"A"},
+    {"name":"CadQuery/cadquery","area":"cad","license":"Apache-2.0","decision":"primary-cad","priority":"A"},
+    {"name":"mikedh/trimesh","area":"mesh-qa","license":"MIT","decision":"integrate","priority":"A"},
+    {"name":"elalish/manifold","area":"robust-geometry","license":"Apache-2.0","decision":"integrate","priority":"A"},
+    {"name":"mozman/ezdxf","area":"dxf","license":"MIT","decision":"integrate","priority":"A"},
+    {"name":"colour-science/colour","area":"color-science","license":"BSD-3-Clause","decision":"offline-integrate","priority":"A"},
+    {"name":"open-stage/python-gdtf","area":"gdtf","license":"MIT","decision":"adapter-later","priority":"B"},
+    {"name":"open-stage/python-mvr","area":"mvr","license":"MIT","decision":"adapter-later","priority":"B"},
+    {"name":"mvrdevelopment/spec","area":"standard","license":"spec-reference","decision":"track","priority":"B"},
+    {"name":"LBNL-ETA/Radiance","area":"lighting-simulation","license":"Radiance distribution terms","decision":"external-validation","priority":"B"},
+    {"name":"IfcOpenShell/IfcOpenShell","area":"bim","license":"LGPL/GPL components","decision":"offline-adapter","priority":"B"},
+    {"name":"gumyr/build123d","area":"cad-r-and-d","license":"Apache-2.0","decision":"benchmark","priority":"C"},
+    {"name":"changyunhai/IESViewer360","area":"photometric-ux","license":"MIT","decision":"study","priority":"C"},
+    {"name":"google/model-viewer","area":"viewer-ux","license":"Apache-2.0","decision":"study","priority":"C"},
+    {"name":"gkjohnson/three-gpu-pathtracer","area":"browser-pathtracing","license":"MIT","decision":"experiment","priority":"C"},
+    {"name":"ThatOpen/engine_web-ifc","area":"browser-bim","license":"MPL-2.0","decision":"optional-later","priority":"C"},
+    {"name":"open-stage/blender-dmx","area":"previsualization","license":"GPL-3.0","decision":"external-only","priority":"C"},
+    {"name":"mcallegari/qlcplus","area":"lighting-control","license":"Apache-2.0","decision":"lab-later","priority":"C"},
+    {"name":"OpenLightingProject/ola","area":"protocol-gateway","license":"LGPL/GPL split","decision":"external-service-later","priority":"C"},
+    {"name":"mvrdevelopment/libMVRgdtf","area":"gdtf-mvr-sdk","license":"custom MVR SDK license","decision":"reference-only","priority":"C"},
+    {"name":"GitBuilding/GitBuilding","area":"hardware-documentation","license":"GPL-3.0","decision":"external-or-study","priority":"C"}
+  ]
+}
