@@ -1,0 +1,663 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-fixture.schema.json",
+  "title": "AETHERIA Fixture Definition",
+  "description": "Canonical product definition for AETHERIA architectural sculptural lighting fixtures.",
+  "version": "0.1.0-draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "identity",
+    "classification",
+    "physical",
+    "assets",
+    "provenance"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+    },
+    "identity": {
+      "$ref": "#/$defs/identity"
+    },
+    "classification": {
+      "$ref": "#/$defs/classification"
+    },
+    "physical": {
+      "$ref": "#/$defs/physical"
+    },
+    "optical": {
+      "$ref": "#/$defs/optical"
+    },
+    "composition": {
+      "$ref": "#/$defs/composition"
+    },
+    "kinematics": {
+      "$ref": "#/$defs/kinematics"
+    },
+    "electrical": {
+      "$ref": "#/$defs/electrical"
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/material"
+      },
+      "uniqueItems": true
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    },
+    "interchange": {
+      "$ref": "#/$defs/interchange"
+    },
+    "manufacturing": {
+      "$ref": "#/$defs/manufacturing"
+    },
+    "compliance": {
+      "$ref": "#/$defs/compliance"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "vector3mm": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number"
+      }
+    },
+    "positiveVector3mm": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixtureId",
+        "productCode",
+        "brand",
+        "name",
+        "revision",
+        "lifecycle"
+      ],
+      "properties": {
+        "fixtureId": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "productCode": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "brand": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "collection": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "revision": {
+          "$ref": "#/$defs/semver"
+        },
+        "lifecycle": {
+          "enum": [
+            "concept",
+            "prototype",
+            "rfq",
+            "engineering",
+            "production",
+            "retired"
+          ]
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixtureType", "motion"],
+      "properties": {
+        "fixtureType": {
+          "enum": [
+            "pendant",
+            "chandelier",
+            "suspended-sculpture",
+            "ceiling",
+            "wall",
+            "floor",
+            "table",
+            "installation",
+            "other"
+          ]
+        },
+        "motion": {
+          "enum": ["static", "kinetic"]
+        },
+        "applications": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "residential",
+              "hospitality",
+              "commercial",
+              "retail",
+              "cultural",
+              "contract",
+              "public-realm",
+              "other"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "environment": {
+          "enum": ["indoor", "outdoor", "indoor-outdoor"]
+        }
+      }
+    },
+    "physical": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["envelopeMm"],
+      "properties": {
+        "envelopeMm": {
+          "$ref": "#/$defs/positiveVector3mm"
+        },
+        "canopyEnvelopeMm": {
+          "$ref": "#/$defs/positiveVector3mm"
+        },
+        "maximumDropMm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "massKg": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": {
+            "value": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "status": {
+              "enum": ["unknown", "estimated", "calculated", "measured"]
+            }
+          }
+        },
+        "centerOfGravityMm": {
+          "$ref": "#/$defs/vector3mm"
+        },
+        "mounting": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "primarySupport": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "secondaryRetention": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "siteStructuralDesignRequired": {
+              "type": "boolean"
+            },
+            "interfaceZoneCount": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "serviceEnvelopeMm": {
+          "$ref": "#/$defs/positiveVector3mm"
+        }
+      }
+    },
+    "optical": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": ["conceptual", "supplier-data", "simulated", "tested"]
+        },
+        "cctK": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "uniqueItems": true
+        },
+        "cri": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "tm30": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "rf": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "rg": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "lumens": {
+          "type": "number",
+          "minimum": 0
+        },
+        "emitters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "type"],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "type": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "quantity": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "beamAngleDeg": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 180
+              },
+              "iesAssetId": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "spdAssetId": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          }
+        }
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "elementCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "families": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "count"],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "nominalSizeMm": {
+                "$ref": "#/$defs/positiveVector3mm"
+              },
+              "geometryAssetId": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          }
+        },
+        "scheduleAssetId": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "suspension": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "lineCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "material": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "nominalDiameterMm": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "minimumLengthMm": {
+              "type": "number",
+              "minimum": 0
+            },
+            "maximumLengthMm": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "kinematics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": ["not-applicable", "concept", "prototype", "validated"]
+        },
+        "axis": {
+          "$ref": "#/$defs/vector3mm"
+        },
+        "speedRpm": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "minimum": {
+              "type": "number",
+              "minimum": 0
+            },
+            "nominal": {
+              "type": "number",
+              "minimum": 0
+            },
+            "maximum": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "driveType": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "bearingType": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "braking": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "electrical": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": ["conceptual", "supplier-data", "engineered", "tested"]
+        },
+        "inputVoltageV": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "frequencyHz": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "powerW": {
+          "type": "number",
+          "minimum": 0
+        },
+        "dimming": {
+          "type": "array",
+          "items": {
+            "enum": ["none", "phase", "0-10v", "dali", "dmx", "art-net", "sacn", "proprietary", "other"]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "status"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "status": {
+          "enum": ["concept", "sample", "approved", "production"]
+        },
+        "baseMaterial": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "finish": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "supplier": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "colorSpecification": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "path", "format", "authority"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "role": {
+          "enum": [
+            "manufacturing",
+            "coordination",
+            "web",
+            "drawing",
+            "schedule",
+            "photometry",
+            "spectral",
+            "document",
+            "preview",
+            "source",
+            "other"
+          ]
+        },
+        "path": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "format": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "units": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "coordinateSystem": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "authority": {
+          "enum": ["reference", "visual", "coordination", "manufacturing", "controlled"]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "generatedBy": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "interchange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ifc": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "class": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "exportStatus": {
+              "enum": ["not-planned", "planned", "available", "validated"]
+            }
+          }
+        },
+        "gdtf": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "exportStatus": {
+              "enum": ["not-applicable", "planned", "available", "validated"]
+            },
+            "profileAssetId": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "mvr": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "exportStatus": {
+              "enum": ["not-applicable", "planned", "available", "validated"]
+            }
+          }
+        }
+      }
+    },
+    "manufacturing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bomAssetId": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "partRegisterAssetId": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "qcPlanAssetId": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "packagingAssetId": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "firstArticleRequired": {
+          "type": "boolean"
+        }
+      }
+    },
+    "compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": ["not-assessed", "target-defined", "testing", "certified"]
+        },
+        "targetMarkets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "standards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "status"],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "status": {
+                "enum": ["target", "applicable", "tested", "certified", "not-applicable"]
+              },
+              "evidenceAssetId": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["createdAt", "updatedAt", "authors"],
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "authors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "sourceReferences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}
