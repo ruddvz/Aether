@@ -7,8 +7,7 @@
     "fileName": "AETHERIA_VORTEX_v5.2.0.zip",
     "sha256": "4cffd5a003a718d359811bf6f3b406d8ad197a92cc3632f9321c6859dca48f79",
     "byteLength": 167948,
-    "encodingStorage": "base64-chunks",
-    "chunkGlob": ".AETHERIA_VORTEX_v5.2.0.zip.b64.*"
+    "reproduction": "pinned-builder-with-historical-member-serialization"
   },
   "memberOrder": [
     "README.md",
@@ -46,16 +45,21 @@
     "coordination/web-geometry-manifest.json": {"byteLength": 401, "sha256": "297280efbd3f525712f48fe65f23f765b7cb6af5a639d2d2a6f72337503d3599"},
     "SHA256SUMS.txt": {"byteLength": 1492, "sha256": "771ccb6e276397f0194a04badbd8535ea7e60a17249346d6f9ebaf1a38945095"}
   },
+  "historicalSerialization": {
+    "product/fixture.json": "JSON object serialized with json.dumps(..., indent=2) plus one trailing newline"
+  },
   "policy": {
     "exactReleaseZipBytesAreImmutable": true,
+    "exactRebuiltZipShaRequired": true,
     "rebuiltMemberBytesMustMatchAuthority": true,
-    "rebuiltZipCompressedStreamMayDifferAcrossPlatforms": true,
+    "liveFixtureFormattingIsNotProductAuthority": true,
     "mayOverwriteHistoricalRelease": false,
     "mayBecomeManufacturingAuthority": false
   },
   "notes": [
     "The exact verified V5.2 ZIP was recovered from the 2026-09-03 AETHERIA platform snapshot.",
-    "Python zipfile/zlib can produce different DEFLATE streams across platforms even when every uncompressed member is byte-identical.",
-    "CI therefore verifies the immutable stored ZIP SHA and every rebuilt member SHA separately."
+    "The apparent GitHub release-hash drift was traced to compacted fixture.json formatting introduced during repository recovery, not to a semantic product change.",
+    "Re-serializing the unchanged fixture object with the historical two-space JSON format restores the exact V5.2 member bytes and exact release SHA-256.",
+    "CI verifies the full archive SHA, byte length, member order, member byte lengths, and every member SHA-256."
   ]
 }
