@@ -37,8 +37,8 @@ jobs:
         run: python scripts/qa_optimized_web_geometry.py
       - name: Run regression tests
         run: pytest -q
-      - name: Build deterministic release
-        run: python scripts/build_release.py
+      - name: Build product artifacts
+        run: python scripts/build_product.py
       - name: Build Pages tree
         run: python scripts/build_site.py
       - name: Verify public entry points
@@ -48,6 +48,6 @@ jobs:
           test -f _site/products/vx4800/versions/5.2.0/index.html
           test -f _site/products/vx4800/inspect/index.html
           test -f _site/products/vx4800/inspect/inspector.app.js
+          test -f _site/downloads/vx4800/1.3.0/vx4800-coordination-v1.3.0.glb
           test -f _site/downloads/vx4800/1.3.0/vx4800-coordination-v1.3.0.optimized.glb
           test -f _site/downloads/vx4800/1.3.0/optimization-manifest.json
-          test -f _site/downloads/vx4800/5.2.0/AETHERIA_VORTEX_v5.2.0.zip
