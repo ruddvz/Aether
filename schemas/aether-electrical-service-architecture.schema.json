@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-electrical-service-architecture.schema.json",
+  "title": "AETHERIA electrical and service architecture",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "architectureRevision",
+    "status",
+    "authority",
+    "designPrinciple",
+    "controlledInputs",
+    "electricalDomains",
+    "fixedRotatingBoundary",
+    "lightingArchitecture",
+    "serviceArchitecture",
+    "protectiveAndSafetyRequirements",
+    "requiredEngineeringReturns",
+    "promotionGate"
+  ],
+  "properties": {
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "architectureRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "authority": {"enum": ["engineering-development-input", "controlled"]},
+    "designPrinciple": {"type": "string"},
+    "controlledInputs": {
+      "type": "object",
+      "required": ["fixedAccentHeadCount", "accentHeadSetout", "finalHeadStatus", "finalDriverTopologyStatus", "siteSupplyStatus"],
+      "properties": {
+        "fixedAccentHeadCount": {"const": 14},
+        "accentHeadSetout": {"type": "string"},
+        "finalHeadStatus": {"type": "string"},
+        "finalDriverTopologyStatus": {"type": "string"},
+        "siteSupplyStatus": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "electricalDomains": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "location", "purpose", "independentIsolationRequired", "preferredControl", "notes"],
+        "additionalProperties": true
+      }
+    },
+    "fixedRotatingBoundary": {
+      "type": "object",
+      "required": ["fixedCanopyContains", "rotatingCarrierContains", "slipRingStatus", "changeControl"],
+      "properties": {
+        "fixedCanopyContains": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "rotatingCarrierContains": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "slipRingStatus": {"type": "string"},
+        "changeControl": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "lightingArchitecture": {"type": "object"},
+    "serviceArchitecture": {"type": "object"},
+    "protectiveAndSafetyRequirements": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "requiredEngineeringReturns": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "promotionGate": {
+      "type": "object",
+      "required": [
+        "exactHeadSelected",
+        "exactDriverTopologySelected",
+        "siteSupplyVariantDefined",
+        "lightingControlGearControlled",
+        "daliCommissioningArchitectureControlled",
+        "protectiveEarthingBondingResolved",
+        "wiringAndVoltageDropCalculated",
+        "thermalValidationPassed",
+        "serviceAccessValidated",
+        "kineticElectricalSafetyResolved",
+        "firstArticleElectricalTestsPassed"
+      ],
+      "additionalProperties": {"type": "boolean"}
+    }
+  },
+  "additionalProperties": true
+}

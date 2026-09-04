@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-structural-site-interface.schema.json",
+  "title": "AETHERIA Structural Site Interface",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "fixtureId", "designRevision", "authority", "status", "purpose",
+    "controlledBaseline", "supportBoundary", "interfaceZones", "requiredProductInputs",
+    "requiredSiteInputs", "requiredLoadCases", "reactionOutputs", "analysisRequirements",
+    "forbiddenAssumptions", "deliverablesRequiredForStructuralRelease", "promotionGate", "dependencies"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"type": "string", "minLength": 1},
+    "designRevision": {"type": "string", "minLength": 1},
+    "authority": {"type": "string", "enum": ["qualification-plan", "controlled"]},
+    "status": {"type": "string", "enum": ["open", "approved"]},
+    "purpose": {"type": "string", "minLength": 1},
+    "controlledBaseline": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canopyEnvelopeMm", "interfaceZoneCount", "primarySupport", "siteStructuralDesignRequired", "repositoryGeometryAuthority", "manufacturingGeometryAuthority", "productLifecycle"],
+      "properties": {
+        "canopyEnvelopeMm": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}], "minItems": 3, "maxItems": 3},
+        "interfaceZoneCount": {"type": "integer", "minimum": 1},
+        "primarySupport": {"type": "string"},
+        "siteStructuralDesignRequired": {"type": "boolean"},
+        "repositoryGeometryAuthority": {"type": "string"},
+        "manufacturingGeometryAuthority": {"type": "string"},
+        "productLifecycle": {"type": "string"}
+      }
+    },
+    "supportBoundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["validPrimarySupport", "falseCeilingStructuralSupportPermitted", "decorativeCanopySkinStructuralSupportPermitted", "servicesAsStructuralSupportPermitted", "siteStructureMustBeIdentifiedBeforeAnchorSelection", "anchorSelectionIsProjectSpecific", "secondaryRetentionMustTerminateToValidFixedStructure"],
+      "properties": {
+        "validPrimarySupport": {"type": "string"},
+        "falseCeilingStructuralSupportPermitted": {"type": "boolean"},
+        "decorativeCanopySkinStructuralSupportPermitted": {"type": "boolean"},
+        "servicesAsStructuralSupportPermitted": {"type": "boolean"},
+        "siteStructureMustBeIdentifiedBeforeAnchorSelection": {"type": "boolean"},
+        "anchorSelectionIsProjectSpecific": {"type": "boolean"},
+        "secondaryRetentionMustTerminateToValidFixedStructure": {"type": "boolean"}
+      }
+    },
+    "interfaceZones": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "positionStatus", "reactionStatus"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^SITE-IF-[0-9]{2}$"},
+          "positionStatus": {"type": "string", "enum": ["manufacturing-interface-geometry-required", "controlled"]},
+          "reactionStatus": {"type": "string", "enum": ["not-calculated", "calculated", "approved"]}
+        }
+      }
+    },
+    "requiredProductInputs": {"$ref": "#/$defs/statusItems"},
+    "requiredSiteInputs": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "status", "purpose"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"type": "string", "enum": ["unknown", "provisional", "controlled"]},
+          "purpose": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "requiredLoadCases": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "description", "status"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^LC-[A-Z0-9-]+$"},
+          "description": {"type": "string", "minLength": 1},
+          "status": {"type": "string", "enum": ["not-calculated", "calculated", "approved"]}
+        }
+      }
+    },
+    "reactionOutputs": {
+      "type": "object", "additionalProperties": false,
+      "required": ["coordinateSystemStatus", "perZoneRequired", "units", "currentStatus", "rule"],
+      "properties": {
+        "coordinateSystemStatus": {"type": "string"},
+        "perZoneRequired": {"type": "array", "minItems": 6, "uniqueItems": true, "items": {"type": "string", "enum": ["Fx", "Fy", "Fz", "Mx", "My", "Mz"]}},
+        "units": {
+          "type": "object", "additionalProperties": false,
+          "required": ["force", "moment"],
+          "properties": {"force": {"const": "N"}, "moment": {"const": "N-m"}}
+        },
+        "currentStatus": {"type": "string", "enum": ["no-numeric-reactions-approved", "provisional", "approved"]},
+        "rule": {"type": "string", "minLength": 1}
+      }
+    },
+    "analysisRequirements": {"$ref": "#/$defs/stringArray"},
+    "forbiddenAssumptions": {"$ref": "#/$defs/stringArray"},
+    "deliverablesRequiredForStructuralRelease": {"$ref": "#/$defs/stringArray"},
+    "promotionGate": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "actualInstalledMassControlled", "rotatingMassControlled", "centerOfGravityControlled", "kineticLoadCasesControlled",
+        "secondaryRetentionLoadCaseControlled", "siteStructureIdentified", "siteConditionsVerified", "projectDesignCriteriaConfirmed",
+        "manufacturingInterfaceGeometryReleased", "structuralModelApproved", "interfaceReactionsApproved", "fixedCanopyStructureApproved",
+        "siteStructureCapacityApproved", "anchorSupportSystemApproved", "secondaryRetentionLoadPathApproved", "deflectionAlignmentApproved",
+        "installationMethodStructurallyApproved", "projectStructuralReleaseApproved"
+      ],
+      "properties": {
+        "actualInstalledMassControlled": {"type": "boolean"},
+        "rotatingMassControlled": {"type": "boolean"},
+        "centerOfGravityControlled": {"type": "boolean"},
+        "kineticLoadCasesControlled": {"type": "boolean"},
+        "secondaryRetentionLoadCaseControlled": {"type": "boolean"},
+        "siteStructureIdentified": {"type": "boolean"},
+        "siteConditionsVerified": {"type": "boolean"},
+        "projectDesignCriteriaConfirmed": {"type": "boolean"},
+        "manufacturingInterfaceGeometryReleased": {"type": "boolean"},
+        "structuralModelApproved": {"type": "boolean"},
+        "interfaceReactionsApproved": {"type": "boolean"},
+        "fixedCanopyStructureApproved": {"type": "boolean"},
+        "siteStructureCapacityApproved": {"type": "boolean"},
+        "anchorSupportSystemApproved": {"type": "boolean"},
+        "secondaryRetentionLoadPathApproved": {"type": "boolean"},
+        "deflectionAlignmentApproved": {"type": "boolean"},
+        "installationMethodStructurallyApproved": {"type": "boolean"},
+        "projectStructuralReleaseApproved": {"type": "boolean"}
+      }
+    },
+    "dependencies": {"$ref": "#/$defs/stringArray"}
+  },
+  "$defs": {
+    "stringArray": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "statusItems": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "quantity", "status", "requiredEvidenceClass", "sourceDependency"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "quantity": {"type": "string", "minLength": 1},
+          "status": {"type": "string", "enum": ["unknown", "provisional", "controlled"]},
+          "requiredEvidenceClass": {"type": "string", "enum": ["REPOSITORY", "SUPPLIER", "ENGINEERING", "PHYSICAL", "THIRD_PARTY"]},
+          "sourceDependency": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

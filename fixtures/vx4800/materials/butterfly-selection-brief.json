@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "status": "research-input",
+  "purpose": "Qualify manufacturable butterfly material and attachment tiers while preserving the external manufacturing-geometry authority and generating controlled physical mass inputs for suspension and kinetic engineering.",
+  "controlledContext": {
+    "elementCount": 240,
+    "sizeAllocation": {"S": 66, "M": 144, "L": 30},
+    "nominalDesignParametersMm": {
+      "S": {"span": 108, "length": 60, "thickness": 5},
+      "M": {"span": 146, "length": 82, "thickness": 6},
+      "L": {"span": 186, "length": 108, "thickness": 7}
+    },
+    "parameterStatus": "RFQ/prototype design inputs; thickness values are not final released material specifications",
+    "actualMassStatus": "unknown",
+    "centerOfGravityStatus": "unknown",
+    "manufacturingGeometryAuthority": "external controlled VX4800 Product Release v1.3.0",
+    "repositoryGeometryAuthority": "coordination-only"
+  },
+  "commercialTiers": [
+    {
+      "tier": "ARC",
+      "intent": "lightweight, repeatable, cost-controlled transparent sculptural element",
+      "materialDirection": "cast optical/architectural PMMA such as PLEXIGLAS GS Clear or approved equivalent",
+      "attachmentDirections": ["mechanically captured three-point drilled attachment", "small edge/yoke capture where geometry permits"],
+      "priorityTests": ["creep around attachment points", "hole/edge stress cracking", "UV/aging", "surface scratch behavior", "proof load", "fatigue", "mass repeatability"]
+    },
+    {
+      "tier": "LUX",
+      "intent": "premium engineered optical/decorative glass with controlled repeatability",
+      "materialDirection": "borosilicate or other engineered lead-free premium glass with supplier-controlled properties; SCHOTT BOROFLOAT 33 is the present data-reference candidate",
+      "attachmentDirections": ["engineered edge clamp/cradle with compliant interface", "specialist-approved drilled three-point mechanical attachment", "qualified bonded metal pad only if validated as a safety-critical system with independent retention"],
+      "priorityTests": ["edge and hole quality", "contact stress", "proof load", "impact behavior", "fatigue", "optical quality", "mass repeatability", "fragment/failure behavior"]
+    },
+    {
+      "tier": "ART",
+      "intent": "artisan hand-worked glass with visible craft character and project-specific matching",
+      "materialDirection": "specialist artisan glassmaker process; glass composition, annealing and mechanical properties supplier-specific",
+      "attachmentDirections": ["integral formed loop/boss if the glassmaker validates it", "mechanically captured cradle designed around the artisan form"],
+      "priorityTests": ["annealing quality", "inclusion/bubble acceptance", "dimensional variation", "mass variation", "attachment proof load", "fatigue", "matched-spare reproducibility"]
+    }
+  ],
+  "attachmentPrinciples": [
+    "Use three-point orientation control only after the final butterfly material and local attachment geometry are qualified.",
+    "Avoid sharp cable or metal bearing directly on glass edges or drilled holes.",
+    "Use compliant isolation/sleeves/pads only with compatible material, aging and creep evidence.",
+    "Do not treat adhesive-only attachment as an approved primary overhead load path without dedicated durability testing and independent retention.",
+    "Keep the complete butterfly attachment replaceable during service.",
+    "Do not use Blender yoke geometry as attachment engineering authority."
+  ],
+  "massControlRequirements": [
+    "prototype at least one production-intent S, M and L butterfly for each tier advanced beyond research",
+    "measure complete suspended assembly mass including butterfly, attachment hardware, lower bridle/yoke and terminals",
+    "record scale resolution, calibration status, sample ID and environmental condition",
+    "measure center of gravity or balance reference where it materially affects hanging orientation",
+    "define production mass tolerance before kinetic balancing is released",
+    "do not calculate final mass from bounding-box volume"
+  ],
+  "mandatorySupplierReturns": [
+    "exact material grade/composition and supplier trade name",
+    "available stock or process thickness and tolerance",
+    "density or mass-property basis for engineering calculations",
+    "optical transmission/refraction data where relevant to the tier",
+    "forming/cutting/drilling/grinding/polishing limitations",
+    "minimum edge distances and hole rules if drilling is proposed",
+    "annealing/tempering/chemical-strengthening state where applicable",
+    "recommended attachment/contact-stress practice",
+    "quality inspection and rejection criteria",
+    "batch traceability and conformity documentation",
+    "sample and spare reproducibility",
+    "regional manufacturing and replacement lead time"
+  ],
+  "engineeringPromotionGates": [
+    "exact material grade and production process selected for the tier",
+    "production-intent S/M/L samples manufactured",
+    "complete S/M/L suspended assembly masses measured and controlled",
+    "attachment detail frozen for the tier",
+    "attachment proof-load test passed on production-equivalent samples",
+    "fatigue/cyclic test passed for intended kinetic duty",
+    "failure/fragment-retention strategy resolved for occupied-space installation",
+    "optical and cosmetic acceptance standard frozen",
+    "production mass tolerance and matching/spares strategy frozen",
+    "supplier quality and traceability returns accepted"
+  ],
+  "rejectionRules": [
+    "Do not promote the current 5/6/7 mm RFQ parameters into final material thickness without supplier and test evidence.",
+    "Do not derive final mass from coordination geometry or a bounding box.",
+    "Do not use generic glass or PMMA strength values as proof of a finished drilled/clamped butterfly assembly.",
+    "Do not approve a glass attachment solely because a hole or clamp can be modeled in CAD or Blender.",
+    "Do not assume an artisan glass composition, density or strength before the selected glassmaker provides controlled data.",
+    "Do not approve an adhesive-only overhead primary load path without durability qualification and independent retention.",
+    "Do not allow a presentation/render material to become manufacturing authority."
+  ]
+}

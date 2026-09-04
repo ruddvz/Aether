@@ -1,0 +1,84 @@
+name: Validate spectral colour quality
+
+on:
+  pull_request:
+    paths:
+      - "requirements-spectral.txt"
+      - "scripts/analyze_vx4800_spectrum.py"
+      - "schemas/aether-spectral-validation-*.json"
+      - "fixtures/vx4800/photometry/spectral/**"
+      - "tests/test_spectral_colour_quality.py"
+      - ".github/workflows/spectral.yml"
+  push:
+    branches:
+      - main
+      - "feat/vx4800-spectral-colour-quality-validation"
+    paths:
+      - "requirements-spectral.txt"
+      - "scripts/analyze_vx4800_spectrum.py"
+      - "schemas/aether-spectral-validation-*.json"
+      - "fixtures/vx4800/photometry/spectral/**"
+      - "tests/test_spectral_colour_quality.py"
+      - ".github/workflows/spectral.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  spectral:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.txt
+            requirements-spectral.txt
+
+      - name: Install spectral validation dependencies
+        run: python -m pip install -r requirements-dev.txt -r requirements-spectral.txt
+
+      - name: Run spectral boundary tests
+        run: python -m pytest -q tests/test_spectral_colour_quality.py
+
+      - name: Run synthetic 3000 K software cross-check
+        run: |
+          mkdir -p validation-output
+          python scripts/analyze_vx4800_spectrum.py \
+            --synthetic-blackbody 3000 \
+            --source-class synthetic-test-only \
+            --output validation-output/synthetic-3000k-report.json
+
+      - name: Verify synthetic report stays test-only
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          report = json.loads(Path("validation-output/synthetic-3000k-report.json").read_text())
+          schema = json.loads(Path("schemas/aether-spectral-validation-report.schema.json").read_text())
+          errors = list(Draft202012Validator(schema).iter_errors(report))
+          assert not errors, [error.message for error in errors]
+          assert report["source"]["sourceClass"] == "synthetic-test-only"
+          assert report["eligibility"]["spectralEvidenceEligible"] is False
+          assert report["eligibility"]["productPhotometryApproved"] is False
+          assert 2975 <= report["metrics"]["cctK"] <= 3025
+          assert report["metrics"]["criRa"] >= 99
+          assert report["metrics"]["criR9"] >= 99
+          assert report["metrics"]["cie2017Rf"] >= 99
+          assert report["metrics"]["tm3018Rf"] >= 99
+          assert 99 <= report["metrics"]["tm3018Rg"] <= 101
+          PY
+
+      - name: Upload test-only spectral report
+        uses: actions/upload-artifact@v4
+        with:
+          name: vx4800-spectral-software-test
+          path: validation-output/synthetic-3000k-report.json
+          if-no-files-found: error

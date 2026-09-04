@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "architectureRevision": "1.0.0",
+  "status": "conceptual-not-released",
+  "authority": "engineering-development-input",
+  "designPrinciple": "Keep lighting and kinetic electrical systems in the fixed canopy. The rotating 240-element field is mechanically driven and has no planned electrical load, avoiding a slip-ring requirement unless a later controlled design introduces rotating electrical devices.",
+  "controlledInputs": {
+    "fixedAccentHeadCount": 14,
+    "accentHeadSetout": "../photometry/led-setout-engineering-v1.3.0.csv",
+    "cctK": 3000,
+    "photometryStatus": "conceptual-until-exact-supplier-files-controlled",
+    "kineticSpeedRpm": {"minimum": 0.08, "nominal": 0.36, "maximum": 0.65},
+    "finalHeadStatus": "not-selected",
+    "finalDriverTopologyStatus": "not-selected",
+    "siteSupplyStatus": "project-specific"
+  },
+  "electricalDomains": [
+    {
+      "id": "LIGHTING",
+      "location": "fixed-canopy",
+      "purpose": "power and control of 14 fixed adjustable accent heads",
+      "independentIsolationRequired": true,
+      "preferredControl": "DALI-2",
+      "alternateControl": "phase or supplier-specific control only when supported by the exact selected driver/PSU",
+      "notes": "The conceptual 4 narrow / 6 spot / 4 flood optical roles are software/commissioning group intent, not mandatory hardwired power circuits."
+    },
+    {
+      "id": "KINETIC",
+      "location": "fixed-canopy",
+      "purpose": "motor/drive, motion safety chain, position/speed feedback and service controls",
+      "independentIsolationRequired": true,
+      "preferredControl": "dedicated motion controller architecture TBD",
+      "notes": "Motor, drive, braking and safety performance remain unresolved. Kinetic faults must not require disabling lighting service unless the final safety analysis explicitly requires it."
+    },
+    {
+      "id": "AUXILIARY",
+      "location": "fixed-canopy-preferred",
+      "purpose": "commissioning, non-rotating sensors, service diagnostics and future approved auxiliary devices",
+      "independentIsolationRequired": false,
+      "preferredControl": "TBD",
+      "notes": "Keep sensors non-contact/fixed where practical. Any future rotating electrical device reopens the rotary power/data transfer analysis and cannot silently assume a slip ring."
+    }
+  ],
+  "fixedRotatingBoundary": {
+    "fixedCanopyContains": [
+      "site power termination and protective devices as required by final market design",
+      "lighting power supplies/control gear",
+      "DALI bus power supply/application controller where used",
+      "kinetic motor drive/control and safety devices",
+      "service terminals/connectors",
+      "protective bonding terminations where required",
+      "non-contact/fixed feedback devices where practical"
+    ],
+    "rotatingCarrierContains": [
+      "mechanical carrier",
+      "240 suspension exits/lines",
+      "mechanical attachment and balancing provisions",
+      "no planned electrical loads"
+    ],
+    "slipRingStatus": "not-required-by-current-architecture",
+    "changeControl": "Any proposal for rotating powered lighting, sensors, displays or other electrical loads requires a new controlled rotary power/data transfer review."
+  },
+  "lightingArchitecture": {
+    "headCount": 14,
+    "serviceGoal": "each head removable/replaceable without destructive canopy work",
+    "controlGoal": "retain individual or finer-grained addressability where supported by selected control gear; derive groups/scenes in commissioning software rather than permanent wiring where practical",
+    "dali": {
+      "preferred": true,
+      "standardFamily": "IEC 62386 / DALI-2",
+      "busPowerSupplyRequired": true,
+      "controlGearCertificationPreferred": "DALI-2 certified exact product",
+      "applicationController": "project/system selection TBD",
+      "addressing": "commissioned after exact control gear topology is selected"
+    },
+    "driverTopologyOptions": [
+      {
+        "id": "ONE-CONTROL-GEAR-PER-HEAD",
+        "status": "preferred-serviceability-study",
+        "advantages": ["maximum replacement isolation", "individual addressability", "clear fault localization"],
+        "blockers": ["component count", "space", "thermal load", "cost", "exact selected head/driver compatibility"]
+      },
+      {
+        "id": "MANUFACTURER-MULTIHEAD-PSU",
+        "status": "supplier-dependent-study",
+        "advantages": ["lower power-supply count", "potentially simpler fixed-canopy power distribution"],
+        "blockers": ["head-level addressability may be reduced", "failure can affect multiple heads", "exact channel/fuse/driver behavior must be supplied and tested"]
+      }
+    ],
+    "referenceCandidateImplementation": {
+      "candidate": "Precision Lighting by Luminii Evo 16",
+      "status": "reference-only-not-canonical",
+      "headInput": "24 V constant voltage according to current manufacturer page",
+      "externalPowerSupplyRequired": true,
+      "publishedDimming": ["DALI", "1-10 V"],
+      "notes": "Do not promote 24 V or this PSU topology to final architecture until the exact VX4800 head family/configuration is selected and controlled."
+    }
+  },
+  "serviceArchitecture": {
+    "access": [
+      "serviceable canopy panels sized and located so drivers/control gear/terminals can be replaced without disturbing the 240-line setout",
+      "no routine service task may require entering the rotating sweep envelope while motion is enabled",
+      "motion lockout/mechanical restraint procedure required before service near rotating components"
+    ],
+    "segregation": [
+      "keep mains and power electronics separated from low-voltage/control wiring to the extent required by final product design and applicable standards",
+      "route wiring outside the rotating-carrier sweep and bearing/drive pinch zones",
+      "provide strain relief at every removable service module and head feed",
+      "do not use the bearing as an intentional protective-earth current path"
+    ],
+    "identification": [
+      "unique head ID linked to controlled LED setout",
+      "unique control gear/PSU ID",
+      "terminal and connector IDs",
+      "lighting/kinetic domain labels",
+      "commissioned DALI address/group/scene record where DALI is selected"
+    ],
+    "replacement": [
+      "heads independently replaceable",
+      "power supplies/control gear independently replaceable where architecture permits",
+      "control modules independently replaceable",
+      "motion drive/controller independently replaceable",
+      "terminal access without destructive finish removal"
+    ]
+  },
+  "protectiveAndSafetyRequirements": [
+    "final electrical class, protective-earthing scheme and site protective devices must be resolved for each market/released supply variant",
+    "metallic canopy/bonding design must not rely on bearings or incidental mechanical contact for protective continuity",
+    "lighting and kinetic domains require defined isolation/lockout points",
+    "kinetic emergency stop, safe torque/braking behavior and restart logic are part of the unresolved motion-safety engineering",
+    "driver/PSU thermal derating and enclosure temperature must be verified in the final canopy arrangement",
+    "all field wiring/conductors/connectors require rating for final voltage, current, temperature, installation method and market requirements",
+    "voltage-drop/current calculations require the exact selected head and driver topology",
+    "electrical access must preserve structural, bearing, cable-exit and dynamic-clearance zones"
+  ],
+  "requiredEngineeringReturns": [
+    "project/site nominal supply and fault/protective-device requirements",
+    "exact selected accent-head family/configuration",
+    "exact driver/power-supply/control-gear part numbers and channel topology",
+    "DALI-2 certification records for selected DALI products where applicable",
+    "head and driver electrical load data including inrush/standby/derating where published",
+    "wiring conductor sizes/types and voltage-drop calculation",
+    "protective earthing/bonding strategy",
+    "canopy electrical thermal analysis or test evidence",
+    "service access drawing and component replacement procedure",
+    "lighting commissioning/address schedule",
+    "kinetic drive/control/safety circuit design",
+    "electrical test plan for first article and production"
+  ],
+  "promotionGate": {
+    "exactHeadSelected": false,
+    "exactDriverTopologySelected": false,
+    "siteSupplyVariantDefined": false,
+    "lightingControlGearControlled": false,
+    "daliCommissioningArchitectureControlled": false,
+    "protectiveEarthingBondingResolved": false,
+    "wiringAndVoltageDropCalculated": false,
+    "thermalValidationPassed": false,
+    "serviceAccessValidated": false,
+    "kineticElectricalSafetyResolved": false,
+    "firstArticleElectricalTestsPassed": false
+  }
+}

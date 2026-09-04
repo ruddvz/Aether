@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "qualificationRevision": "1.0.0",
+  "status": "qualification-shortlist-not-approved",
+  "finalSystemApproved": false,
+  "authority": "research-and-rfq-input",
+  "currentArchitecture": {
+    "lineCount": 240,
+    "upperGripper": "supplier-rated adjustable gripper",
+    "mainCable": "matched stainless 7x7 microcable",
+    "lowerAttachment": "custom three-point anti-rotation bridle/yoke; engineering unresolved"
+  },
+  "candidates": [
+    {
+      "candidateId": "reutlinger-type12-stainless",
+      "manufacturer": "Reutlinger GmbH",
+      "role": "compact-system reference finalist",
+      "status": "shortlisted-for-sample-and-rfq",
+      "family": "Cable Holder Type 12 / Eco Slim",
+      "compatibleDiameterMm": [0.63, 0.81, 1.0, 1.2],
+      "publishedStainlessWorkingLoads": [
+        {"diameterMm": 0.63, "workingLoadKg": 3},
+        {"diameterMm": 0.81, "workingLoadKg": 6},
+        {"diameterMm": 1.0, "workingLoadKg": 8},
+        {"diameterMm": 1.2, "workingLoadKg": 12}
+      ],
+      "publishedCableReference": "stainless steel 7x7, 1570 N/mm2; manufacturer-matched cable required",
+      "publishedOperatingCoefficient": 5,
+      "mountingVariantsOfInterest": [
+        {"description": "Type 12 M4x7 with release", "serialNumber": "193.000.133"},
+        {"description": "Type 12 M4x7 without release", "serialNumber": "193.000.134"},
+        {"description": "Type 12 M8x1 A9", "serialNumber": "193.000.139"},
+        {"description": "Type 12 M8x1 A9 with fork coupling", "serialNumber": "193.000.141"}
+      ],
+      "strengths": [
+        "0.81 mm and 1.0 mm stainless options sit inside the present visual diameter target",
+        "manufacturer publishes exact stainless working-load table and operating coefficient",
+        "multiple compact threaded/fork attachment variants support carrier-detail exploration",
+        "manufacturer offers factory certificates based on special tests on request"
+      ],
+      "blockers": [
+        "actual butterfly and lower-yoke masses are not controlled",
+        "dynamic line design load is not established",
+        "exact upper attachment variant is not selected",
+        "lower three-point anti-rotation bridle is not supplied by this qualification",
+        "kinetic/fatigue suitability for VX4800 has not been confirmed by manufacturer or testing"
+      ],
+      "sources": {
+        "family": "https://reutlinger.de/en/cable-holder/type-12",
+        "workingLoad": "https://reutlinger.de/de/arbeitslast-edelstahl-drahtseilhalter",
+        "ecoSlimTechnicalSheet": "https://reutlinger.de/en/component/zoo/?element=7a497aa5-508e-4124-bb3c-77579b0a6c97&format=raw&item_id=5871&method=download&task=callelement"
+      }
+    },
+    {
+      "candidateId": "griplock-type12-1mm-stainless",
+      "manufacturer": "Griplock Systems, LLC",
+      "role": "lighting-industry system reference finalist",
+      "status": "shortlisted-for-sample-and-rfq",
+      "family": "Premium Type 12 / 1.0 mm stainless aircraft cable",
+      "compatibleDiameterMm": [1.0],
+      "publishedGripperWorkingLoad": {"diameterMm": 1.0, "stainlessWorkingLoadLb": 20},
+      "publishedCableWorkingLoad": {"diameterMm": 1.0, "stainlessWorkingLoadLb": 17},
+      "publishedRatingBasis": "working-load limits are 20 percent of minimum break strength for the gripper/cable combination",
+      "partOfInterest": {
+        "description": "12Z-M4-Q1.6 side-exit cross-cable gripper",
+        "thread": "M4 x 0.70 mm",
+        "manufacturerProductPage": "https://griplocksystems.com/product/12z-m4-q1-6"
+      },
+      "strengths": [
+        "1.0 mm stainless cable is within the current visual target",
+        "lighting-specific manufacturer publishes system working-load guidance",
+        "compact M4 side-exit gripper architecture is relevant to a dense carrier plate",
+        "manufacturer supplies matching extra-fine 1.0 mm cable"
+      ],
+      "blockers": [
+        "candidate system load is governed by the weakest exact matched component and must be confirmed by Griplock for the final assembly",
+        "actual butterfly and lower-yoke masses are not controlled",
+        "dynamic line design load is not established",
+        "lower three-point anti-rotation bridle is unresolved",
+        "kinetic/fatigue suitability for VX4800 has not been confirmed by manufacturer or testing"
+      ],
+      "sources": {
+        "weightLoadGuidelines": "https://griplocksystems.com/technical-legal/weight-load-guidelines",
+        "extraFineCable": "https://griplocksystems.com/product/extra-fine-cable",
+        "gripper": "https://griplocksystems.com/product/12z-m4-q1-6"
+      }
+    }
+  ],
+  "lowerBridle": {
+    "status": "custom-engineering-required",
+    "concept": "one main suspension line transitions through a compact junction/yoke into three fine leads to the butterfly attachment points to limit uncontrolled yaw/roll while preserving the visual lightness of the field",
+    "visualizationReference": "Blender currently represents three yoke/lead splines per butterfly; this is not engineering authority",
+    "requiredDevelopment": [
+      "freeze final butterfly material and thickness tier",
+      "define three attachment points and local reinforcement without inducing glass stress concentrations",
+      "select lead construction and terminal technology",
+      "determine minimum bend radii and avoid sharp cable bearing on glass",
+      "prove anti-rotation performance and visual alignment",
+      "proof-load complete cable + junction + three leads + butterfly assembly",
+      "fatigue-test terminal interfaces under kinetic duty",
+      "develop replaceable service procedure"
+    ]
+  },
+  "promotionGate": {
+    "actualElementMassControlled": false,
+    "dynamicLineDesignLoadControlled": false,
+    "exactUpperGripperSelected": false,
+    "exactMatchedCableSelected": false,
+    "lowerBridleEngineered": false,
+    "secondaryRetentionResolved": false,
+    "samplePullSlipTestPassed": false,
+    "fatigueTestPassed": false,
+    "fullPreHangTestPassed": false
+  }
+}
