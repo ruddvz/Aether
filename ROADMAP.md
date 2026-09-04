@@ -72,10 +72,8 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [x] Generate fail-safe P0 DXF coordination output from controlled setout while refusing unresolved mechanism footprints and any inferred physical rotation-axis XY datum
   - [x] Define machine-verifiable RFQ dispatch and supplier-response intake with exact-variant, assumption, evidence and provenance gates
   - [x] Create RFQ execution issue and dispatch register that distinguish research targets from actual external issue/response states
-  - [x] Qualify current official contact routes for bearing, drive, synchronous-transmission, direct-brake and feedback RFQs without claiming dispatch
-  - [ ] Qualify a precision prototype fabricator and alternate Schaeffler/Mayr application-engineering routes
-  - [ ] Issue the five ready-to-issue kinetic RFQ packages and record actual external issue references
-  - [ ] Issue the fabrication RFQ after a qualified fabricator route exists
+  - [x] Qualify current public routes for all six RFQ packages, including Schaeffler/Mayr alternates and an Ontario prototype-fabrication enquiry target, without claiming technical approval or dispatch
+  - [ ] Issue the six ready-to-issue kinetic RFQ packages and record actual external issue references
   - [ ] Archive supplier responses/CAD in validated response records and disposition clarifications
   - [ ] Populate exact supplier mating data and close bearing/drive/brake/lock/retention/feedback tolerance loops
   - [ ] Replace P0 annotation-only mechanism callouts with supplier/evidence-backed parametric interface geometry and failure-state configurations without changing controlled setout
