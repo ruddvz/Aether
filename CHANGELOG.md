@@ -39,3 +39,15 @@ All notable repository and product presentation changes are recorded here.
 - Added a renderer-neutral measured-distribution browser adapter gated by controlled SHA-256 and provenance.
 - Added explicit rejection of unsupported multi-plane distributions in the first browser adapter.
 - Kept V5.2 presentation output unchanged until exact supplier/laboratory files are controlled.
+
+## 2026-09-04 - web inspection and review tooling
+
+- Added a derived Meshopt coordination GLB pipeline using pinned glTF-Transform CLI 4.5.0.
+- Added a separate optimized-geometry manifest with source/output SHA-256 provenance and explicit authority constraints.
+- Added QA that preserves all 240 element nodes, 240 suspension nodes and 14 fixed LED-head nodes through optimization.
+- Added a dedicated VX4800 technical inspector route without changing the immutable V5.2 presentation viewer.
+- Added three-mesh-bvh 0.9.14 accelerated picking and element-to-element coordination clearance queries.
+- Added point-to-point browser measurements in millimetres.
+- Added browser-local review annotations stored separately from product authority.
+- Added CI and Pages gates for the inspector and optimized GLB.
+- Added a regression guard requiring the historical V5.2 release SHA-256 to remain unchanged.
