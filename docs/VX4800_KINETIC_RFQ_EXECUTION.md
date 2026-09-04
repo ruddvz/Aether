@@ -23,23 +23,18 @@ Machine-readable controls:
 
 No kinetic RFQ is recorded as externally issued by the repository at this stage.
 
-Five packages now have a verified current public supplier route and are therefore `ready-to-issue`:
+All six controlled packages now have at least one verified current public route and are `ready-to-issue`:
 
-- bearing: Kaydon Bearings
+- bearing: Kaydon Bearings, with Schaeffler Canada as a contact-qualified alternate
 - drive: SEW-EURODRIVE Company of Canada Ltd.
 - synchronous transmission: Gates Corporation
-- direct-carrier brake: RINGSPANN Corporation / RINGSPANN GmbH
+- direct-carrier brake: RINGSPANN Corporation / RINGSPANN GmbH, with Mayr as a contact-qualified alternate
 - feedback: HEIDENHAIN
+- prototype fabrication: Bormill Inc.
 
-The prototype-fabrication package remains `not-issued` because a precision fabricator has not yet been contact-qualified. Schaeffler and Mayr remain alternate research targets, not contact-qualified targets.
+`contact-qualified` proves only that a current public supplier route exists. It does not prove technical suitability, contact with the supplier, dispatch, supplier agreement or selection. In particular, Bormill's published large-turning, fabrication/welding and prototype-machining capabilities justify a capability enquiry only; post-weld flatness, distortion control, traceability, NDT, inspection and proof-load capability remain unanswered RFQ requirements.
 
-The dispatch model deliberately distinguishes:
-
-1. `repository-evidence-target`: relevant technical evidence exists, but a current external contact route is not yet qualified.
-2. `research-required`: supplier/fabricator research or contact qualification is still required.
-3. `contact-qualified`: a current official public application-engineering, technical-support, sales or service route is evidenced and may support dispatch.
-
-`contact-qualified` is not proof of contact and `ready-to-issue` is not proof of dispatch. `dispatchStatus=issued` requires both an actual issue date and an external channel/thread reference.
+`ready-to-issue` is not proof of dispatch. `dispatchStatus=issued` requires both an actual issue date and an external channel/thread reference.
 
 ## Controlled RFQ packages
 
@@ -54,8 +49,8 @@ The dispatch model deliberately distinguishes:
 
 For each package:
 
-1. Confirm the supplier target is technically relevant.
-2. Verify and archive a current public application-engineering/support contact route.
+1. Confirm the supplier target is technically relevant enough to receive the enquiry.
+2. Verify and archive a current public application-engineering/support/quote route.
 3. Send the controlled RFQ without inventing rotating mass, CG, bearing loads, drive torque, brake torque, stopping energy or dynamic amplification.
 4. Record the actual issue date and external channel/thread reference.
 5. Preserve the exact enquiry material sent.
@@ -102,37 +97,33 @@ The response schema intentionally has no `selected` state. A response can only b
 
 `technically-comparable` requires exact variant identity, assumptions disclosure, required submittals, variant-bound numeric ratings where applicable, completed technical review and a comparison-ready gate. `shortlisted-not-selected` additionally requires the technically-comparable state.
 
-Final component selection remains a separate controlled engineering action after physical mass/dynamic evidence, load/fault calculations, mating/tolerance review and risk-allocation gates close. Commercial price or lead time cannot close a technical gate.
+Final component or fabricator selection remains a separate controlled engineering action after physical mass/dynamic evidence, load/fault calculations, mating/tolerance review, fabrication capability evidence and risk-allocation gates close. Commercial price or lead time cannot close a technical gate.
 
-## Immediate dispatch priorities
+## Ready-to-issue enquiry priorities
 
-### Bearing: ready to issue
+### Bearing
 
-Kaydon is contact-qualified from its current official engineering-support route. The enquiry should request required axial/radial/moment inputs, mounting-face and support-rigidity requirements, exact mating data, fastening/preload procedure, running-torque method and combined-load/life methodology. It must not ask Kaydon to infer final VX4800 loads.
+Kaydon is the primary contact-qualified route for the slewing/turntable family. Schaeffler Canada is now a contact-qualified alternate for the crossed-roller study family. Enquiries should request required axial/radial/moment inputs, mounting-face and support-rigidity requirements, exact mating data, fastening/preload procedure, running-torque method and combined-load/life methodology. Neither supplier should be asked to infer final VX4800 loads.
 
-Schaeffler remains an alternate crossed-roller research path until its application-engineering route is separately qualified.
+### Drive
 
-### Drive: ready to issue
+SEW-EURODRIVE Canada is contact-qualified. The enquiry should focus on candidate motor/reducer architecture for stable continuous very-low-speed operation, speed-control method, thermal behavior, output-load limits, backlash/compliance, mounting, service/manual movement and the data required for later torque-speed sizing. No exact SEW variant is selected.
 
-SEW-EURODRIVE Canada is contact-qualified from its current official Canadian support route. The enquiry should focus on candidate motor/reducer architecture for stable continuous very-low-speed operation, speed-control method, thermal behavior, output-load limits, backlash/compliance, mounting, service/manual movement and the data required for later torque-speed sizing. No exact SEW variant is selected.
+### Positive transmission
 
-### Positive transmission: ready to issue
+Gates is contact-qualified. The enquiry should obtain the tooth-family/width/tension selection method, minimum engagement, large-ring fabrication tolerances, alignment/runout limits, tooth-jump avoidance and resulting bearing/support reactions after a controlled torque case becomes available.
 
-Gates is contact-qualified from its current official Industrial Technical & Engineering Support route. The enquiry should obtain the tooth-family/width/tension selection method, minimum engagement, large-ring fabrication tolerances, alignment/runout limits, tooth-jump avoidance and resulting bearing/support reactions after a controlled torque case becomes available.
+### Direct-carrier brake
 
-### Direct-carrier brake: ready to issue
+RINGSPANN is the primary contact-qualified route and Mayr is a contact-qualified alternate. Both enquiries must distinguish static holding capability from dynamic stopping/energy duty and obtain exact disc/ring thickness, friction compatibility, runout/alignment, apply/release, manual-release, wear-state and mating requirements for any proposed variant. No brake model or safety performance is selected.
 
-RINGSPANN is contact-qualified from its current official North American route. The enquiry must distinguish static holding capability from dynamic stopping/energy duty and obtain exact disc/ring thickness, friction compatibility, runout/alignment, apply/release, manual-release, wear-state and mating requirements for any proposed variant.
+### Feedback
 
-Mayr remains an alternate research target until its current application-engineering route is separately qualified.
+HEIDENHAIN is contact-qualified. The enquiry should focus on fixed readhead plus passive rotating scale/target architecture, very-low-speed update behavior, reference/index recovery, runout/air-gap tolerance, contamination/environment limits and options for a sufficiently diverse second channel if later required by risk assessment.
 
-### Feedback: ready to issue
+### Prototype fabrication
 
-HEIDENHAIN is contact-qualified from its current official international-sales/application-advice route. The enquiry should focus on fixed readhead plus passive rotating scale/target architecture, very-low-speed update behavior, reference/index recovery, runout/air-gap tolerance, contamination/environment limits and options for a sufficiently diverse second channel if later required by risk assessment.
-
-### Prototype fabrication: research still required
-
-A fabricator must demonstrate large-ring machining, post-weld distortion control, material traceability, inspection/NDT, controlled fastener access and representative proof-load capability before this package moves to `ready-to-issue`.
+Bormill is contact-qualified for a capability enquiry because its official capacity information covers large vertical turning, fabrication/welding and prototype machining at a scale relevant to the VX4800 coordination envelope. The RFQ must still establish whether it can meet the actual project requirements for post-weld machining strategy, bearing-support flatness, distortion control, dimensional inspection, material traceability, NDT, controlled weld procedure documentation, representative proof work and engineering change traceability. `ready-to-issue` is not fabricator approval.
 
 ## Evidence dependencies that still block final sizing
 
