@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-spectral-validation-report.schema.json",
+  "title": "AETHERIA spectral colour-quality validation report",
+  "type": "object",
+  "required": ["schemaVersion", "fixtureId", "generatedAt", "source", "configuration", "toolchain", "methods", "metrics", "eligibility"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "generatedAt": {"type": "string"},
+    "source": {
+      "type": "object",
+      "required": ["sourceClass", "description", "sha256", "coverageNm", "maximumStepNm"],
+      "properties": {
+        "sourceClass": {"enum": ["synthetic-test-only", "supplier", "laboratory"]},
+        "description": {"type": "string", "minLength": 1},
+        "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "coverageNm": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2},
+        "maximumStepNm": {"type": "number", "exclusiveMinimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "configuration": {
+      "type": "object",
+      "required": ["configurationId", "controlled"],
+      "properties": {
+        "configurationId": {"type": ["string", "null"]},
+        "controlled": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "toolchain": {
+      "type": "object",
+      "required": ["package", "version"],
+      "properties": {
+        "package": {"const": "colour-science"},
+        "version": {"const": "0.4.7"}
+      },
+      "additionalProperties": true
+    },
+    "methods": {
+      "type": "object",
+      "required": ["cri", "cieFidelity", "cctDuv", "tm30Compatibility", "currentTm30Authority"],
+      "properties": {
+        "cri": {"const": "CIE 1995"},
+        "cieFidelity": {"const": "CIE 2017"},
+        "cctDuv": {"const": "Ohno 2013 independent cross-check"},
+        "tm30Compatibility": {"const": "ANSI/IES TM-30-18"},
+        "currentTm30Authority": {"const": "ANSI/IES TM-30-24"}
+      },
+      "additionalProperties": false
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["cctK", "duv", "criRa", "criR9", "cie2017Rf", "tm3018Rf", "tm3018Rg"],
+      "properties": {
+        "cctK": {"type": "number"},
+        "duv": {"type": "number"},
+        "criRa": {"type": "number"},
+        "criR9": {"type": "number"},
+        "cie2017Rf": {"type": "number"},
+        "tm3018Rf": {"type": "number"},
+        "tm3018Rg": {"type": "number"}
+      },
+      "additionalProperties": false
+    },
+    "eligibility": {
+      "type": "object",
+      "required": ["exactSpdControlled", "exactConfigurationControlled", "supplierOrLabSource", "spectralEvidenceEligible", "tm3024PrimaryEvidenceControlled", "productPhotometryApproved"],
+      "properties": {
+        "exactSpdControlled": {"type": "boolean"},
+        "exactConfigurationControlled": {"type": "boolean"},
+        "supplierOrLabSource": {"type": "boolean"},
+        "spectralEvidenceEligible": {"type": "boolean"},
+        "tm3024PrimaryEvidenceControlled": {"type": "boolean"},
+        "productPhotometryApproved": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"source": {"properties": {"sourceClass": {"const": "synthetic-test-only"}}}}},
+      "then": {"properties": {"eligibility": {"properties": {"spectralEvidenceEligible": {"const": false}, "exactSpdControlled": {"const": false}, "supplierOrLabSource": {"const": false}}}}}
+    }
+  ]
+}
