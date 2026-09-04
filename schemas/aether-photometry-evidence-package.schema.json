@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-photometry-evidence-package.schema.json",
+  "title": "AETHERIA exact photometry configuration evidence package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "fixtureId", "packageId", "authority", "status", "configuration", "angular", "spectral", "consistency", "eligibility", "generatedAt"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"const": "1.0.0"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "packageId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "authority": {"const": "derived-evidence-package"},
+    "status": {"enum": ["incomplete", "eligible-for-further-review"]},
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["configurationId", "candidateId", "manufacturer", "family", "role", "exactModelCode", "opticCode", "cctK", "candidateExactConfigurationConfirmed"],
+      "properties": {
+        "configurationId": {"type": "string", "minLength": 1},
+        "candidateId": {"type": "string", "minLength": 1},
+        "manufacturer": {"type": "string", "minLength": 1},
+        "family": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1},
+        "exactModelCode": {"type": "string", "minLength": 1},
+        "opticCode": {"type": "string", "minLength": 1},
+        "cctK": {"type": "number"},
+        "candidateExactConfigurationConfirmed": {"type": "boolean"}
+      }
+    },
+    "angular": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["radianceReportPath", "radianceReportSha256", "iesFilename", "iesSha256", "provenanceStatus", "configurationId", "configurationControlled", "syntheticTest", "radiancePipelinePass", "radianceNumericalCrossCheckPass"],
+      "properties": {
+        "radianceReportPath": {"type": "string", "minLength": 1},
+        "radianceReportSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "iesFilename": {"type": "string", "minLength": 1},
+        "iesSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "provenanceStatus": {"enum": ["supplier", "laboratory", "unknown", "synthetic-test"]},
+        "configurationId": {"type": ["string", "null"]},
+        "configurationControlled": {"type": "boolean"},
+        "syntheticTest": {"type": "boolean"},
+        "radiancePipelinePass": {"type": "boolean"},
+        "radianceNumericalCrossCheckPass": {"type": "boolean"}
+      }
+    },
+    "spectral": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spectralReportPath", "spectralReportSha256", "spdSha256", "sourceClass", "configurationId", "configurationControlled", "spectralEvidenceEligible", "tm3024PrimaryEvidenceControlled", "tm3024PrimaryEvidenceReference"],
+      "properties": {
+        "spectralReportPath": {"type": "string", "minLength": 1},
+        "spectralReportSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "spdSha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "sourceClass": {"enum": ["synthetic-test-only", "supplier", "laboratory"]},
+        "configurationId": {"type": ["string", "null"]},
+        "configurationControlled": {"type": "boolean"},
+        "spectralEvidenceEligible": {"type": "boolean"},
+        "tm3024PrimaryEvidenceControlled": {"type": "boolean"},
+        "tm3024PrimaryEvidenceReference": {"type": ["string", "null"]}
+      }
+    },
+    "consistency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["angularAndPackageConfigurationMatch", "spectralAndPackageConfigurationMatch", "angularAndSpectralConfigurationMatch", "candidateConfigurationControlled", "allExactConfigurationChecksPass"],
+      "properties": {
+        "angularAndPackageConfigurationMatch": {"type": "boolean"},
+        "spectralAndPackageConfigurationMatch": {"type": "boolean"},
+        "angularAndSpectralConfigurationMatch": {"type": "boolean"},
+        "candidateConfigurationControlled": {"type": "boolean"},
+        "allExactConfigurationChecksPass": {"type": "boolean"}
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exactCandidateConfigurationConfirmed", "controlledAngularSource", "radianceCrossCheckPassed", "controlledSpectralSource", "currentTm3024EvidenceControlled", "packageEligibleForFurtherReview", "productPhotometryApproved"],
+      "properties": {
+        "exactCandidateConfigurationConfirmed": {"type": "boolean"},
+        "controlledAngularSource": {"type": "boolean"},
+        "radianceCrossCheckPassed": {"type": "boolean"},
+        "controlledSpectralSource": {"type": "boolean"},
+        "currentTm3024EvidenceControlled": {"type": "boolean"},
+        "packageEligibleForFurtherReview": {"type": "boolean"},
+        "productPhotometryApproved": {"const": false}
+      }
+    },
+    "generatedAt": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "eligible-for-further-review"}}},
+      "then": {
+        "properties": {
+          "consistency": {"properties": {"allExactConfigurationChecksPass": {"const": true}}},
+          "eligibility": {"properties": {"packageEligibleForFurtherReview": {"const": true}}}
+        }
+      }
+    }
+  ]
+}
