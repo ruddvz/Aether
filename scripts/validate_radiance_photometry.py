@@ -4,7 +4,6 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import os
 import shutil
 import subprocess
 import sys
@@ -108,6 +107,21 @@ def run_checked(command: Sequence[str], *, cwd: Path, input_text: str | None = N
     return proc
 
 
+def build_octree(oconv: str, rad_path: Path, oct_path: Path, *, cwd: Path) -> str:
+    with oct_path.open("wb") as oct_file:
+        proc = subprocess.run(
+            [oconv, rad_path.name],
+            cwd=cwd,
+            stdout=oct_file,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+    stderr = proc.stderr.decode(errors="replace") if isinstance(proc.stderr, bytes) else str(proc.stderr or "")
+    if proc.returncode != 0 or not oct_path.is_file() or oct_path.stat().st_size == 0:
+        raise RadianceValidationError(f"oconv failed to create a non-empty octree: {stderr}")
+    return stderr.strip()
+
+
 def radiance_version(rtrace: str, *, cwd: Path) -> str:
     proc = subprocess.run([rtrace, "-version"], cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
     text = (proc.stdout + "\n" + proc.stderr).strip()
@@ -129,8 +143,8 @@ def parse_rtrace_rgb(stdout: str, expected_rows: int) -> list[tuple[float, float
 
 
 def rgb_scalar(rgb: tuple[float, float, float]) -> float:
-    # Relative distribution is what matters here. A positive linear combination
-    # cancels the lamp spectrum when all samples use the same converted source.
+    # Only relative angular distribution is compared. Any fixed positive RGB
+    # weighting cancels because all points are sampled from the same source.
     return sum(rgb) / 3.0
 
 
@@ -146,10 +160,14 @@ def validate(
     *,
     provenance: str,
     allow_synthetic_test: bool,
+    configuration_id: str | None,
+    configuration_controlled: bool,
     toolchain: dict,
 ) -> dict:
     if provenance == "synthetic-test" and not allow_synthetic_test:
         raise RadianceValidationError("Synthetic test photometry requires --allow-synthetic-test")
+    if configuration_controlled and not configuration_id:
+        raise RadianceValidationError("--configuration-controlled requires --configuration-id")
 
     parsed = parse_ies(ies_path)
     method = toolchain["method"]
@@ -172,14 +190,7 @@ def validate(
         raise RadianceValidationError("ies2rad did not create the expected .rad and .dat files")
 
     oct_path = out_dir / f"{stem}.oct"
-    compiled = run_checked([oconv, rad_path.name], cwd=out_dir)
-    oct_path.write_bytes(compiled.stdout.encode("latin-1"))
-    # subprocess text mode is unsuitable for an octree. Rebuild in binary mode.
-    with oct_path.open("wb") as oct_file:
-        proc = subprocess.run([oconv, rad_path.name], cwd=out_dir, stdout=oct_file, stderr=subprocess.PIPE, check=False)
-    if proc.returncode != 0 or not oct_path.is_file() or oct_path.stat().st_size == 0:
-        stderr = proc.stderr.decode(errors="replace") if isinstance(proc.stderr, bytes) else str(proc.stderr)
-        raise RadianceValidationError(f"oconv failed to create a non-empty octree: {stderr}")
+    oconv_stderr = build_octree(oconv, rad_path, oct_path, cwd=out_dir)
 
     sensor_text = "".join(f"{s.x_m:.9f} {s.y_m:.9f} {s.z_m:.9f} 0 0 1\n" for s in samples)
     traced = run_checked(
@@ -217,8 +228,14 @@ def validate(
     max_error = max(errors) if errors else math.inf
     pipeline_pass = all(math.isfinite(value) for value in scalars) and rad_path.stat().st_size > 0 and dat_path.stat().st_size > 0
     numerical_pass = pipeline_pass and max_error <= tolerance
-    is_product_evidence = provenance in {"supplier", "laboratory"}
-    product_eligible = is_product_evidence and toolchain["validationBoundary"]["supplierOrLabRawIesRequiredForProductValidation"]
+    product_eligible = (
+        numerical_pass
+        and provenance in {"supplier", "laboratory"}
+        and configuration_controlled
+        and bool(configuration_id)
+        and toolchain["validationBoundary"]["supplierOrLabRawIesRequiredForProductValidation"]
+        and toolchain["validationBoundary"]["exactHeadOpticConfigurationMustBeControlled"]
+    )
 
     report = {
         "$schema": "../../../../schemas/aether-radiance-validation-report.schema.json",
@@ -232,6 +249,8 @@ def validate(
             "byteLength": parsed.byte_length,
             "provenanceStatus": provenance,
             "syntheticTest": provenance == "synthetic-test",
+            "configurationId": configuration_id,
+            "configurationControlled": configuration_controlled,
         },
         "radiance": {
             "expectedRelease": toolchain["radiance"]["release"],
@@ -251,11 +270,12 @@ def validate(
             "pipelinePass": pipeline_pass,
             "numericalCrossCheckPass": numerical_pass,
             "maxRelativeError": max_error,
-            "productPhotometryEligibleForFurtherReview": bool(product_eligible and numerical_pass),
+            "productPhotometryEligibleForFurtherReview": bool(product_eligible),
             "productPhotometryApproved": False,
         },
         "commands": {
             "ies2rad": {"stdout": convert.stdout.strip(), "stderr": convert.stderr.strip()},
+            "oconv": {"stderr": oconv_stderr},
             "rtrace": {"stderr": traced.stderr.strip()},
         },
         "generatedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
@@ -265,6 +285,8 @@ def validate(
         report["warnings"].append("Synthetic test IES validates the Radiance pipeline only and is not product photometry evidence.")
     if provenance not in {"supplier", "laboratory"}:
         report["warnings"].append("Product validation requires controlled raw supplier or laboratory IES provenance.")
+    if not configuration_controlled:
+        report["warnings"].append("Exact head/optic configuration is not marked controlled; product review eligibility remains false.")
     return report
 
 
@@ -274,10 +296,20 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--provenance", choices=["supplier", "laboratory", "unknown", "synthetic-test"], default="unknown")
     parser.add_argument("--allow-synthetic-test", action="store_true")
+    parser.add_argument("--configuration-id")
+    parser.add_argument("--configuration-controlled", action="store_true")
     args = parser.parse_args()
 
     toolchain = load_toolchain()
-    report = validate(args.ies.resolve(), args.out.resolve(), provenance=args.provenance, allow_synthetic_test=args.allow_synthetic_test, toolchain=toolchain)
+    report = validate(
+        args.ies.resolve(),
+        args.out.resolve(),
+        provenance=args.provenance,
+        allow_synthetic_test=args.allow_synthetic_test,
+        configuration_id=args.configuration_id,
+        configuration_controlled=args.configuration_controlled,
+        toolchain=toolchain,
+    )
     report_path = args.out / "radiance-validation.report.json"
     report_path.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     print(f"Radiance report: {report_path}")
