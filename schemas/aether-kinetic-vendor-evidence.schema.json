@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-vendor-evidence.schema.json",
+  "title": "AETHERIA VX4800 kinetic vendor evidence index",
+  "type": "object",
+  "required": ["schemaVersion", "fixtureId", "evidenceRevision", "status", "records", "selectionRule"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "evidenceRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "records": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["id", "manufacturer", "sourceType", "sourceUrl", "accessedDate", "publishedClaimUsed", "selectionImpact", "finalVariantSelected"],
+        "properties": {
+          "sourceType": {"enum": ["manufacturer-web", "manufacturer-manual", "manufacturer-datasheet"]},
+          "finalVariantSelected": {"const": false}
+        },
+        "additionalProperties": true
+      }
+    },
+    "selectionRule": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": true
+}
