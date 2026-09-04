@@ -1,0 +1,111 @@
+name: Validate VX4800 IFC coordination export
+
+on:
+  pull_request:
+    paths:
+      - "requirements-interchange.txt"
+      - "scripts/export_vx4800_ifc.py"
+      - "scripts/build_interchange_loss_report.py"
+      - "schemas/aether-interchange-loss-report.schema.json"
+      - "fixtures/vx4800/interchange/**"
+      - "fixtures/vx4800/fixture.json"
+      - "tests/test_ifc_export.py"
+      - "tests/test_interchange_loss_reporting.py"
+      - "docs/IFC_COORDINATION_EXPORT.md"
+      - ".github/workflows/ifc.yml"
+  push:
+    branches:
+      - main
+      - "feat/vx4800-ifc-coordination-export"
+    paths:
+      - "requirements-interchange.txt"
+      - "scripts/export_vx4800_ifc.py"
+      - "scripts/build_interchange_loss_report.py"
+      - "schemas/aether-interchange-loss-report.schema.json"
+      - "fixtures/vx4800/interchange/**"
+      - "fixtures/vx4800/fixture.json"
+      - "tests/test_ifc_export.py"
+      - "tests/test_interchange_loss_reporting.py"
+      - "docs/IFC_COORDINATION_EXPORT.md"
+      - ".github/workflows/ifc.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  ifc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.txt
+            requirements-interchange.txt
+
+      - name: Install IFC validation dependencies
+        run: python -m pip install -r requirements-dev.txt -r requirements-interchange.txt
+
+      - name: Run IFC and interchange boundary tests
+        run: python -m pytest -q tests/test_ifc_export.py tests/test_interchange_loss_reporting.py
+
+      - name: Export coordination IFC
+        run: |
+          mkdir -p validation-output
+          python scripts/export_vx4800_ifc.py \
+            --output validation-output/VX4800-BF-01.ifc \
+            --loss-report validation-output/ifc-loss-report.json
+
+      - name: Reopen and verify exported IFC
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          import ifcopenshell
+          import ifcopenshell.util.element
+
+          root = Path('.')
+          model = ifcopenshell.open('validation-output/VX4800-BF-01.ifc')
+          assert model.schema == 'IFC4'
+          fixtures = model.by_type('IfcLightFixture')
+          assert len(fixtures) == 1
+          fixture = fixtures[0]
+          psets = ifcopenshell.util.element.get_psets(fixture)
+          coordination = psets['AETHERIA_Coordination']
+          authority = psets['AETHERIA_AuthorityBoundary']
+          assert coordination['ElementCount'] == 240
+          assert coordination['FamilySCount'] == 66
+          assert coordination['FamilyMCount'] == 144
+          assert coordination['FamilyLCount'] == 30
+          assert coordination['SuspensionLineCount'] == 240
+          assert coordination['FixedHeadCount'] == 14
+          assert coordination['MassStatus'] == 'unknown'
+          assert all(authority[key] is False for key in (
+              'ManufacturingAuthority',
+              'StructuralAuthority',
+              'PhotometryAuthority',
+              'KineticSafetyAuthority',
+              'ConstructionReleaseAuthority',
+          ))
+          expected_sha = hashlib.sha256((root / 'fixtures/vx4800/fixture.json').read_bytes()).hexdigest()
+          assert authority['LossReportFixtureSha256'] == expected_sha
+
+          report = json.loads(Path('validation-output/ifc-loss-report.json').read_text())
+          assert report['summary']['exportEligible'] is True
+          assert report['summary']['exportAuthority'] == 'coordination-only'
+          PY
+
+      - name: Upload IFC coordination validation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vx4800-ifc-coordination-validation
+          path: |
+            validation-output/VX4800-BF-01.ifc
+            validation-output/ifc-loss-report.json
+          if-no-files-found: error
