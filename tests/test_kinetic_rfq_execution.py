@@ -20,6 +20,19 @@ def errors(instance, schema):
     return list(Draft202012Validator(schema).iter_errors(instance))
 
 
+def identified_variant(fake):
+    fake["exactVariant"] = {
+        "family": "example-family",
+        "modelCode": "example-model",
+        "variantCode": "example-variant",
+        "configurationNotes": "schema test only; not a product candidate",
+        "fullyIdentified": True,
+    }
+    fake["releaseGates"]["exactVariantIdentified"] = True
+    fake["releaseGates"]["assumptionsDisclosed"] = True
+    return fake
+
+
 def test_rfq_execution_artifacts_validate():
     response_schema = load(RESPONSE_SCHEMA)
     dispatch_schema = load(DISPATCH_SCHEMA)
@@ -76,19 +89,11 @@ def test_shortlist_candidate_requires_exact_variant_and_assumption_disclosure():
     fake["selectionState"] = "candidate-for-shortlist"
     assert errors(fake, schema), "Shortlist candidacy must fail without exact variant identity and assumption disclosure"
 
-    fake["exactVariant"] = {
-        "family": "example-family",
-        "modelCode": "example-model",
-        "variantCode": "example-variant",
-        "configurationNotes": "schema test only; not a product candidate",
-        "fullyIdentified": True,
-    }
-    fake["releaseGates"]["exactVariantIdentified"] = True
-    fake["releaseGates"]["assumptionsDisclosed"] = True
+    identified_variant(fake)
     assert not errors(fake, schema)
 
 
-def test_numeric_ratings_are_required_to_carry_condition_evidence_and_provenance_status():
+def test_supplier_estimate_requires_a_value_unit_and_condition():
     schema = load(RESPONSE_SCHEMA)
     fake = deepcopy(load(TEMPLATE))
     fake["technicalResponse"]["numericRatings"] = [
@@ -101,10 +106,62 @@ def test_numeric_ratings_are_required_to_carry_condition_evidence_and_provenance
             "status": "supplier-estimate",
         }
     ]
+    assert errors(fake, schema)
+
+    fake["technicalResponse"]["numericRatings"][0]["condition"] = "schema-test operating condition"
     assert not errors(fake, schema)
-    rating = fake["technicalResponse"]["numericRatings"][0]
-    assert set(rating) == {"name", "value", "unit", "condition", "evidenceRef", "status"}
-    assert rating["status"] != "supplier-published"
+
+
+def test_published_or_calculated_rating_requires_bound_evidence():
+    schema = load(RESPONSE_SCHEMA)
+    for status in ["supplier-published", "supplier-calculated"]:
+        fake = deepcopy(load(TEMPLATE))
+        fake["technicalResponse"]["numericRatings"] = [
+            {
+                "name": "example-rating",
+                "value": 1.0,
+                "unit": "example",
+                "condition": "schema-test operating condition",
+                "evidenceRef": None,
+                "status": status,
+            }
+        ]
+        assert errors(fake, schema)
+        fake["technicalResponse"]["numericRatings"][0]["evidenceRef"] = "EVIDENCE-TEST-01"
+        assert not errors(fake, schema)
+
+
+def test_technically_comparable_state_requires_completed_review_gates():
+    schema = load(RESPONSE_SCHEMA)
+    fake = identified_variant(deepcopy(load(TEMPLATE)))
+    fake["responseStatus"] = "technically-comparable"
+    assert errors(fake, schema)
+
+    for gate in [
+        "requiredSubmittalsPresent",
+        "numericRatingsVariantBound",
+        "technicalReviewComplete",
+        "comparisonReady",
+    ]:
+        fake["releaseGates"][gate] = True
+    assert not errors(fake, schema)
+
+
+def test_shortlisted_state_requires_technically_comparable_response():
+    schema = load(RESPONSE_SCHEMA)
+    fake = identified_variant(deepcopy(load(TEMPLATE)))
+    fake["selectionState"] = "shortlisted-not-selected"
+    for gate in [
+        "requiredSubmittalsPresent",
+        "numericRatingsVariantBound",
+        "technicalReviewComplete",
+        "comparisonReady",
+    ]:
+        fake["releaseGates"][gate] = True
+    assert errors(fake, schema)
+
+    fake["responseStatus"] = "technically-comparable"
+    assert not errors(fake, schema)
 
 
 def test_dispatch_candidates_do_not_close_engineering_selection():
