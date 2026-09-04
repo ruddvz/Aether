@@ -46,6 +46,8 @@ def glb_json(path: Path) -> dict:
 
 req(manifest["authority"] == "coordination-only-derived-web-asset", "optimized authority label changed")
 req(manifest["constraints"]["mayReplaceControlledCoordinationGlb"] is False, "optimized asset must not replace source coordination GLB")
+req(manifest["constraints"]["mayBecomeManufacturingAuthority"] is False, "optimized asset must not become manufacturing authority")
+req(manifest["constraints"]["rawFileSizeReductionRequired"] is False, "raw-size policy must remain explicit for compact instanced source")
 req(source.exists(), "source coordination GLB missing")
 req(optimized.exists(), "optimized coordination GLB missing")
 
@@ -55,7 +57,15 @@ if source.exists():
 if optimized.exists():
     req(sha256(optimized) == manifest["optimized"]["sha256"], "optimized GLB SHA mismatch")
     req(optimized.stat().st_size == manifest["optimized"]["byteLength"], "optimized byte length mismatch")
-    req(optimized.stat().st_size < source.stat().st_size, "optimized GLB is not smaller than source GLB")
+    req(
+        optimized.stat().st_size - source.stat().st_size == manifest["optimized"]["rawByteDelta"],
+        "optimized raw byte delta mismatch",
+    )
+    req(
+        abs((optimized.stat().st_size / source.stat().st_size) - manifest["optimized"]["rawByteRatio"]) < 0.0000015,
+        "optimized raw byte ratio mismatch",
+    )
+    req(optimized.stat().st_size <= source.stat().st_size * 2, "Meshopt derived GLB overhead is unexpectedly large")
 
 try:
     source_doc = glb_json(source)
@@ -79,5 +89,6 @@ if errors:
         print("-", e)
     raise SystemExit(1)
 
-saved = 100 * (1 - manifest["optimized"]["compressionRatio"])
-print(f"OPTIMIZED WEB GEOMETRY QA PASSED - Meshopt derived asset, {saved:.1f}% byte reduction; coordination authority unchanged")
+ratio = manifest["optimized"]["rawByteRatio"]
+delta = manifest["optimized"]["rawByteDelta"]
+print(f"OPTIMIZED WEB GEOMETRY QA PASSED - Meshopt encoded; raw ratio={ratio:.3f}, delta={delta:+d} bytes; coordination authority unchanged")
