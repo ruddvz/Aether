@@ -4,6 +4,7 @@ from pathlib import Path
 import base64
 import hashlib
 import json
+import shutil
 import subprocess
 import sys
 import zipfile
@@ -73,12 +74,11 @@ def generate_current_sources() -> list[tuple[str, Path]]:
 def historical_member_bytes(archive_name: str, source_path: Path) -> bytes:
     data = source_path.read_bytes()
     if archive_name == "product/fixture.json":
-        # The verified V5.2 release used the canonical JSON content with standard
-        # two-space pretty formatting. The recovery commit compacted formatting
-        # only. Re-serializing here preserves semantic authority while reproducing
-        # the exact historical release member bytes.
-        parsed = json.loads(data)
-        data = (json.dumps(parsed, indent=2) + "\n").encode("utf-8")
+        # The verified V5.2 release used the same canonical JSON semantics with
+        # standard two-space pretty formatting. The GitHub recovery commit later
+        # compacted formatting only. Re-serialization reproduces the released member
+        # while ensuring any future semantic change still fails the authority hash.
+        data = (json.dumps(json.loads(data), indent=2) + "\n").encode("utf-8")
     return data
 
 
@@ -116,14 +116,10 @@ def verify_member_bytes(zip_path: Path, auth: dict, label: str) -> None:
             data = zf.read(name)
             expected = expected_members[name]
             if len(data) != expected["byteLength"]:
-                errors.append(
-                    f"{label}: {name} byte length {len(data)} != {expected['byteLength']}"
-                )
+                errors.append(f"{label}: {name} byte length {len(data)} != {expected['byteLength']}")
             digest = sha256_bytes(data)
             if digest != expected["sha256"]:
-                errors.append(
-                    f"{label}: {name} sha256 {digest} != {expected['sha256']}"
-                )
+                errors.append(f"{label}: {name} sha256 {digest} != {expected['sha256']}")
     if errors:
         print("V5.2 RELEASE MEMBER VERIFICATION FAILED")
         for error in errors:
@@ -135,7 +131,6 @@ def restore_immutable_release(auth: dict) -> Path:
     chunk_paths = sorted(AUTH_DIR.glob(auth["release"]["chunkGlob"]))
     if not chunk_paths:
         raise SystemExit("No immutable V5.2 release chunks found")
-
     encoded = "".join(path.read_text().strip() for path in chunk_paths)
     try:
         data = base64.b64decode(encoded, validate=True)
@@ -145,13 +140,10 @@ def restore_immutable_release(auth: dict) -> Path:
     expected_length = auth["release"]["byteLength"]
     expected_sha = auth["release"]["sha256"]
     if len(data) != expected_length:
-        raise SystemExit(
-            f"Immutable V5.2 release byte length {len(data)} != {expected_length}"
-        )
+        raise SystemExit(f"Immutable V5.2 release byte length {len(data)} != {expected_length}")
     digest = sha256_bytes(data)
     if digest != expected_sha:
         raise SystemExit(f"Immutable V5.2 release sha256 {digest} != {expected_sha}")
-
     FINAL_OUT.write_bytes(data)
     verify_member_bytes(FINAL_OUT, auth, "immutable release")
     return FINAL_OUT
@@ -161,10 +153,25 @@ def build() -> Path:
     auth = authority()
     candidate = build_candidate()
     verify_member_bytes(candidate, auth, "rebuilt candidate")
-    final = restore_immutable_release(auth)
 
+    expected_sha = auth["release"]["sha256"]
+    candidate_sha = sha256(candidate)
     print(candidate)
-    print(f"rebuilt candidate sha256: {sha256(candidate)}")
+    print(f"rebuilt candidate sha256: {candidate_sha}")
+
+    if candidate_sha == expected_sha:
+        # Preferred path: the pinned build already reproduces the exact historical
+        # archive, so no binary recovery material is required at runtime.
+        shutil.copyfile(candidate, FINAL_OUT)
+        final = FINAL_OUT
+        print("rebuilt candidate is byte-identical to immutable V5.2 authority")
+    else:
+        print("rebuilt ZIP stream differs; using immutable binary fallback")
+        final = restore_immutable_release(auth)
+
+    if sha256(final) != expected_sha:
+        raise SystemExit("Final V5.2 release does not match immutable authority SHA")
+    verify_member_bytes(final, auth, "final release")
     print(final)
     print(f"immutable release sha256: {sha256(final)}")
     return final
