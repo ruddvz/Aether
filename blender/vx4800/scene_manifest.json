@@ -66,6 +66,7 @@
     "The 0.11.0 lookdev reduces visual-only glass absorption, refines the sculptural butterfly centre and repairs full-elevation framing.",
     "The 0.12.0 environment library adds staircase-void, hospitality-lobby and gallery-atrium contexts using the same authority and scale rules as the residential baseline.",
     "The 0.13.0 final framing pass gives the residential-medium canopy breathing room, recentres the butterfly macro and makes repeated lookdev/finish operations idempotent.",
+    "The 0.13.0 baseline was reconciled after current engineering, lifecycle, certification, Radiance and spectral-validation work; those domains remain upstream authority and are not duplicated or overridden here.",
     "The existing dark studio product stage is the premium studio context; it is not duplicated as a second architectural environment.",
     "Finish variants are render-time visualization overrides only and do not select or qualify a manufacturing finish.",
     "The nominal rotation action is a constant-speed visualization reference derived from the controlled nominal RPM; it excludes acceleration, braking, wind, cable dynamics and butterfly flapping.",
