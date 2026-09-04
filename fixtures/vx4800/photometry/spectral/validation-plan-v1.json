@@ -1,0 +1,101 @@
+{
+  "$schema": "../../../../schemas/aether-spectral-validation-report.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authority": "qualification-plan",
+  "status": "open",
+  "purpose": "Define controlled spectral-power-distribution evidence and independent colour-quality calculations without promoting synthetic data or an older software method to current product authority.",
+  "currentProductTargets": {
+    "cctK": 3000,
+    "criRaMinimum": 92,
+    "tm30Thresholds": "not-yet-released",
+    "duvThreshold": "not-yet-released"
+  },
+  "standardsReferences": [
+    {
+      "id": "CIE-013.3-1995",
+      "role": "legacy-general-colour-rendering-index",
+      "status": "current-interim-reference",
+      "note": "CIE states that Ra remains current during transition and encourages parallel reporting with the newer CIE fidelity index."
+    },
+    {
+      "id": "ANSI-IES-TM-30-24",
+      "role": "current-ies-colour-rendition-method",
+      "status": "current-target",
+      "note": "Current product TM-30 authority. An older open-source implementation must not be represented as TM-30-24 compliance."
+    },
+    {
+      "id": "ANSI-IES-TM-40-24",
+      "role": "current-ies-cct-duv-method",
+      "status": "current-target",
+      "note": "Current IES reference for CCT and distance from the Planckian locus. Independent software calculations are cross-checks unless the released method is demonstrated equivalent."
+    },
+    {
+      "id": "ANSI-IES-LP-30-26",
+      "role": "colour-rendition-specification-guidance",
+      "status": "reference"
+    }
+  ],
+  "softwareToolchain": {
+    "package": "colour-science",
+    "version": "0.4.7",
+    "license": "BSD-3-Clause",
+    "supportedCalculationsUsed": [
+      "CIE 1995 CRI Ra and special indices",
+      "CIE 2017 colour fidelity index Rf",
+      "Ohno 2013 CCT/Duv independent calculation",
+      "ANSI/IES TM-30-18 Rf/Rg compatibility calculation"
+    ],
+    "knownAuthorityLimit": "colour-science 0.4.7 exposes ANSI/IES TM-30-18, not TM-30-24. TM-30-18 results are independent compatibility checks only."
+  },
+  "sourceRequirements": {
+    "acceptedProductSourceClasses": ["supplier", "laboratory"],
+    "syntheticSourcePermittedForSoftwareTestOnly": true,
+    "exactRawSpdBytesRequired": true,
+    "sha256Required": true,
+    "exactHeadOpticConfigurationRequired": true,
+    "minimumProductCoverageNm": [380, 780],
+    "maximumProductSampleStepNm": 5,
+    "normalizationMayChangeAbsoluteScaleButNotSpectralShape": true
+  },
+  "requiredProductEvidence": [
+    "raw spectral power distribution",
+    "raw SPD SHA-256",
+    "exact luminaire/head/optic/CCT/drive-current or control configuration",
+    "measurement source and laboratory/supplier identity",
+    "measurement date and instrument/report reference where available",
+    "current TM-30-24 supplier/lab/IES-tool report or equivalent controlled primary evidence",
+    "independent calculation report from repository toolchain"
+  ],
+  "metricsToRecord": [
+    "CCT",
+    "Duv",
+    "CRI Ra",
+    "CRI R9",
+    "CIE 2017 Rf",
+    "TM-30-18 compatibility Rf",
+    "TM-30-18 compatibility Rg"
+  ],
+  "promotionGate": {
+    "exactSpdControlled": false,
+    "exactConfigurationControlled": false,
+    "supplierOrLabProvenanceControlled": false,
+    "cieCriCrossCheckCompleted": false,
+    "cie2017FidelityCrossCheckCompleted": false,
+    "cctDuvCrossCheckCompleted": false,
+    "tm3018CompatibilityCrossCheckCompleted": false,
+    "tm3024PrimaryEvidenceControlled": false,
+    "colourQualityCriteriaReleased": false,
+    "spectralEvidenceApproved": false,
+    "productPhotometryApproved": false
+  },
+  "rules": [
+    "Synthetic blackbody or other generated SPD data is test-only and can never close a product evidence gate.",
+    "TM-30-18 calculations from colour-science must never be labelled TM-30-24 results.",
+    "Published CRI/CCT marketing values do not replace controlled raw SPD and exact configuration provenance.",
+    "A successful spectral software workflow is not certification and does not approve the final head family.",
+    "No TM-30 threshold is invented before the product colour-quality specification is released.",
+    "Product photometry remains conceptual until exact angular photometry and exact spectral evidence are both controlled."
+  ]
+}
