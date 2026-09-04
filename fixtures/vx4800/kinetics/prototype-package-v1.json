@@ -1,0 +1,160 @@
+{
+  "$schema": "../../../schemas/aether-kinetic-prototype-package.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "packageRevision": "1.0.0",
+  "status": "pre-prototype-engineering-input-not-released",
+  "authority": "engineering-development-input",
+  "finalPrototypePackageReleased": false,
+  "controlledBaseline": {
+    "elementCount": 240,
+    "sizeAllocation": {"S": 66, "M": 144, "L": 30},
+    "canopyEnvelopeMm": [2400, 1500, 150],
+    "rotatingCarrierCoordinationMm": {"width": 2260, "depth": 1330, "thicknessParameter": 24},
+    "speedRpm": {"minimum": 0.08, "nominal": 0.36, "maximum": 0.65},
+    "fixedAccentHeadCount": 14,
+    "slipRingStatus": "not-required-by-current-architecture",
+    "engineeringSchedule": "../composition/engineering-v1.3.0.csv",
+    "geometryParameters": "../geometry/parameters-v1.3.0.json"
+  },
+  "packageBoundary": {
+    "manufacturingGeometryAuthorityChanged": false,
+    "controlledSetoutChanged": false,
+    "poweredRotatingDeviceIntroduced": false,
+    "coordinationOnly": true,
+    "rule": "This package defines mechanical interfaces and evidence requirements. It is not manufacturing geometry and cannot move the 240 exits, 14 fixed heads or canopy envelope."
+  },
+  "arrangementPrinciples": [
+    "Primary structural bearing/support, propulsion, direct-carrier braking, service locking, feedback and secondary retention are separate functional interfaces even if they share the same fixed canopy frame.",
+    "The 24 mm rotating-carrier value remains a coordination parameter and is not a permitted axial stack height for bearing/drive/brake/retention hardware.",
+    "Final axial and radial stack-up is not frozen until the selected bearing, drive, brake and retention concepts have controlled mating dimensions and tolerance data.",
+    "All rotating electronics remain prohibited under the current architecture; rotating feedback features are passive.",
+    "Any concept that requires moving a controlled cable exit or LED position becomes a controlled design-change proposal rather than an implicit packaging adjustment.",
+    "Service-removable items must be replaceable without destructive removal of the canopy or carrier."
+  ],
+  "interfaceZones": [
+    {
+      "id": "KZ-PRIMARY-BEARING",
+      "purpose": "Carry primary gravity, radial and overturning loads between fixed structural frame and rotating hub/carrier.",
+      "fixedSide": ["machined or otherwise supplier-compliant bearing support ring", "fixed structural frame", "bearing fastener access"],
+      "rotatingSide": ["rotating bearing ring", "structural hub/carrier attachment"],
+      "envelopeStatus": "coordination-only-tbd",
+      "mustNotBecomeLoadPath": ["decorative canopy skin", "motor/reducer", "bearing seal", "sensor bracket"],
+      "requiredInputs": ["actual rotating mass", "center of gravity", "combined axial/radial/moment load cases", "selected bearing mounting flatness/rigidity requirements", "bolt/preload procedure", "required running torque/runout"]
+    },
+    {
+      "id": "KZ-POSITIVE-DRIVE",
+      "purpose": "Transmit propulsion torque from fixed drive to a dedicated rotating drive interface without becoming the primary support path.",
+      "fixedSide": ["motor/reducer mount", "drive sprocket or pinion", "adjustment/tensioning mechanism", "guarding"],
+      "rotatingSide": ["synchronous toothed ring or ring gear under qualification"],
+      "envelopeStatus": "coordination-only-tbd",
+      "mustNotBecomeLoadPath": ["primary vertical support", "secondary retention", "service lock"],
+      "requiredInputs": ["required torque envelope", "transmission ratio", "selected belt/gear geometry", "pretension and tangential forces", "bearing/support reaction impact", "service access", "noise/vibration evidence"]
+    },
+    {
+      "id": "KZ-DIRECT-CARRIER-BRAKE",
+      "purpose": "Provide a fixed-side power-off holding/fault-stop architecture that can act directly on the rotating carrier independently of a failed drive transmission where required by the released risk assessment.",
+      "fixedSide": ["spring-applied electrically released caliper or equivalent", "fixed brake reaction bracket", "manual-release/service access"],
+      "rotatingSide": ["passive annular brake ring/disc attached to qualified carrier structure"],
+      "envelopeStatus": "coordination-only-tbd",
+      "mustNotBecomeLoadPath": ["primary gravity support", "mechanical service lock"],
+      "requiredInputs": ["holding torque", "fault-stop torque and energy", "effective brake radius", "disc/ring thickness and runout tolerance", "thermal duty", "release voltage/control interface from Issue #11", "wear inspection method", "transmission-disconnect fault case"]
+    },
+    {
+      "id": "KZ-SERVICE-LOCK",
+      "purpose": "Provide a positive mechanical restraint for technician access after verified zero speed and isolation.",
+      "fixedSide": ["double-shear or equivalent lock bracket", "captive positive lock device", "direct visual verification access", "optional fixed lock-state sensor"],
+      "rotatingSide": ["dedicated receiver ring/lugs isolated from precision feedback and brake friction surfaces"],
+      "envelopeStatus": "coordination-only-tbd",
+      "mustNotBecomeLoadPath": ["normal operating brake", "motion control feedback"],
+      "requiredInputs": ["approved service load case", "receiver indexing strategy", "carrier runout/tolerance", "proof load", "engagement travel", "LOTO procedure", "mis-engagement geometry"]
+    },
+    {
+      "id": "KZ-SECONDARY-RETENTION",
+      "purpose": "Arrest abnormal carrier separation/tilt after relevant primary support failure without routine normal-operation contact.",
+      "fixedSide": ["multiple fixed catch sectors", "independent fixed structural attachment regions", "inspection access"],
+      "rotatingSide": ["multiple distributed passive capture features attached outside relevant primary-bearing fastener failure paths"],
+      "envelopeStatus": "coordination-only-tbd",
+      "mustNotBecomeLoadPath": ["normal running support", "bearing preload device", "decorative skin"],
+      "requiredInputs": ["abnormal load case", "failure coverage/FMEA", "normal clearance tolerance stack", "engagement travel", "fixed-frame reactions", "proof-test method", "post-engagement inspection criteria"]
+    },
+    {
+      "id": "KZ-FEEDBACK",
+      "purpose": "Measure actual carrier position/speed and provide index/overspeed plausibility while retaining powered electronics on the fixed side.",
+      "fixedSide": ["primary non-contact readhead", "independent/diverse plausibility sensor if required", "adjustable protected brackets", "service connectors"],
+      "rotatingSide": ["passive scale/ring/targets", "distinct passive reference/index feature"],
+      "envelopeStatus": "coordination-only-tbd",
+      "mustNotBecomeLoadPath": ["carrier support", "brake reaction", "service restraint"],
+      "requiredInputs": ["required resolution at 0.08 rpm", "fault detection latency", "runout/air-gap tolerance", "contamination environment", "reference strategy", "selected sensor interface", "risk-assessment redundancy decision"]
+    },
+    {
+      "id": "KZ-BALANCE-TRIM",
+      "purpose": "Provide controlled trim-mass adjustment without moving any cable exit.",
+      "fixedSide": ["inspection/reference access only"],
+      "rotatingSide": ["indexed captive trim stations", "secondary capture for trim masses", "witnessed fasteners"],
+      "envelopeStatus": "coordination-only-tbd",
+      "mustNotBecomeLoadPath": ["cable exit relocation mechanism", "service lock receiver unless specifically co-engineered and approved"],
+      "requiredInputs": ["production S/M/L mass distributions", "full rotating component mass map", "allowable trim locations", "required correction range", "fastener retention method", "replacement-element procedure"]
+    },
+    {
+      "id": "KZ-SERVICE-CORRIDOR",
+      "purpose": "Reserve safe access for bearing, drive, brake, sensors, retention inspection and lock operation inside the canopy envelope.",
+      "fixedSide": ["removable service panels", "tool/hand access", "inspection sight lines", "component extraction paths"],
+      "rotatingSide": ["defined no-contact swept envelope"],
+      "envelopeStatus": "coordination-only-tbd",
+      "mustNotBecomeLoadPath": ["false ceiling", "removable panel", "electrical tray"],
+      "requiredInputs": ["exact selected component dimensions", "required tool clearances", "component replacement path", "guarding", "electrical isolation zones", "canopy structural member layout"]
+    }
+  ],
+  "loadDependentDimensions": [
+    {"id": "bearingPitchDiameterAndSection", "status": "tbd", "releaseDependency": "approved bearing loads plus supplier selection"},
+    {"id": "bearingSupportRingThicknessAndRibbing", "status": "tbd", "releaseDependency": "structural stiffness/flatness calculation and selected bearing"},
+    {"id": "bearingBoltPatternAndPreload", "status": "tbd", "releaseDependency": "exact bearing variant and supplier instructions"},
+    {"id": "driveRingPitchDiameter", "status": "tbd", "releaseDependency": "torque calculation, transmission selection and packaging"},
+    {"id": "beltOrGearWidthAndPretension", "status": "tbd", "releaseDependency": "approved torque and exact transmission variant"},
+    {"id": "brakeEffectiveRadius", "status": "tbd", "releaseDependency": "approved holding/fault-stop torque and selected brake family"},
+    {"id": "brakeRingThicknessAndMaterial", "status": "tbd", "releaseDependency": "selected brake friction interface, thermal duty and structural check"},
+    {"id": "serviceLockPinDiameterAndReceiverSection", "status": "tbd", "releaseDependency": "approved service load case and proof factor from released risk/structural design"},
+    {"id": "secondaryRetentionGapAndEngagementTravel", "status": "tbd", "releaseDependency": "tolerance stack, runout, deflection and abnormal load case"},
+    {"id": "secondaryRetentionSectionAndFasteners", "status": "tbd", "releaseDependency": "abnormal load calculation and failure-coverage review"},
+    {"id": "feedbackRingDiameterAndReadheadAirGap", "status": "tbd", "releaseDependency": "sensor family selection and carrier runout"},
+    {"id": "trimStationCapacity", "status": "tbd", "releaseDependency": "production mass variation and full rotating mass map"},
+    {"id": "serviceExtractionClearances", "status": "tbd", "releaseDependency": "exact selected components and canopy frame layout"}
+  ],
+  "drawingAndCadRequirements": {
+    "nextControlledPrototypeDrawingSet": [
+      "fixed-frame plan showing bearing, drive, brake, lock, sensor and retention zones",
+      "rotating hub/carrier plan showing dedicated drive, brake, lock, feedback and retention interfaces",
+      "radial/axial interface stack section with all TBD dimensions clearly identified",
+      "bearing support datum/flatness and fastener access drawing after bearing selection",
+      "direct-carrier brake ring/caliper concept drawing",
+      "service-lock detail and engagement/mis-engagement section",
+      "secondary-retention normal-clearance and failed-support engagement sections",
+      "sensor readhead/passive target layout and service adjustment detail",
+      "drive tensioning/guarding/service-removal detail",
+      "component extraction/service-access study"
+    ],
+    "cadRules": [
+      "do not modify controlled cable-exit coordinates",
+      "do not modify 14 fixed LED coordinates",
+      "do not present coordination geometry as released manufacturing geometry",
+      "all load-dependent dimensions remain parameterized/TBD until evidence exists",
+      "separate fixed and rotating bodies/layers/components",
+      "model normal retention clearance and abnormal engagement as separate states",
+      "include service-tool and removal envelopes, not only assembled solids"
+    ]
+  },
+  "prototypePromotionGate": {
+    "controlledMassInputsAvailable": false,
+    "carrierStructuralConceptReviewed": false,
+    "bearingInterfaceConceptReviewed": false,
+    "driveInterfaceConceptReviewed": false,
+    "directCarrierBrakeConceptReviewed": false,
+    "serviceLockDetailReviewed": false,
+    "secondaryRetentionDetailReviewed": false,
+    "feedbackTargetLayoutReviewed": false,
+    "t1RigReleasedForBuild": false,
+    "t2RigReleasedForBuild": false,
+    "prototypeDrawingSetReleased": false
+  }
+}
