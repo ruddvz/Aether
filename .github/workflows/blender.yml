@@ -52,7 +52,7 @@ jobs:
           tar -xf blender-5.2.1-linux-x64.tar.xz
           rm blender-5.2.1-linux-x64.tar.xz blender-5.2.1.sha256
 
-      - name: Build Blender master and preview
+      - name: Build Blender master
         shell: bash
         run: |
           set -euo pipefail
@@ -60,10 +60,8 @@ jobs:
           "$BLENDER" --background --factory-startup \
             --python blender/vx4800/build_entrypoint.py -- \
             --repo-root "$GITHUB_WORKSPACE" \
-            --output blender/vx4800/VX4800_MASTER.blend \
-            --render-preview build/blender/VX4800_HERO_PREVIEW.png
+            --output blender/vx4800/VX4800_MASTER.blend
           test -s blender/vx4800/VX4800_MASTER.blend
-          test -s build/blender/VX4800_HERO_PREVIEW.png
 
       - name: Validate generated Blender scene
         shell: bash
@@ -81,6 +79,19 @@ jobs:
           if report.get('status') != 'pass':
               raise SystemExit(f"Blender validation did not pass: {report}")
           PY
+
+      - name: Render quick hero preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          BLENDER="$GITHUB_WORKSPACE/.blender-cache/blender-5.2.1-linux-x64/blender"
+          "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
+            --python blender/vx4800/render_shot.py -- \
+            --repo-root "$GITHUB_WORKSPACE" \
+            --camera CAM_HERO_FRONT_3Q \
+            --preset preview \
+            --output build/blender/VX4800_HERO_PREVIEW.png
+          test -s build/blender/VX4800_HERO_PREVIEW.png
 
       - name: Upload Blender validation outputs
         uses: actions/upload-artifact@v4
