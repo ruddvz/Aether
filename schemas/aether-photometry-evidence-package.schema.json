@@ -64,12 +64,14 @@
     "consistency": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["angularAndPackageConfigurationMatch", "spectralAndPackageConfigurationMatch", "angularAndSpectralConfigurationMatch", "candidateConfigurationControlled", "allExactConfigurationChecksPass"],
+      "required": ["angularAndPackageConfigurationMatch", "spectralAndPackageConfigurationMatch", "angularAndSpectralConfigurationMatch", "candidateConfigurationControlled", "candidatePhotometryVerified", "candidateIesHashMatches", "allExactConfigurationChecksPass"],
       "properties": {
         "angularAndPackageConfigurationMatch": {"type": "boolean"},
         "spectralAndPackageConfigurationMatch": {"type": "boolean"},
         "angularAndSpectralConfigurationMatch": {"type": "boolean"},
         "candidateConfigurationControlled": {"type": "boolean"},
+        "candidatePhotometryVerified": {"type": "boolean"},
+        "candidateIesHashMatches": {"type": "boolean"},
         "allExactConfigurationChecksPass": {"type": "boolean"}
       }
     },
@@ -94,7 +96,7 @@
       "if": {"properties": {"status": {"const": "eligible-for-further-review"}}},
       "then": {
         "properties": {
-          "consistency": {"properties": {"allExactConfigurationChecksPass": {"const": true}}},
+          "consistency": {"properties": {"allExactConfigurationChecksPass": {"const": true}, "candidatePhotometryVerified": {"const": true}, "candidateIesHashMatches": {"const": true}}},
           "eligibility": {"properties": {"packageEligibleForFurtherReview": {"const": true}}}
         }
       }
