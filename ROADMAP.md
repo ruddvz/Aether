@@ -7,7 +7,7 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [x] Engineering and presentation authority separation
 - [x] 240-element controlled VORTEX engineering schedule
 - [x] Deterministic V5.2 viewer generation
-- [x] Deterministic release ZIP and SHA-256 manifest
+- [x] Repository-native product artifact build and controlled hash validation
 - [x] GitHub Pages catalog architecture
 - [x] Public versioned JSON Schemas
 - [x] Canonical fixture JSON public route
@@ -23,7 +23,7 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [x] LM-63 raw-file ingestion with SHA-256 provenance
 - [x] Parsed IES report schema
 - [x] Normalized polar SVG generation
-- [ ] Shortlist real architectural head family
+- [x] Formal supplier-qualification shortlist
 - [ ] Acquire exact supplier/lab IES files
 - [ ] Independent parser/viewer cross-check
 - [x] Browser measured-distribution adapter
@@ -42,7 +42,7 @@ This roadmap describes repository capabilities, not promised commercial release 
 
 ## Viewer and review tooling
 - [x] Refactor single-file development source into reusable Three.js modules
-- [x] Keep generated standalone HTML as a release artifact
+- [x] Keep generated standalone HTML as a deployable viewer artifact
 - [x] Add optimized GLB pipeline with glTF-Transform
 - [x] Add three-mesh-bvh inspection and proximity tools
 - [x] Add measurement/annotation mode
