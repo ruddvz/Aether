@@ -1,73 +1,87 @@
 # VX4800 Blender visual QA
 
-This document tracks render-quality findings for the AETHERIA VORTEX VX4800-BF-01 Blender visualization master. It is visualization QA only. Controlled engineering data, manufacturing decisions and measured photometry remain upstream authority.
+This document records visualization QA for the AETHERIA VORTEX VX4800-BF-01 Blender master. It is not engineering, manufacturing, measured-photometry or construction authority.
 
-## Baseline reviewed
+## Controlled baseline
 
-The first Blender-native baseline was the Cycles CPU preview produced by the successful `Build VX4800 Blender master` workflow run 33891009803 from source commit `44960367dae48b840272fd0a7f92c66d880a080e`.
+All approved visualization revisions preserve the controlled engineering mapping:
 
-The scene itself validated correctly: 240 butterfly instances, 66 S / 144 M / 30 L, 240 main suspension splines, 720 yoke/lead splines, 14 fixed LED-head placeholders, 14 conceptual render lights and six named cameras.
+- 240 butterfly instances;
+- 66 S / 144 M / 30 L;
+- 240 main suspension splines;
+- 720 visual yoke/lead splines;
+- 14 fixed LED-head positions;
+- engineering revision 1.3.0;
+- presentation revision 5.2.0.
 
-## Highest-impact visual deficiencies in the baseline preview
+## Early baseline findings
 
-1. The overall vortex silhouette is difficult to read because the fixture is rendered against a very bright ivory field with insufficient edge separation.
-2. The hero camera does not show the complete fixture. The canopy is outside the frame and the lower tail is clipped.
-3. Butterflies read as small pale shards rather than premium optical objects. The prior wing geometry is mostly flat and the body language is too literal/anatomical for the intended sculptural abstraction.
-4. Optical transmission and refraction are not legible. Most butterflies render nearly white, with weak edge highlights and little internal value variation.
-5. The dense suspension field is too visually dominant relative to the butterfly field.
-6. The photographic light rig is too flat. Key, fill and rim hierarchy is weak and the right side of the image is overexposed.
-7. Canopy, carrier and LED-head finishes have limited material separation and do not yet read as premium PVD/brushed/satin studies.
-8. The fixed LED heads and their role are difficult to see in the hero image.
-9. The studio stage creates distracting bright geometry and gives little useful scale or depth information.
-10. The image has excess unstructured negative space while still failing to contain the full product height.
+The first Blender-native Cycles baseline from workflow run `33891009803` was technically valid but visually weak. The fixture was washed out against an ivory stage, the canopy and lower tail were clipped, suspension dominated the image, the butterflies read as pale shards, optical transmission was unclear and the photographic-light hierarchy was flat.
 
-## Visualization revision 0.2.0 review
+Revisions 0.2 and 0.3 established the dark premium studio direction, contained the full fixture, suppressed conceptual fixture beams in clean product photography, removed the distracting stage horizon and replaced the first glitter-like radial facets with broader optical faces.
 
-The 0.2.0 Cycles preview was produced by workflow run 33898059475 from source commit `8b1370130e150e2a1b349648d2d6d2eb61f7209b`.
+## Optical-detail review
 
-Improvements visible in the render:
+Revision 0.4 introduced a macro camera aimed at controlled instance `VX-001` without moving the instance. That close view proved that the then-current material/body balance still read too dark and mirror-like, and that the sculptural centre was oversized relative to the wings.
 
-- the full canopy and controlled lower tail fit in frame;
-- the overall descending vortex is readable;
-- the canopy and carrier have clearer metal response;
-- linked butterfly geometry has moved away from literal insect anatomy;
-- the dark studio direction provides substantially more contrast than the original ivory stage.
+Later lookdev reduced suspension prominence, introduced an isolated neutral macro context and improved wing shaping and lighting. Revision 0.11 reduced visualization-only volume absorption to 3.5 and reduced the sculptural centre while deliberately keeping thin-film/rainbow effects disabled because no controlled coating specification supports them.
 
-Remaining defects:
+## Architectural review
 
-1. The 240 suspension lines still form a bright curtain and compete with the butterflies.
-2. The separate floor and backdrop planes create a visible diagonal studio horizon through the composition.
-3. The lower fixture dissolves into an overexposed floor pool. Much of that pool comes from the conceptual 14-head beam study, which should not be conflated with clean product photography.
-4. The first radial fan facet layout creates too many small reflective triangles, so the optical wings can read like silver glitter rather than transparent decorative glass.
-5. The hero viewpoint is too high and reveals the canopy top surface, weakening the installed architectural-lighting reading.
-6. Background illumination is still too bright and uneven for a clean optical-product baseline.
+The architectural library was developed after the studio/product baseline became stable. The final library contains four visualization-only installed contexts:
 
-## Visualization revision 0.3.0 review
+1. double-height residential;
+2. staircase void;
+3. hospitality lobby;
+4. gallery atrium.
 
-The 0.3.0 Cycles preview was produced by workflow run 33898655806 from source commit `d4c99ab1c8323123bca268d3a56fdbff37908eeb`.
+The dark studio remains a product-photography context rather than a fifth architectural environment.
 
-Improvements visible in the render:
+Architectural QA focused on keeping the fixture dominant, providing plausible scale, preserving a useful contrast field behind transparent butterflies, avoiding decorative competition and keeping every room object/light explicitly outside engineering authority.
 
-- the floor and diagonal studio seam are gone;
-- the conceptual 14-head beams are suppressed in the clean preview instead of blowing out the lower stage;
-- the hero viewpoint now reads the canopy from below;
-- the dark background gives the complete controlled fixture silhouette strong separation;
-- broad optical wing faces reduce the earlier glitter/fan-facet effect.
+The residential wide, staircase, hospitality, atrium and vertical-marketing compositions passed the final visual review. The residential-medium camera required one last framing correction because revision 0.12 clipped the canopy too tightly.
 
-Remaining defects:
+## Finish studies
 
-1. Suspension is still brighter than intended and remains visually competitive with the butterfly field.
-2. At full-fixture distance, transparent wings naturally collapse into specular edge highlights, so the hero render alone cannot prove whether the optical material is believable.
-3. A close optical view is needed before changing glass parameters further; otherwise lookdev risks tuning the material to compensate for a camera-scale problem.
+The final render-time appearance studies are:
 
-## Visualization revision 0.4.0 goals
+- dark champagne;
+- black titanium;
+- brushed brass;
+- satin nickel.
 
-- Further quiet the suspension appearance using only visualization display diameter and roughness changes, with no rated-hardware claim.
-- Add a single butterfly macro camera aimed at the controlled `VX-001` L instance without moving or altering the instance.
-- Render both hero and macro previews in CI so every lookdev revision is judged at fixture scale and optical-detail scale.
-- Introduce a subtle blue-green edge absorption study in the glass while explicitly labelling the absorption density as a visualization lookdev value rather than a commercial material property.
-- Keep thin-film interference disabled. Blender 5.2 supports it, but rainbow interference would be inappropriate without a specified optical coating and would push the material toward fantasy glass.
+All four are visually distinguishable in the canopy/detail review. They are presentation overrides only and do not approve PVD chemistry, substrate, brushing process, colour tolerance, durability or supplier.
 
-## Blender 5.2 rendering basis
+## Final revision 0.13.0 review
 
-Cycles remains the production renderer. The optical material uses full transmission, an IOR-based dielectric surface, very low surface roughness and light volume absorption. The scene keeps sufficient transmission bounces for stacked glass views. Refractive caustics are not treated as measured optical output and should only be enabled selectively where the render benefit justifies the noise/performance cost.
+Final source commit `700949ac60e81ebd5742911841a9db0a3590e594` was exercised by Blender workflow run `33918998474` and ordinary repository validation run `33918998481`.
+
+The Blender run completed successfully with:
+
+- Blender 5.2.1 LTS master generation;
+- Blender-native scene validation;
+- repeated master-refinement idempotence checks;
+- sequential finish-switch checks in one Blender session;
+- all 12 targeted parallel Cycles QA renders;
+- combined validation/render artifact generation.
+
+The ordinary repository run also completed successfully, covering canonical product data, Blender source policy, engineering geometry, optimized web geometry, regression tests, product artifacts, Pages assembly and public entry points.
+
+Final visual findings:
+
+- product hero: approved as the clean dark-studio baseline;
+- full elevation: approved with full fixture contained;
+- butterfly macro: approved after recentering and tightening; transparent/faceted optical response is legible without unsupported fantasy dispersion;
+- residential wide: approved;
+- residential medium: approved after the 0.13 camera correction restored ceiling/canopy breathing room;
+- vertical marketing: approved;
+- staircase void: approved;
+- hospitality lobby: approved;
+- gallery atrium: approved;
+- black titanium, brushed brass and satin nickel comparison renders: approved as distinct visualization studies.
+
+The final Blender visualization baseline is therefore accepted for repository integration. This acceptance does not qualify the physical butterfly material, attachment, suspension hardware, kinetic system, photometric supplier data, structural interface or certification evidence.
+
+## Rendering basis
+
+Cycles remains the production renderer. The optical material uses transmission, IOR-based dielectric response, low micro-roughness and restrained visualization-only edge absorption. Refractive/caustic behaviour is treated as rendering lookdev, not measured fixture output. Exact supplier IES/LDT and physical optical qualification remain separate upstream evidence domains.
