@@ -1,0 +1,234 @@
+{
+  "$schema": "../../../schemas/aether-kinetic-interface-control.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "interfaceRevision": "1.0.0",
+  "status": "engineering-interface-input-not-released",
+  "authority": "engineering-development-input",
+  "finalInterfaceControlReleased": false,
+  "controlledBaseline": {
+    "elementCount": 240,
+    "sizeAllocation": {"S": 66, "M": 144, "L": 30},
+    "canopyEnvelopeMm": [2400, 1500, 150],
+    "rotatingCarrierCoordinationMm": {"width": 2260, "depth": 1330, "thicknessParameter": 24},
+    "speedRpm": {"minimum": 0.08, "nominal": 0.36, "maximum": 0.65},
+    "fixedAccentHeadCount": 14,
+    "slipRingStatus": "not-required-by-current-architecture"
+  },
+  "datumFramework": [
+    {
+      "id": "KD-A-FIXED-STRUCTURE",
+      "role": "Primary fixed structural and machining reference plane for the kinetic mechanism.",
+      "status": "tbd-to-drawing",
+      "rule": "Datum A must resolve to qualified fixed structure and must not reference decorative canopy skin, false ceiling, removable trim or service panels."
+    },
+    {
+      "id": "KD-B-ROTATION-AXIS",
+      "role": "Functional vertical rotation axis shared by the bearing, carrier, direct-carrier brake and feedback coordination model.",
+      "status": "functional-reference",
+      "rule": "Datum B is a functional axis only until the bearing and structural support geometry are selected and controlled; no fabricated bore or bolt circle may be inferred from it."
+    },
+    {
+      "id": "KD-C-INDEX-AZIMUTH",
+      "role": "Angular service and reference-index datum tied to the controlled product orientation.",
+      "status": "tbd-to-drawing",
+      "rule": "Datum C must be physically recoverable after power restoration and must not imply that arriving at the index means the mechanical service lock is engaged."
+    },
+    {
+      "id": "KD-D-CARRIER-INTERFACE-PLANE",
+      "role": "Functional rotating carrier interface plane used to coordinate axial stack and service envelopes.",
+      "status": "tbd-to-drawing",
+      "rule": "The existing 24 mm carrier thickness parameter is not Datum D and must not be used as the available mechanism stack height."
+    }
+  ],
+  "mechanicalInterfaces": [
+    {
+      "id": "KI-BEARING",
+      "function": "Primary gravity, radial and overturning-load transfer while permitting continuous vertical-axis rotation.",
+      "fixedSide": ["qualified structural bearing support", "supplier-compliant mounting face", "accessible controlled fasteners"],
+      "rotatingSide": ["selected bearing rotating ring", "structural hub/carrier attachment"],
+      "reactionPath": "rotating carrier -> bearing -> fixed structural support -> site structure",
+      "prohibitedCommonCause": ["motor/reducer as vertical support", "decorative canopy skin as bearing support", "secondary-retention attachment relying only on the same local failed bearing bolts"],
+      "serviceRequirement": "Bearing fasteners, lubrication points where applicable, mounting face/runout references and removal path must remain inspectable and serviceable.",
+      "releaseDependencies": ["controlled rotating mass and CG", "combined load cases", "selected bearing exact mating data", "support stiffness/flatness calculation", "controlled fastener preload method"]
+    },
+    {
+      "id": "KI-DRIVE",
+      "function": "Apply commanded propulsion torque through a positive transmission without becoming the primary support or access restraint.",
+      "fixedSide": ["motor/reducer", "drive sprocket or pinion", "adjustment/tensioning bracket", "guard"],
+      "rotatingSide": ["dedicated synchronous toothed ring or ring gear under qualification"],
+      "reactionPath": "drive tangential force and pretension reactions -> fixed drive bracket and carrier drive ring -> qualified structural supports",
+      "prohibitedCommonCause": ["gearbox self-locking used as service lock", "drive transmission used as sole fault holding path", "unaccounted belt pretension transferred into bearing/support design"],
+      "serviceRequirement": "Tension/alignment adjustment, guard removal, drive-module extraction and inspection must be possible without disturbing controlled cable exits.",
+      "releaseDependencies": ["approved drive torque envelope", "selected transmission", "pretension/separation forces", "support reaction calculation", "service/removal study"]
+    },
+    {
+      "id": "KI-BRAKE",
+      "function": "Provide power-off holding and qualified fault-stop action directly at the carrier independently of a failed drive transmission where required by risk assessment.",
+      "fixedSide": ["spring-applied electrically released caliper or equivalent", "fixed structural brake reaction bracket", "manual-release access"],
+      "rotatingSide": ["passive carrier brake ring/disc"],
+      "reactionPath": "carrier brake ring -> fixed brake caliper/bracket -> fixed structural support",
+      "prohibitedCommonCause": ["fault holding torque forced only through belt/gear transmission", "brake treated as the mechanical service lock", "rotating electrical release power"],
+      "serviceRequirement": "Friction surfaces, wear/air-gap state, brake-state sensing where selected and guarded manual release must be inspectable without uncontrolled carrier motion.",
+      "releaseDependencies": ["holding torque case", "dynamic stopping energy case", "selected brake exact disc/runout requirements", "thermal duty", "Issue #11 electrical release/control interface"]
+    },
+    {
+      "id": "KI-SERVICE-LOCK",
+      "function": "Provide positive mechanical restraint for technician access after zero speed verification and isolation.",
+      "fixedSide": ["positive captive lock device", "fixed double-shear or equivalently justified bracket", "direct visual verification feature"],
+      "rotatingSide": ["dedicated receiver ring/lugs structurally isolated from precision feedback and brake friction surfaces"],
+      "reactionPath": "carrier service load -> receiver -> positive lock -> fixed structural bracket -> site structure",
+      "prohibitedCommonCause": ["motor torque used as access restraint", "brake status substituted for lock engagement", "lock reaction through precision bearing rolling elements where avoidable", "software index flag treated as physical engagement"],
+      "serviceRequirement": "Engagement must be captive, visually obvious, LOTO-compatible and directly verifiable before access; partial engagement must be geometrically detectable or prevented.",
+      "releaseDependencies": ["approved service load case", "receiver indexing strategy", "runout/tolerance stack", "proof-load method", "mis-engagement validation"]
+    },
+    {
+      "id": "KI-SECONDARY-RETENTION",
+      "function": "Arrest abnormal carrier separation or tilt after relevant primary-support failure without routine running contact.",
+      "fixedSide": ["multiple fixed structural catch sectors", "independent attachment regions", "inspection access"],
+      "rotatingSide": ["multiple distributed passive capture features on qualified carrier structure"],
+      "reactionPath": "abnormally displaced carrier -> distributed capture features -> fixed catch sectors -> fixed structural support",
+      "prohibitedCommonCause": ["all capture attachments lost with one relevant bearing-ring failure", "all capture attachments sharing only the same failed bearing bolts", "decorative skin used as catch structure", "routine retention rubbing used as normal support"],
+      "serviceRequirement": "Normal clearance and contact witness must be inspectable; any engagement removes the fixture from service pending engineering inspection.",
+      "releaseDependencies": ["failure coverage/FMEA", "abnormal load case", "normal clearance tolerance stack", "engagement travel", "fixed-frame reaction calculation", "controlled simulated engagement/proof method"]
+    },
+    {
+      "id": "KI-FEEDBACK-PRIMARY",
+      "function": "Measure carrier position, speed and reference/index state using fixed powered electronics and passive rotating features.",
+      "fixedSide": ["primary readhead", "adjustable protected bracket", "fixed cable/service connection"],
+      "rotatingSide": ["passive scale/target ring", "passive reference/index feature"],
+      "reactionPath": "measurement only; no structural, brake or restraint reaction path permitted",
+      "prohibitedCommonCause": ["sensor bracket used as carrier restraint", "powered rotating encoder introduced without architecture change", "index signal used as proof of service-lock engagement"],
+      "serviceRequirement": "Readhead air gap, alignment, contamination state and replacement adjustment must be inspectable from fixed-side service access.",
+      "releaseDependencies": ["selected sensor family", "required resolution/update behavior at 0.08 rpm", "runout/air-gap stack", "reference strategy"]
+    },
+    {
+      "id": "KI-FEEDBACK-DIVERSE",
+      "function": "Provide independent or sufficiently diverse speed/overspeed plausibility if allocated by the released risk assessment.",
+      "fixedSide": ["independent/diverse fixed sensor channel if required"],
+      "rotatingSide": ["passive target set sufficiently independent from the primary feedback failure mode if required"],
+      "reactionPath": "measurement only; no mechanical load path",
+      "prohibitedCommonCause": ["blindly duplicating the same single failure mechanism", "sharing one software value while claiming independent measurement", "powered rotating target electronics"],
+      "serviceRequirement": "Channel identity and diagnostic disagreement must be testable without dismantling the carrier.",
+      "releaseDependencies": ["released risk assessment safety-function allocation", "fault-detection latency requirement", "selected sensing technology", "common-cause review"]
+    },
+    {
+      "id": "KI-BALANCE-TRIM",
+      "function": "Permit controlled balance correction while preserving all 240 controlled cable-exit coordinates.",
+      "fixedSide": ["inspection/reference access only"],
+      "rotatingSide": ["indexed captive trim stations", "positively retained trim masses", "witnessable fasteners"],
+      "reactionPath": "trim mass inertial/gravity loads -> dedicated carrier trim station -> carrier structure",
+      "prohibitedCommonCause": ["moving cable exits to correct balance", "loose/unretained trim weights", "trim hardware obstructing service lock or retention"],
+      "serviceRequirement": "Trim mass, station ID and fastener state must be recordable and replaceable under the service-lock/LOTO state.",
+      "releaseDependencies": ["Issue #9 production mass distribution", "full rotating mass map", "balance correction calculation", "retention/fastener method"]
+    },
+    {
+      "id": "KI-SERVICE-ACCESS",
+      "function": "Maintain inspection, tooling and component-extraction paths for all kinetic modules without treating removable architecture as structure.",
+      "fixedSide": ["removable panels", "guarding", "tool access", "component extraction routes"],
+      "rotatingSide": ["defined no-contact swept/service envelopes"],
+      "reactionPath": "no primary structural reaction through removable service panels or false ceiling",
+      "prohibitedCommonCause": ["service panel used as primary structure", "electrical tray used as mechanical reaction support", "removal path requiring uncontrolled carrier movement"],
+      "serviceRequirement": "Normal replaceable kinetic modules must have a demonstrated extraction and reinstallation path with carrier positively locked and isolated.",
+      "releaseDependencies": ["exact selected component envelopes", "canopy frame layout", "tool clearances", "guarding design", "electrical isolation zones"]
+    }
+  ],
+  "interfaceParameters": [
+    {"id": "bearingMountingDiameter", "status": "tbd", "value": null, "unit": "mm", "dependency": "exact selected bearing mating drawing", "usedBy": ["KI-BEARING"]},
+    {"id": "bearingSupportFlatness", "status": "tbd", "value": null, "unit": "mm", "dependency": "selected bearing mounting requirement plus support stiffness calculation", "usedBy": ["KI-BEARING"]},
+    {"id": "bearingBoltCircleAndPreload", "status": "tbd", "value": null, "unit": null, "dependency": "exact bearing variant and supplier fastening procedure", "usedBy": ["KI-BEARING"]},
+    {"id": "driveRingPitchDiameter", "status": "tbd", "value": null, "unit": "mm", "dependency": "approved torque, transmission ratio, selected tooth geometry and package study", "usedBy": ["KI-DRIVE"]},
+    {"id": "driveBeltOrGearWidth", "status": "tbd", "value": null, "unit": "mm", "dependency": "approved torque and exact transmission selection", "usedBy": ["KI-DRIVE"]},
+    {"id": "drivePretension", "status": "tbd", "value": null, "unit": "N", "dependency": "exact synchronous transmission selection and supplier calculation", "usedBy": ["KI-DRIVE", "KI-BEARING"]},
+    {"id": "brakeEffectiveRadius", "status": "tbd", "value": null, "unit": "mm", "dependency": "approved holding/fault-stop torque and selected brake family", "usedBy": ["KI-BRAKE"]},
+    {"id": "brakeRingThickness", "status": "tbd", "value": null, "unit": "mm", "dependency": "exact selected brake friction interface, thermal duty and ring structural check", "usedBy": ["KI-BRAKE"]},
+    {"id": "brakeCaliperMountOffset", "status": "tbd", "value": null, "unit": "mm", "dependency": "selected brake mating geometry and final axial stack", "usedBy": ["KI-BRAKE", "KI-SERVICE-ACCESS"]},
+    {"id": "serviceLockPinDiameter", "status": "tbd", "value": null, "unit": "mm", "dependency": "approved service load case, material and proof methodology", "usedBy": ["KI-SERVICE-LOCK"]},
+    {"id": "serviceLockEngagementTravel", "status": "tbd", "value": null, "unit": "mm", "dependency": "receiver geometry and tolerance/mis-engagement study", "usedBy": ["KI-SERVICE-LOCK"]},
+    {"id": "retentionNormalClearance", "status": "tbd", "value": null, "unit": "mm", "dependency": "bearing/carrier runout, structural deflection and complete tolerance stack", "usedBy": ["KI-SECONDARY-RETENTION"]},
+    {"id": "retentionAbnormalEngagementTravel", "status": "tbd", "value": null, "unit": "mm", "dependency": "failure-state geometry and approved abnormal load case", "usedBy": ["KI-SECONDARY-RETENTION"]},
+    {"id": "feedbackPrimaryAirGap", "status": "tbd", "value": null, "unit": "mm", "dependency": "selected primary sensor family and runout/concentricity stack", "usedBy": ["KI-FEEDBACK-PRIMARY"]},
+    {"id": "feedbackDiverseAirGap", "status": "tbd", "value": null, "unit": "mm", "dependency": "risk allocation and selected diverse sensing technology", "usedBy": ["KI-FEEDBACK-DIVERSE"]},
+    {"id": "trimStationCapacity", "status": "tbd", "value": null, "unit": "kg", "dependency": "production mass variation and balance correction calculation", "usedBy": ["KI-BALANCE-TRIM"]},
+    {"id": "componentExtractionEnvelope", "status": "tbd", "value": null, "unit": null, "dependency": "selected component dimensions, tooling and fixed canopy frame layout", "usedBy": ["KI-SERVICE-ACCESS", "KI-BEARING", "KI-DRIVE", "KI-BRAKE", "KI-FEEDBACK-PRIMARY"]}
+  ],
+  "toleranceClosures": [
+    {"id": "TC-BEARING-MOUNT", "status": "tbd", "contributors": ["fixed support fabrication/machining", "bearing mounting face", "fastener preload distortion", "thermal/assembly effects"], "acceptanceSource": "exact bearing supplier mounting requirements plus approved structural/machining calculation and measured prototype inspection"},
+    {"id": "TC-DRIVE-ALIGN", "status": "tbd", "contributors": ["bearing axis/runout", "drive-ring fabrication", "fixed drive bracket position", "tensioner adjustment"], "acceptanceSource": "selected transmission supplier alignment/runout requirements plus prototype measurement"},
+    {"id": "TC-BRAKE-RUNOUT", "status": "tbd", "contributors": ["bearing runout", "brake-ring fabrication", "carrier attachment", "caliper bracket position"], "acceptanceSource": "selected brake supplier disc/ring runout and air-gap requirements plus measured assembly runout"},
+    {"id": "TC-LOCK-ENGAGEMENT", "status": "tbd", "contributors": ["carrier angular/index accuracy", "receiver position", "fixed lock bracket position", "carrier runout/deflection", "lock travel"], "acceptanceSource": "approved lock geometry, tolerance calculation and physical full/partial engagement validation"},
+    {"id": "TC-RETENTION-NORMAL-CLEARANCE", "status": "tbd", "contributors": ["bearing runout/play", "carrier fabrication", "fixed catch position", "normal structural deflection", "thermal effects"], "acceptanceSource": "approved normal-operation no-contact requirement plus failure-engagement geometry and measured prototype clearances"},
+    {"id": "TC-FEEDBACK-AIR-GAP", "status": "tbd", "contributors": ["bearing runout", "passive target-ring concentricity", "readhead bracket tolerance", "carrier deflection"], "acceptanceSource": "selected sensor supplier air-gap/runout specification plus measured full-rotation verification"},
+    {"id": "TC-SERVICE-EXTRACTION", "status": "tbd", "contributors": ["fixed frame", "adjacent modules", "guards/panels", "tool approach", "component removal trajectory"], "acceptanceSource": "controlled service-access study using exact selected component CAD and representative tooling"}
+  ],
+  "failureStateModels": [
+    {
+      "id": "FS-NORMAL-RUN",
+      "purpose": "Verify normal rotating clearances and that secondary retention remains non-contact.",
+      "geometryToModel": ["full normal runout envelope", "drive/brake/sensor clearances", "retention normal gap", "service guards closed"],
+      "mustRemainTrue": ["no routine retention contact", "service lock disengaged", "no removable service panel is a load path"]
+    },
+    {
+      "id": "FS-TRANSMISSION-DISCONNECTED",
+      "purpose": "Verify loss/separation of the drive transmission does not remove the required direct-carrier holding path.",
+      "geometryToModel": ["belt/gear torque path disconnected", "direct-carrier brake engaged", "carrier/brake reaction path"],
+      "mustRemainTrue": ["required holding path bypasses the failed transmission", "service lock remains a separate access control"]
+    },
+    {
+      "id": "FS-BRAKE-APPLIED",
+      "purpose": "Verify brake application clearances, reaction path and service access independently from propulsion.",
+      "geometryToModel": ["brake friction contact", "caliper/ring deflection envelope", "manual-release access"],
+      "mustRemainTrue": ["brake is not labelled mechanically locked for access", "no rotating electrical power is required"]
+    },
+    {
+      "id": "FS-SERVICE-LOCKED",
+      "purpose": "Verify positive lock engagement and technician-access geometry.",
+      "geometryToModel": ["full lock engagement", "partial/misaligned engagement cases", "LOTO access", "tool/service envelopes"],
+      "mustRemainTrue": ["positive mechanical restraint is directly verifiable", "zero speed and isolation precede access", "index position alone is not lock confirmation"]
+    },
+    {
+      "id": "FS-PRIMARY-SUPPORT-SEPARATION",
+      "purpose": "Model relevant abnormal primary-support displacement before and into secondary-retention engagement.",
+      "geometryToModel": ["defined bearing/hub separation modes", "distributed capture approach", "fixed catch-sector engagement sequence"],
+      "mustRemainTrue": ["retention attachments relevant to the model survive the represented primary failure", "uncontained failure modes remain explicitly disclosed"]
+    },
+    {
+      "id": "FS-RETENTION-ENGAGED",
+      "purpose": "Verify post-engagement geometry, reaction path and inspection access.",
+      "geometryToModel": ["capture/catch contact", "abnormal carrier attitude", "fixed-frame reaction path", "contact witness/inspection zones"],
+      "mustRemainTrue": ["fixture is out of service after engagement", "retention is not reused as normal running support without engineering disposition"]
+    },
+    {
+      "id": "FS-MANUAL-RECOVERY",
+      "purpose": "Verify recovery access without creating an uncontrolled freewheel state.",
+      "geometryToModel": ["positive service lock engaged", "LOTO/isolation state", "controlled brake/drive release tooling if required"],
+      "mustRemainTrue": ["carrier is positively restrained before manual release", "normal holding path is restored before service lock removal"]
+    },
+    {
+      "id": "FS-FEEDBACK-FAULT",
+      "purpose": "Verify that sensing faults do not create physical interference and that diverse targets remain serviceable if allocated.",
+      "geometryToModel": ["primary readhead unavailable/misaligned", "diverse fixed-side channel where required", "passive target rings"],
+      "mustRemainTrue": ["no sensor is a mechanical restraint", "fault reset cannot command or resume motion"]
+    }
+  ],
+  "serviceabilityRules": [
+    "A stopped or electrically held carrier is not a safe-access state; positive service lock engagement and LOTO are required before mechanical access.",
+    "All normal replaceable kinetic modules should be removable from fixed-side service access without moving controlled cable exits or fixed LED coordinates.",
+    "Bearing fasteners, drive tension/alignment, brake wear state, retention clearance/contact witness, service-lock engagement and sensor air gaps require inspection access.",
+    "Manual recovery must never rely on uncontrolled freewheel; positive restraint precedes any manual brake or drive release.",
+    "Secondary-retention engagement is an out-of-service engineering-inspection condition and cannot be cleared by ordinary operator reset.",
+    "Safety-relevant mechanical state must have direct physical verification where required and must not rely on colour-only indication or a software label alone."
+  ],
+  "releaseGates": {
+    "datumsLinkedToControlledDrawing": false,
+    "selectedBearingMatingDataControlled": false,
+    "selectedDriveMatingDataControlled": false,
+    "selectedBrakeMatingDataControlled": false,
+    "serviceLockGeometryVerified": false,
+    "secondaryRetentionGeometryVerified": false,
+    "feedbackAirGapRunoutVerified": false,
+    "toleranceStackApproved": false,
+    "serviceExtractionStudyApproved": false,
+    "failureStateGeometryReviewed": false
+  }
+}
