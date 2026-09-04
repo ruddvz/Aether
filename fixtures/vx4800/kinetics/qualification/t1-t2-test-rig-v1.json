@@ -40,7 +40,7 @@
         "production-intent suspension exits and assemblies where available",
         "instrumented rig drive with repeatable smooth profiles",
         "fixed reference obstacles/clearance gauges only where the released test procedure requires them",
-        "guarded perimeter and remote observation for abnormal-drag/sn ag tests"
+        "guarded perimeter and remote observation for abnormal-drag/snag tests"
       ],
       "adjustability": ["schedule-derived cluster selection", "controlled mass-variation/replacement sample", "motion profile", "approved added-drag device", "instrument/camera placement"],
       "requiredMeasurements": ["all T1 motion channels as applicable", "butterfly-to-butterfly clearance", "butterfly-to-cable clearance", "cable-to-cable clearance", "phase/lag propagation", "drive current/load signature", "detection time for approved abnormal drag", "post-test orientation and contact evidence"],
