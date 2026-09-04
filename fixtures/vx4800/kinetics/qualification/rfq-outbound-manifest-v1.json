@@ -1,0 +1,70 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-rfq-outbound.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "outboundRevision": "1.0.0",
+  "status": "prepared-not-sent",
+  "documents": [
+    {
+      "rfqPackageId": "RFQ-KIN-BRG-01",
+      "primaryTarget": "Kaydon Bearings",
+      "alternateTargets": ["Schaeffler Canada Inc."],
+      "contactEvidenceRefs": ["KRC-BRG-KAYDON-01", "KRC-BRG-SCHAEFFLER-01"],
+      "documentPath": "docs/rfq/vx4800/RFQ-KIN-BRG-01-bearing.md",
+      "subject": "VX4800 kinetic carrier bearing application-engineering enquiry",
+      "outboundStatus": "prepared-not-sent",
+      "unknownsNotToInvent": ["total rotating mass", "rotating assembly center of gravity", "combined bearing design loads", "dynamic amplification", "final bearing mounting diameter"]
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-DRV-01",
+      "primaryTarget": "SEW-EURODRIVE Company of Canada Ltd.",
+      "alternateTargets": [],
+      "contactEvidenceRefs": ["KRC-DRV-SEW-01"],
+      "documentPath": "docs/rfq/vx4800/RFQ-KIN-DRV-01-drive.md",
+      "subject": "VX4800 very-low-speed kinetic carrier drive application enquiry",
+      "outboundStatus": "prepared-not-sent",
+      "unknownsNotToInvent": ["drive torque", "equivalent transient inertia", "acceleration and jerk limits", "final transmission ratio", "structural reactions"]
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-BELT-01",
+      "primaryTarget": "Gates Corporation",
+      "alternateTargets": [],
+      "contactEvidenceRefs": ["KRC-BELT-GATES-01"],
+      "documentPath": "docs/rfq/vx4800/RFQ-KIN-BELT-01-transmission.md",
+      "subject": "VX4800 large-ring synchronous transmission application-engineering enquiry",
+      "outboundStatus": "prepared-not-sent",
+      "unknownsNotToInvent": ["drive torque", "belt width", "installation pretension", "drive-ring pitch diameter", "tooth family"]
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-BRK-01",
+      "primaryTarget": "RINGSPANN Corporation / RINGSPANN GmbH",
+      "alternateTargets": ["Chr. Mayr GmbH + Co. KG"],
+      "contactEvidenceRefs": ["KRC-BRK-RINGSPANN-01", "KRC-BRK-MAYR-01"],
+      "documentPath": "docs/rfq/vx4800/RFQ-KIN-BRK-01-brake.md",
+      "subject": "VX4800 direct-carrier fail-safe holding and fault-stop brake enquiry",
+      "outboundStatus": "prepared-not-sent",
+      "unknownsNotToInvent": ["static holding torque", "dynamic stopping torque", "stopping energy", "brake effective radius", "brake-ring thickness", "safety integrity allocation"]
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-FBK-01",
+      "primaryTarget": "HEIDENHAIN",
+      "alternateTargets": [],
+      "contactEvidenceRefs": ["KRC-FBK-HEIDENHAIN-01"],
+      "documentPath": "docs/rfq/vx4800/RFQ-KIN-FBK-01-feedback.md",
+      "subject": "VX4800 fixed-readhead passive-scale very-low-speed feedback enquiry",
+      "outboundStatus": "prepared-not-sent",
+      "unknownsNotToInvent": ["final position resolution", "fault-detection latency allocation", "air gap", "target-ring diameter", "functional-safety performance level"]
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-FAB-01",
+      "primaryTarget": "Bormill Inc.",
+      "alternateTargets": [],
+      "contactEvidenceRefs": ["KRC-FAB-BORMILL-01"],
+      "documentPath": "docs/rfq/vx4800/RFQ-KIN-FAB-01-fabrication.md",
+      "subject": "VX4800 kinetic carrier prototype fabrication capability enquiry",
+      "outboundStatus": "prepared-not-sent",
+      "unknownsNotToInvent": ["bearing support final dimensions", "bearing mounting flatness tolerance", "service-lock section", "secondary-retention section", "proof load", "final material and weld procedure"]
+    }
+  ],
+  "dispatchBoundary": "These documents are prepared RFQ drafts only. Their existence does not prove external dispatch. The dispatch register may move a package to issued only after a real external issue date and channel/thread reference are recorded."
+}
