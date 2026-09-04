@@ -32,6 +32,7 @@ def test_p0_generator_preserves_controlled_counts_and_draws_no_interface_footpri
     assert manifest["controlledGeometry"]["suspensionLocations"] == 240
     assert manifest["controlledGeometry"]["fixedAccentHeads"] == 14
     assert manifest["physicalInterfaceFootprintsDrawn"] is False
+    assert manifest["rotationAxisXYPhysicalDatumDrawn"] is False
 
     interface = json.loads(INTERFACE.read_text())
     assert manifest["interfaceIds"] == [item["id"] for item in interface["mechanicalInterfaces"]]
@@ -68,8 +69,11 @@ def test_p0_drawing_contains_authority_warning_and_no_fake_mating_geometry(tmp_p
         assert all(entity.dxftype() == "TEXT" for entity in layer_entities(model, layer))
 
     functional = layer_entities(model, "FUNCTIONAL_DATUM")
-    assert {entity.dxftype() for entity in functional}.issubset({"LINE", "TEXT"})
-    assert not any(entity.dxftype() == "CIRCLE" for entity in functional)
+    assert functional
+    assert all(entity.dxftype() == "TEXT" for entity in functional)
+    functional_text = " ".join(entity.dxf.text for entity in functional)
+    assert "XY PHYSICAL DATUM LOCATION / FEATURE TBD" in functional_text
+    assert "COMPOSITION ORIGIN IS NOT SUBSTITUTED" in functional_text
 
 
 def test_p0_generator_fails_closed_if_somebody_partially_freezes_interface_values():
