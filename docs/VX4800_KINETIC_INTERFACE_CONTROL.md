@@ -16,6 +16,14 @@ The authoritative machine-readable companions are:
 - `fixtures/vx4800/kinetics/qualification/calculation-register-v1.json`
 - `schemas/aether-kinetic-calculation-register.schema.json`
 
+The controlled P0 coordination generator is:
+
+- `scripts/generate_kinetic_p0.py`
+- output: `build/vx4800/kinetics/vx4800-kinetic-p0-interface-v1.dxf`
+- output manifest: `build/vx4800/kinetics/vx4800-kinetic-p0-interface-v1.manifest.json`
+
+The P0 generator is intentionally fail-safe. It reproduces controlled canopy/carrier coordination outlines, the 240 controlled suspension exits and 14 fixed accent-head locations, but it does not draw load- or supplier-dependent bearing, drive, brake, service-lock, retention or sensor mating footprints while those parameters remain unresolved. Generated P0 output is coordination evidence only and is not manufacturing authority.
+
 The pre-prototype/RFQ layer remains in:
 
 - `fixtures/vx4800/kinetics/prototype-package-v1.json`
@@ -50,7 +58,7 @@ The fixed kinetic structure is the future primary machining and reaction referen
 
 ### KD-B rotation axis
 
-The vertical rotation axis coordinates the bearing, carrier, direct-carrier brake and position/speed feedback. It is a functional reference until an exact bearing and support design establishes the manufacturable axis.
+Only the vertical direction of the rotation axis is controlled at this stage. Its physical XY location and the physical feature that establishes it remain TBD until the bearing/support architecture and mechanical datum drawing are controlled. The composition/setout origin must not be silently promoted into a bearing, shaft, bore or bolt-circle datum. The P0 generator therefore labels KD-B textually and deliberately draws no axis crosshair or physical axis feature.
 
 ### KD-C index azimuth
 
@@ -78,8 +86,9 @@ The CAD model should keep these as separate bodies, assemblies or clearly separa
 
 ## Parameter ledger
 
-Every load- or selection-dependent mechanical dimension remains explicitly unresolved. Examples include:
+Every load-, datum- or selection-dependent mechanical dimension remains explicitly unresolved. Examples include:
 
+- physical rotation-axis XY datum/location
 - bearing mounting diameter
 - bearing support flatness
 - bearing bolt circle and preload
@@ -98,7 +107,7 @@ Every load- or selection-dependent mechanical dimension remains explicitly unres
 - trim-station capacity
 - component extraction envelope
 
-The machine-readable package stores each current value as `null`, status `tbd`, and names the evidence needed to close it. This prevents a coordination placeholder from quietly becoming a fabrication dimension.
+The machine-readable package stores each current value as `null`, status `tbd`, and names the evidence needed to close it. This prevents a coordination placeholder, centered visual origin or supplier suggestion from quietly becoming a fabrication dimension.
 
 ## Tolerance closures that must be solved
 
@@ -205,16 +214,30 @@ Issue dependencies remain unchanged:
 
 ## CAD maturity progression
 
-### P0: interface model
+### P0: interface coordination
 
-Permitted now:
+Implemented now:
+
+- deterministic DXF generation from controlled repository sources
+- controlled fixed-canopy and rotating-carrier coordination outlines
+- all 240 controlled suspension-exit markers
+- all 14 controlled fixed accent-head markers
+- annotation-only mechanical interface callouts
+- explicit TBD parameter/dependency callouts
+- explicit warning that generated output is not manufacturing authority
+- fail-closed rejection if a partially frozen interface parameter is mixed into the P0 workflow
+- no inferred physical XY rotation-axis datum
+
+The P0 DXF does **not** claim that physical mechanism geometry exists yet.
+
+Permitted in the next richer P0/P1 CAD model once evidence exists:
 
 - fixed and rotating assembly separation
-- functional datums
+- controlled physical datums
 - dedicated conceptual bearing/drive/brake/lock/retention/sensor/trim zones
 - service access and removal volumes
 - normal and failure-state configurations
-- parameter names with unresolved values
+- parameter names with controlled supplier/evidence-backed values
 
 Not permitted:
 
@@ -222,6 +245,7 @@ Not permitted:
 - arbitrary brake-ring radius/thickness
 - arbitrary retention gap
 - arbitrary sensor air gap
+- an assumed bearing axis at the composition origin
 - a visual service lock presented as structurally released
 
 ### P1: supplier-coordinated prototype model
@@ -250,7 +274,7 @@ Changing only a top-level release flag cannot convert an unfinished package into
 1. Keep supplier RFQs moving without allowing a supplier recommendation to become a selection.
 2. Obtain controlled S/M/L assembly mass and variation evidence from Issues #7/#9.
 3. Populate exact candidate mating requirements for bearing, positive drive, brake and fixed-side feedback.
-4. Build the P0 parametric interface model and the listed failure-state configurations without replacing TBDs with guesses.
+4. Resolve the physical rotation-axis datum, then replace P0 annotation-only mechanism callouts with supplier/evidence-backed parametric interface geometry without changing the controlled setout.
 5. Complete T1 rig structural/test-risk release after its measured mass envelope is known.
 6. Run T1 and use measured lag/damping/start-stop data to constrain motion profiles.
 7. Build/run the schedule-derived T2 cluster and establish interaction, snag and dynamic-clearance evidence.
