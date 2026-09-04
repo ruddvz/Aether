@@ -84,6 +84,16 @@
       "reference": "fixtures/vx4800/installation/commissioning-plan-v1.json",
       "claim": "Defines site receipt, installation, commissioning, handover and service-baseline evidence requirements; it does not prove any physical site stage has passed.",
       "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-LIFECYCLE-SERVICE-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/service/lifecycle-plan-v1.json",
+      "claim": "Defines lifecycle inspection, maintenance, spares, post-service verification and service-history requirements; it does not establish inspection intervals or prove maintenance/service evidence.",
+      "canClosePhysicalTest": false
     }
   ]
 }
