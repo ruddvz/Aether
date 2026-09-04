@@ -8,10 +8,10 @@
     {
       "rfqPackageId": "RFQ-KIN-BRG-01",
       "candidateTargets": [
-        {"name": "Kaydon Bearings", "basis": "Repository manufacturer evidence exists for slewing-bearing mounting and installation requirements.", "targetStatus": "repository-evidence-target"},
-        {"name": "Schaeffler", "basis": "Crossed-roller bearing family remains an approved study family; exact application-engineering target still requires contact qualification.", "targetStatus": "research-required"}
+        {"name": "Kaydon Bearings", "basis": "Repository manufacturer evidence exists for slewing-bearing mounting/installation requirements and a current official engineering-support route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRG-KAYDON-01"},
+        {"name": "Schaeffler", "basis": "Crossed-roller bearing family remains an approved study family; exact application-engineering target still requires contact qualification.", "targetStatus": "research-required", "contactEvidenceRef": null}
       ],
-      "dispatchStatus": "not-issued",
+      "dispatchStatus": "ready-to-issue",
       "issuedDate": null,
       "dispatchChannelReference": null,
       "responseRecord": null,
@@ -20,9 +20,9 @@
     {
       "rfqPackageId": "RFQ-KIN-DRV-01",
       "candidateTargets": [
-        {"name": "drive application-engineering supplier target TBD", "basis": "No exact motor/reducer supplier has yet been qualified by this kinetic track; target research is required before dispatch.", "targetStatus": "research-required"}
+        {"name": "SEW-EURODRIVE Company of Canada Ltd.", "basis": "Current official Canadian technical/online-support route is verified; supplier remains an RFQ target only and no exact gearmotor/reducer variant is selected.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-DRV-SEW-01"}
       ],
-      "dispatchStatus": "not-issued",
+      "dispatchStatus": "ready-to-issue",
       "issuedDate": null,
       "dispatchChannelReference": null,
       "responseRecord": null,
@@ -31,9 +31,9 @@
     {
       "rfqPackageId": "RFQ-KIN-BELT-01",
       "candidateTargets": [
-        {"name": "Gates Corporation", "basis": "Repository manufacturer evidence exists for synchronous-belt design tension and bearing/shaft reaction implications.", "targetStatus": "repository-evidence-target"}
+        {"name": "Gates Corporation", "basis": "Repository manufacturer evidence exists for synchronous-belt design tension/reactions and a current official Industrial Technical & Engineering Support route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BELT-GATES-01"}
       ],
-      "dispatchStatus": "not-issued",
+      "dispatchStatus": "ready-to-issue",
       "issuedDate": null,
       "dispatchChannelReference": null,
       "responseRecord": null,
@@ -42,10 +42,10 @@
     {
       "rfqPackageId": "RFQ-KIN-BRK-01",
       "candidateTargets": [
-        {"name": "RINGSPANN GmbH", "basis": "Repository manufacturer evidence exists for spring-activated electromagnetically released brake-caliper architecture.", "targetStatus": "repository-evidence-target"},
-        {"name": "Mayr", "basis": "Direct-carrier fail-safe brake families have been reviewed as architecture precedents; exact application-engineering contact and variant evidence remain to be qualified.", "targetStatus": "research-required"}
+        {"name": "RINGSPANN Corporation / RINGSPANN GmbH", "basis": "Repository manufacturer evidence exists for spring-activated electromagnetically released brake-caliper architecture and a current official North American contact route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRK-RINGSPANN-01"},
+        {"name": "Mayr", "basis": "Direct-carrier fail-safe brake families have been reviewed as architecture precedents; exact application-engineering contact and variant evidence remain to be qualified.", "targetStatus": "research-required", "contactEvidenceRef": null}
       ],
-      "dispatchStatus": "not-issued",
+      "dispatchStatus": "ready-to-issue",
       "issuedDate": null,
       "dispatchChannelReference": null,
       "responseRecord": null,
@@ -54,9 +54,9 @@
     {
       "rfqPackageId": "RFQ-KIN-FBK-01",
       "candidateTargets": [
-        {"name": "HEIDENHAIN", "basis": "Repository manufacturer evidence exists for modular angle encoders using fixed scanning heads with passive rotating scale components.", "targetStatus": "repository-evidence-target"}
+        {"name": "HEIDENHAIN", "basis": "Repository manufacturer evidence exists for modular fixed-readhead/passive-scale angle encoders and a current official International Sales/application-advice route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-FBK-HEIDENHAIN-01"}
       ],
-      "dispatchStatus": "not-issued",
+      "dispatchStatus": "ready-to-issue",
       "issuedDate": null,
       "dispatchChannelReference": null,
       "responseRecord": null,
@@ -65,7 +65,7 @@
     {
       "rfqPackageId": "RFQ-KIN-FAB-01",
       "candidateTargets": [
-        {"name": "prototype precision fabricator target TBD", "basis": "Fabricator must demonstrate large-ring machining, distortion control, traceability, inspection and proof-test capability before becoming a dispatch target.", "targetStatus": "research-required"}
+        {"name": "prototype precision fabricator target TBD", "basis": "Fabricator must demonstrate large-ring machining, distortion control, traceability, inspection and proof-test capability before becoming a dispatch target.", "targetStatus": "research-required", "contactEvidenceRef": null}
       ],
       "dispatchStatus": "not-issued",
       "issuedDate": null,
@@ -74,5 +74,5 @@
       "technicalDisposition": "not-reviewed"
     }
   ],
-  "releaseRule": "A candidate target is not an issued RFQ. Dispatch status may move to issued only after an external channel/reference and issue date are recorded. A response may become comparable only through a validated RFQ response record; no dispatch state selects a component."
+  "releaseRule": "A candidate target is not an issued RFQ. Contact qualification proves only that a current public route exists. Dispatch status may move to issued only after an external channel/reference and issue date are recorded. A response may become comparable only through a validated RFQ response record; no dispatch state selects a component."
 }
