@@ -1,0 +1,165 @@
+{
+  "$schema": "../../../schemas/aether-installation-commissioning-plan.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authority": "qualification-plan",
+  "status": "open",
+  "purpose": "Define project-site installation, commissioning, handover and service-baseline evidence for VX4800 without treating factory acceptance, repository validation or visual inspection as site acceptance.",
+  "boundaries": {
+    "factoryAcceptanceIsSiteAcceptance": false,
+    "coordinationCadIsInstallationAuthority": false,
+    "blenderIsInstallationAuthority": false,
+    "falseCeilingCanSupportFixture": false,
+    "siteStructuralApprovalRequiredBeforePermanentLoadTransfer": true,
+    "releasedInstallationPackageRequired": true,
+    "siteConfigurationMustMatchReleasedBuild": true,
+    "uncontrolledSiteModificationPermitted": false,
+    "commissioningCannotOverrideMechanicalSafetyLimits": true
+  },
+  "controlledBaseline": {
+    "elementCount": 240,
+    "sizeAllocation": {"S": 66, "M": 144, "L": 30},
+    "fixedAccentHeadCount": 14,
+    "interfaceZoneCount": 8,
+    "sitePrimarySupport": "engineered building structure through approved project-specific interface",
+    "lightingLocation": "fixed-canopy",
+    "rotatingFieldPlannedElectricalLoads": false,
+    "nominalMotionRpm": 0.36,
+    "minimumMotionRpm": 0.08,
+    "maximumMotionRpm": 0.65
+  },
+  "siteStages": [
+    {
+      "id": "SITE-RECEIPT",
+      "releaseStatus": "not-released",
+      "requirements": [
+        "Verify shipment identity, fixture serial/build configuration, package count and dispatch documentation.",
+        "Inspect shipping restraints, visible finishes, butterflies, suspension lines and safety-critical hardware for transport damage.",
+        "Quarantine and NCR any damage or identity mismatch before installation."
+      ]
+    },
+    {
+      "id": "STRUCTURAL-INSTALLATION",
+      "releaseStatus": "not-released",
+      "requirements": [
+        "Confirm named-project structural approval and interface coordinates before permanent load transfer.",
+        "Verify actual supporting structure matches approved project information or obtain approved disposition.",
+        "Install exact approved support/anchor/connection system with recorded inspection and installation values where specified.",
+        "Verify independent secondary-retention structural termination before normal operation."
+      ]
+    },
+    {
+      "id": "FIXTURE-ASSEMBLY",
+      "releaseStatus": "not-released",
+      "requirements": [
+        "Maintain component and element identity through unpacking and assembly.",
+        "Install canopy, suspension, butterflies and kinetic components using released work instructions.",
+        "Verify exact 240-element schedule, line identity/length, attachment orientation and lower-edge envelope.",
+        "Complete inaccessible-before-close inspections before decorative closure."
+      ]
+    },
+    {
+      "id": "LIGHTING-ELECTRICAL-COMMISSIONING",
+      "releaseStatus": "not-released",
+      "requirements": [
+        "Verify market/project supply, protective devices, isolation, earthing/bonding and wiring against released electrical authority.",
+        "Verify all 14 fixed accent heads and exact released optic/CCT configuration.",
+        "Commission DALI-2 or other released control architecture without changing physical optical roles or safety limits.",
+        "Record addressing, groups/scenes, control-gear identity and functional test results.",
+        "Complete post-install electrical safety checks required by the released installation/test plan."
+      ]
+    },
+    {
+      "id": "KINETIC-COMMISSIONING",
+      "releaseStatus": "not-released",
+      "requirements": [
+        "Verify mechanical service lock, brake/holding architecture, secondary retention and feedback hardware before powered motion.",
+        "Confirm the field is clear of people, temporary works, packaging and obstructions before each initial motion test.",
+        "Commission at released low-speed/jog condition before nominal operation.",
+        "Verify released direction, speed limits, controlled stop, fault stop, power-loss behavior, safe restart and abnormal-torque response.",
+        "Verify no unacceptable contact, snagging, cable interaction, head interference or architectural collision during site trials.",
+        "Do not widen software limits to make an installation fit; treat interference as an engineering nonconformance."
+      ]
+    },
+    {
+      "id": "HANDOVER-SERVICE-BASELINE",
+      "releaseStatus": "not-released",
+      "requirements": [
+        "Record final installed configuration and all approved site deviations.",
+        "Record commissioning baselines for motion, lighting, noise/vibration observations and inspection condition.",
+        "Demonstrate isolation and mechanical service-lock procedure to authorized service personnel.",
+        "Provide installation, operation, inspection, maintenance and replacement instructions plus spare-part identities.",
+        "Establish owner/operator contacts, warranty/service process, first planned inspection and change-control requirements."
+      ]
+    }
+  ],
+  "preconditions": [
+    {"id": "PRE-CONSTRUCTION-RELEASE", "status": "open", "requirement": "Named project/configuration has approved construction release under the VX4800 release-gate framework."},
+    {"id": "PRE-STRUCTURAL", "status": "open", "requirement": "Project structural/site-interface design and support system are approved."},
+    {"id": "PRE-MANUFACTURING", "status": "open", "requirement": "Delivered fixture configuration is traceable to the released manufacturing build and FAT/pre-hang evidence."},
+    {"id": "PRE-KINETIC", "status": "open", "requirement": "Released kinetic architecture, limits and commissioning procedure are available."},
+    {"id": "PRE-ELECTRICAL", "status": "open", "requirement": "Released electrical/head/control-gear configuration and market supply design are available."},
+    {"id": "PRE-SITE", "status": "open", "requirement": "Site access, lifting/temporary works, exclusion zone and installation method are approved."}
+  ],
+  "installationEvidence": [
+    {"id": "INST-RECEIPT", "status": "open", "requiredEvidence": ["PHYSICAL", "REPOSITORY"], "requirement": "Shipment/receipt inspection confirms identity, quantity, condition and NCR disposition before installation."},
+    {"id": "INST-STRUCTURE", "status": "open", "requiredEvidence": ["ENGINEERING", "PHYSICAL"], "requirement": "Installed structural interfaces, supports/connections and secondary-retention termination match the named-project approved structural design."},
+    {"id": "INST-CONFIGURATION", "status": "open", "requiredEvidence": ["REPOSITORY", "PHYSICAL"], "requirement": "Installed fixture serial/build configuration, 240-element schedule, 14 fixed heads and safety-critical components match released authority or approved deviations."},
+    {"id": "INST-ELECTRICAL", "status": "open", "requiredEvidence": ["ENGINEERING", "PHYSICAL"], "requirement": "Supply, protection, isolation, bonding, wiring, control gear and fixed-head configuration are verified on site."},
+    {"id": "INST-LIGHTING", "status": "open", "requiredEvidence": ["SUPPLIER", "PHYSICAL"], "requirement": "Exact released head/optic/CCT configuration, addressing and intended control groups/scenes are commissioned and recorded."},
+    {"id": "INST-KINETIC", "status": "open", "requiredEvidence": ["ENGINEERING", "PHYSICAL"], "requirement": "Released kinetic limits, feedback, stops, power-loss behavior, safe restart, service lock and abnormal-motion response are demonstrated on site."},
+    {"id": "INST-CLEARANCE", "status": "open", "requiredEvidence": ["PHYSICAL"], "requirement": "Site motion trials demonstrate no unacceptable interference with butterflies, cables, fixed heads, canopy, architecture or services across released commissioning conditions."},
+    {"id": "INST-HANDOVER", "status": "open", "requiredEvidence": ["REPOSITORY", "PHYSICAL"], "requirement": "Final as-installed record, manuals, service procedure, baseline condition, training/handover and open-item register are controlled."}
+  ],
+  "siteChangeControl": {
+    "siteDeviationRegisterRequired": true,
+    "engineeringApprovalRequiredForControlledRequirementDeviation": true,
+    "substitutionWithoutEvidenceImpactReviewPermitted": false,
+    "fieldDrillingCuttingOrReworkingSafetyCriticalPartsWithoutApprovalPermitted": false,
+    "softwareLimitExpansionWithoutEngineeringApprovalPermitted": false,
+    "structuralSupportChangeRequiresReanalysis": true,
+    "kineticGeometryOrMassChangeRequiresDynamicImpactReview": true,
+    "headDriverOrControlGearChangeRequiresElectricalPhotometricImpactReview": true,
+    "failedCommissioningTestRequiresDispositionAndRetest": true
+  },
+  "baselineRecords": {
+    "fixtureSerialRequired": true,
+    "buildConfigurationIdRequired": true,
+    "projectSiteIdRequired": true,
+    "structuralApprovalReferenceRequired": true,
+    "siteDeviationRegisterRequired": true,
+    "installedComponentTraceabilityRequired": true,
+    "lightingCommissioningRecordRequired": true,
+    "kineticCommissioningRecordRequired": true,
+    "finalInspectionRecordRequired": true,
+    "photographicConditionRecordRequired": true,
+    "operatorServiceHandoverRecordRequired": true,
+    "firstInspectionDueDateRequired": true
+  },
+  "promotionGate": {
+    "constructionReleaseReferenceControlled": false,
+    "siteStructuralApprovalControlled": false,
+    "receiptInspectionPassed": false,
+    "structuralInstallationAccepted": false,
+    "installedConfigurationVerified": false,
+    "secondaryRetentionVerified": false,
+    "electricalSiteChecksPassed": false,
+    "lightingCommissioningPassed": false,
+    "kineticCommissioningPassed": false,
+    "siteDynamicClearancePassed": false,
+    "serviceLockAndIsolationDemonstrated": false,
+    "siteDeviationsClosedOrApproved": false,
+    "handoverDocumentationComplete": false,
+    "operatorServiceHandoverComplete": false,
+    "installationCommissioningReleaseApproved": false
+  },
+  "rules": [
+    "A successful factory FAT/pre-hang does not close site installation or commissioning evidence.",
+    "Permanent support must transfer into the named-project approved building structure, not false-ceiling framing or decorative skin.",
+    "A site interference is an engineering issue; commissioning software limits must not be expanded or shifted merely to hide it.",
+    "Any failed commissioning result remains failed until disposition and affected re-test are complete.",
+    "The as-installed configuration and approved deviations become part of the service baseline for future maintenance and changes.",
+    "Blender renders, coordination geometry and GitHub CI cannot close physical installation evidence."
+  ]
+}
