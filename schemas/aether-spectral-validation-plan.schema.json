@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-spectral-validation-plan.schema.json",
+  "title": "AETHERIA spectral colour-quality validation plan",
+  "type": "object",
+  "required": ["schemaVersion", "fixtureId", "designRevision", "authority", "status", "currentProductTargets", "standardsReferences", "softwareToolchain", "sourceRequirements", "requiredProductEvidence", "metricsToRecord", "promotionGate", "rules"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "designRevision": {"const": "1.3.0"},
+    "authority": {"enum": ["qualification-plan", "controlled"]},
+    "status": {"enum": ["open", "approved"]},
+    "currentProductTargets": {
+      "type": "object",
+      "required": ["cctK", "criRaMinimum", "tm30Thresholds", "duvThreshold"],
+      "properties": {
+        "cctK": {"const": 3000},
+        "criRaMinimum": {"const": 92},
+        "tm30Thresholds": {"type": "string"},
+        "duvThreshold": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "standardsReferences": {"type": "array", "minItems": 4},
+    "softwareToolchain": {
+      "type": "object",
+      "required": ["package", "version", "license", "supportedCalculationsUsed", "knownAuthorityLimit"],
+      "properties": {
+        "package": {"const": "colour-science"},
+        "version": {"const": "0.4.7"},
+        "license": {"const": "BSD-3-Clause"},
+        "supportedCalculationsUsed": {"type": "array", "minItems": 4, "items": {"type": "string"}},
+        "knownAuthorityLimit": {"type": "string", "minLength": 20}
+      },
+      "additionalProperties": false
+    },
+    "sourceRequirements": {
+      "type": "object",
+      "required": ["acceptedProductSourceClasses", "syntheticSourcePermittedForSoftwareTestOnly", "exactRawSpdBytesRequired", "sha256Required", "exactHeadOpticConfigurationRequired", "minimumProductCoverageNm", "maximumProductSampleStepNm", "normalizationMayChangeAbsoluteScaleButNotSpectralShape"],
+      "properties": {
+        "acceptedProductSourceClasses": {"const": ["supplier", "laboratory"]},
+        "syntheticSourcePermittedForSoftwareTestOnly": {"const": true},
+        "exactRawSpdBytesRequired": {"const": true},
+        "sha256Required": {"const": true},
+        "exactHeadOpticConfigurationRequired": {"const": true},
+        "minimumProductCoverageNm": {"const": [380, 780]},
+        "maximumProductSampleStepNm": {"const": 5},
+        "normalizationMayChangeAbsoluteScaleButNotSpectralShape": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "requiredProductEvidence": {"type": "array", "minItems": 6, "items": {"type": "string"}},
+    "metricsToRecord": {"type": "array", "minItems": 7, "items": {"type": "string"}},
+    "promotionGate": {
+      "type": "object",
+      "required": ["exactSpdControlled", "exactConfigurationControlled", "supplierOrLabProvenanceControlled", "cieCriCrossCheckCompleted", "cie2017FidelityCrossCheckCompleted", "cctDuvCrossCheckCompleted", "tm3018CompatibilityCrossCheckCompleted", "tm3024PrimaryEvidenceControlled", "colourQualityCriteriaReleased", "spectralEvidenceApproved", "productPhotometryApproved"],
+      "additionalProperties": {"type": "boolean"}
+    },
+    "rules": {"type": "array", "minItems": 5, "items": {"type": "string"}}
+  }
+}
