@@ -67,8 +67,11 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [x] Define six supplier RFQ packages with assumption disclosure and exact-variant evidence requirements
   - [x] Record current manufacturer evidence for bearing mounting, belt reactions, power-off brake families and fixed-readhead/passive-scale feedback without selecting components
   - [x] Define schedule-derived T1 single-suspension and T2 mixed-cluster test-rig architecture with instrumentation, data and build gates
+  - [x] Define CAD-facing functional datums, independent mechanical interfaces, tolerance closures, failure-state models and fail-closed interface release gates
+  - [x] Define thirteen traceable normal/fault/service load cases with explicit evidence classes and no unsupported numeric results
   - [ ] Issue kinetic RFQs and archive supplier application-engineering responses/CAD
-  - [ ] Create P0 mechanical interface-zone coordination CAD without changing controlled setout
+  - [ ] Populate exact supplier mating data and close bearing/drive/brake/lock/retention/feedback tolerance loops
+  - [ ] Create P0 parametric mechanical coordination CAD and failure-state configurations without changing controlled setout or replacing TBDs with guesses
   - [ ] Control rotating mass, center of gravity, production variation and dynamic load cases
   - [ ] Release T1 rig structural/instrument design from controlled mass envelope and execute T1
   - [ ] Release schedule-derived T2 cluster rig and execute T2 after T1 findings are dispositioned
