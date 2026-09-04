@@ -1,0 +1,84 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-test-rig.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "rigRevision": "1.0.0",
+  "status": "engineering-test-rig-input-not-released-for-build",
+  "purpose": "Define buildable T1/T2 prototype rigs that measure suspended-field dynamics and local interaction before any full rotating carrier is fabricated.",
+  "sourceAuthority": {
+    "engineeringSchedule": "../../composition/engineering-v1.3.0.csv",
+    "dynamicTestPlan": "dynamic-test-plan-v1.json",
+    "butterflyMassSchema": "../../../../schemas/aether-butterfly-mass-measurement.schema.json",
+    "rule": "The rig may reproduce controlled exit coordinates and line lengths for test purposes but cannot redefine the product setout."
+  },
+  "rigStages": [
+    {
+      "id": "T1",
+      "name": "single-suspension dynamics rig",
+      "purpose": "Measure pendulum period, damping, yaw/orientation response, cable tension, lag and start/stop sensitivity for individual S/M/L production-intent suspended assemblies.",
+      "geometrySource": "Use fixtures/vx4800/composition/engineering-v1.3.0.csv as the controlled source to select actual line lengths and radial/tangential kinematic conditions. Test at minimum the shortest and longest controlled line conditions for each relevant mass family once production-intent assemblies exist.",
+      "mechanicalConcept": [
+        "rigid fixed test frame with overhead guarded rotary arm/table or equivalent motion stage",
+        "adjustable suspension-exit radial station so tangential acceleration can represent controlled product radii without changing the product schedule",
+        "production-intent gripper/cable/lower-bridle/butterfly assembly when available",
+        "instrumented fixed/rotating drive owned by the test rig, not assumed to be the final product drive",
+        "motion controller capable of repeatable smooth/jerk-limited start, steady motion and stop profiles",
+        "clear optical measurement volume around the suspended element"
+      ],
+      "adjustability": ["radial station", "controlled line length", "S/M/L suspended assembly", "motion profile", "direction for test-only studies", "added controlled drag where specifically approved"],
+      "requiredMeasurements": ["commanded angle/speed", "actual rig angle/speed", "acceleration/jerk", "cable angle/lag", "element yaw/roll/orientation", "settling time", "cable tension where instrumented", "drive load/torque proxy", "video synchronized to logged data"],
+      "loadCapacityStatus": "tbd-measured-mass-required",
+      "prohibitedShortcuts": ["do not size rig structure or suspension fixture from assumed decorative material mass", "do not use Blender motion as acceptance evidence", "do not infer final product motor/brake torque directly from the rig drive rating"]
+    },
+    {
+      "id": "T2",
+      "name": "representative mixed-cluster interaction rig",
+      "purpose": "Measure local butterfly/cable interaction, dynamic clearance, wave propagation and snag/added-drag signatures using a schedule-derived subset of the 240-element field.",
+      "geometrySource": "Select a contiguous or otherwise justified cluster directly from engineering-v1.3.0.csv and preserve the chosen elements' relative X/Y coordinates, size families and controlled line lengths. Archive the exact element IDs with every test record.",
+      "mechanicalConcept": [
+        "rigid overhead rotating subframe or plate reproducing the selected schedule subset",
+        "production-intent suspension exits and assemblies where available",
+        "instrumented rig drive with repeatable smooth profiles",
+        "fixed reference obstacles/clearance gauges only where the released test procedure requires them",
+        "guarded perimeter and remote observation for abnormal-drag/snag tests"
+      ],
+      "adjustability": ["schedule-derived cluster selection", "controlled mass-variation/replacement sample", "motion profile", "approved added-drag device", "instrument/camera placement"],
+      "requiredMeasurements": ["all T1 motion channels as applicable", "butterfly-to-butterfly clearance", "butterfly-to-cable clearance", "cable-to-cable clearance", "phase/lag propagation", "drive current/load signature", "detection time for approved abnormal drag", "post-test orientation and contact evidence"],
+      "loadCapacityStatus": "tbd-measured-mass-required",
+      "prohibitedShortcuts": ["do not invent a visually convenient cluster", "do not change relative product coordinates to avoid collisions", "do not treat T2 local clearance as full-field dynamic-clearance approval"]
+    }
+  ],
+  "instrumentation": [
+    {"id": "INST-ANGLE-SPEED", "function": "independent actual rig angular position and speed measurement", "rangeStatus": "tbd-from-rig-geometry-and-test-profile", "calibrationRequired": true},
+    {"id": "INST-DRIVE-LOAD", "function": "motor current, torque transducer or other controlled drive-load measurement/proxy", "rangeStatus": "tbd-after-rig-drive-selection", "calibrationRequired": true},
+    {"id": "INST-CABLE-TENSION", "function": "measure suspension tension for selected T1/T2 cases without materially changing dynamics", "rangeStatus": "tbd-measured-mass-and-dynamic-case-required", "calibrationRequired": true},
+    {"id": "INST-MOTION-VIDEO", "function": "synchronized calibrated-view video or optical tracking for cable angle, lag and element orientation", "rangeStatus": "tbd-from-fastest-approved-transient", "calibrationRequired": true},
+    {"id": "INST-CLEARANCE", "function": "quantify minimum local dynamic clearances using validated optical/physical measurement method", "rangeStatus": "tbd-from-cluster-and-camera-method", "calibrationRequired": true},
+    {"id": "INST-TIME-SYNC", "function": "common timestamp/trigger across command, feedback, load and video channels", "rangeStatus": "method-to-be-controlled-before-test", "calibrationRequired": true},
+    {"id": "INST-AIRFLOW", "function": "record ambient/test airflow for drag-sensitivity cases", "rangeStatus": "tbd-project-and-rig-airflow-study", "calibrationRequired": true},
+    {"id": "INST-ACOUSTIC", "function": "optional development measurement of rig/background/drive noise; not product acoustic acceptance", "rangeStatus": "method-to-be-controlled-before-use", "calibrationRequired": true}
+  ],
+  "dataRequirements": [
+    "record exact element IDs, S/M/L size, measured suspended-assembly mass, line length and rig radial position",
+    "record test configuration hash or revision and all sensor identifiers/calibration state",
+    "record command profile separately from actual measured motion",
+    "record raw data before derived filtering/summary",
+    "synchronize video/optical tracking with command and drive-load channels",
+    "retain failed/aborted runs with reason rather than deleting them",
+    "acceptance criteria must be controlled before a test record can claim pass"
+  ],
+  "safetyBoundary": {
+    "occupiedInstallationSimulator": false,
+    "physicalGuardingRequired": true,
+    "emergencyStopRequired": true,
+    "releasedRiskAssessmentRequiredBeforeBuild": true,
+    "rules": ["abnormal-drag or resisted-motion tests use sacrificial/controlled fixtures", "personnel remain outside the swept/fragment zone during powered motion", "test rig emergency stop is test equipment safety and does not establish the final VX4800 safety category"]
+  },
+  "buildGate": {
+    "massEnvelopeControlled": false,
+    "rigStructuralCalculationApproved": false,
+    "instrumentRangesControlled": false,
+    "guardingAndTestRiskAssessmentReleased": false,
+    "testProcedureReleased": false
+  }
+}

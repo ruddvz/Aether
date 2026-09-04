@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-rfq-response.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "responseRevision": "1.0.0",
+  "rfqPackageId": "RFQ-KIN-BRG-01",
+  "responseStatus": "template-not-issued",
+  "supplier": {
+    "manufacturer": null,
+    "respondingEntity": null,
+    "contactName": null,
+    "contactReference": null,
+    "responseDate": null
+  },
+  "exactVariant": {
+    "family": null,
+    "modelCode": null,
+    "variantCode": null,
+    "configurationNotes": null,
+    "fullyIdentified": false
+  },
+  "suppliedEvidence": [],
+  "declaredAssumptions": [],
+  "missingInputs": [
+    "controlled total rotating mass",
+    "controlled rotating assembly center of gravity",
+    "approved combined load envelope",
+    "approved dynamic amplification / transient evidence"
+  ],
+  "complianceMatrix": [],
+  "technicalResponse": {
+    "numericRatings": [],
+    "matingData": [],
+    "maintenanceData": [],
+    "applicationEngineeringNotes": []
+  },
+  "selectionState": "not-selected",
+  "releaseGates": {
+    "exactVariantIdentified": false,
+    "assumptionsDisclosed": false,
+    "requiredSubmittalsPresent": false,
+    "numericRatingsVariantBound": false,
+    "loadInputsControlled": false,
+    "technicalReviewComplete": false,
+    "comparisonReady": false
+  }
+}

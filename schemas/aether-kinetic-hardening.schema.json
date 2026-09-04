@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-hardening.schema.json",
+  "title": "AETHERIA VX4800 kinetic safety hardening review",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "reviewRevision",
+    "status",
+    "authority",
+    "finalHardeningApproved",
+    "designReviewFindings",
+    "faultContainmentMatrix",
+    "architectureCorrections",
+    "manufacturerResearch",
+    "promotionGate"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "reviewRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "authority": {"enum": ["engineering-development-input", "controlled"]},
+    "finalHardeningApproved": {"type": "boolean"},
+    "designReviewFindings": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["id", "severity", "finding", "requiredDisposition", "status"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["critical", "major", "moderate"]},
+          "finding": {"type": "string", "minLength": 1},
+          "requiredDisposition": {"type": "string", "minLength": 1},
+          "status": {"enum": ["open", "architecture-corrected-evidence-pending", "closed"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "faultContainmentMatrix": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["faultId", "initiatingFailure", "detectionRequirements", "requiredMechanicalContainment", "evidenceRequired", "status"],
+        "properties": {
+          "faultId": {"type": "string", "minLength": 1},
+          "initiatingFailure": {"type": "string", "minLength": 1},
+          "detectionRequirements": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "requiredMechanicalContainment": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "evidenceRequired": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "status": {"enum": ["open", "architecture-defined-evidence-pending", "validated"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "architectureCorrections": {"type": "object"},
+    "manufacturerResearch": {"type": "array", "items": {"type": "object"}},
+    "promotionGate": {
+      "type": "object",
+      "required": [
+        "faultContainmentMatrixApproved",
+        "directCarrierHoldingPathResolved",
+        "transmissionFailureContainmentValidated",
+        "independentOverspeedMonitoringResolved",
+        "brakeStateMonitoringResolved",
+        "manualReleaseRecoveryValidated",
+        "serviceStateModelValidated",
+        "restartSettlingLogicValidated",
+        "suspendedFieldDynamicModelCorrelated",
+        "bearingMountingJointValidated",
+        "acousticAcceptanceControlled",
+        "enduranceDutyControlled",
+        "configurationChangeImpactMatrixReleased"
+      ],
+      "properties": {
+        "faultContainmentMatrixApproved": {"type": "boolean"},
+        "directCarrierHoldingPathResolved": {"type": "boolean"},
+        "transmissionFailureContainmentValidated": {"type": "boolean"},
+        "independentOverspeedMonitoringResolved": {"type": "boolean"},
+        "brakeStateMonitoringResolved": {"type": "boolean"},
+        "manualReleaseRecoveryValidated": {"type": "boolean"},
+        "serviceStateModelValidated": {"type": "boolean"},
+        "restartSettlingLogicValidated": {"type": "boolean"},
+        "suspendedFieldDynamicModelCorrelated": {"type": "boolean"},
+        "bearingMountingJointValidated": {"type": "boolean"},
+        "acousticAcceptanceControlled": {"type": "boolean"},
+        "enduranceDutyControlled": {"type": "boolean"},
+        "configurationChangeImpactMatrixReleased": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"finalHardeningApproved": {"const": true}}, "required": ["finalHardeningApproved"]},
+      "then": {
+        "properties": {
+          "authority": {"const": "controlled"},
+          "status": {"const": "approved"},
+          "promotionGate": {
+            "properties": {
+              "faultContainmentMatrixApproved": {"const": true},
+              "directCarrierHoldingPathResolved": {"const": true},
+              "transmissionFailureContainmentValidated": {"const": true},
+              "independentOverspeedMonitoringResolved": {"const": true},
+              "brakeStateMonitoringResolved": {"const": true},
+              "manualReleaseRecoveryValidated": {"const": true},
+              "serviceStateModelValidated": {"const": true},
+              "restartSettlingLogicValidated": {"const": true},
+              "suspendedFieldDynamicModelCorrelated": {"const": true},
+              "bearingMountingJointValidated": {"const": true},
+              "acousticAcceptanceControlled": {"const": true},
+              "enduranceDutyControlled": {"const": true},
+              "configurationChangeImpactMatrixReleased": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": true
+}

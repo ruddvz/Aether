@@ -92,3 +92,65 @@ All notable repository and product presentation changes are recorded here.
 - Added stable primary IFC GUID generation for repeatable identity across rebuilds without claiming byte-for-byte deterministic IFC serialization.
 - Added a dedicated IFC GitHub Actions workflow that generates, reopens and semantically validates the IFC4 model before uploading it with its companion loss report.
 - Kept the IFC body as coordination proxy geometry rather than fabricating 240 BIM parts or promoting repository geometry to manufacturing authority.
+
+## 2026-09-04 - VX4800 rotating-carrier engineering architecture
+
+- Added a machine-readable kinetic architecture for primary load path, bearing/drive studies, braking, positive service locking, independent annular secondary retention, balance/trim, feedback, faults, power loss, dynamic clearance and maintenance.
+- Added a manufacturer-scoped qualification shortlist without selecting final bearing, drive, brake or encoder ratings before measured mass/load evidence exists.
+- Added calculation frameworks that consume controlled S/M/L mass records, production variation and physical dynamic-test evidence instead of decorative-material assumptions.
+- Added staged T1 through T4 dynamic testing ending in a full 240-element factory pre-hang.
+- Added JSON Schema and regression gates that prevent final kinetic approval while required mass, component-selection, safety, clearance, test and maintenance gates remain open.
+- Preserved the 240-element engineering schedule, S66/M144/L30 allocation, 14 fixed LEDs, canopy envelope, manufacturing authority and fixed-side no-slip-ring electrical boundary.
+
+## 2026-09-04 - VX4800 kinetic safety hardening
+
+- Performed an adversarial common-cause review of the first rotating-carrier architecture instead of treating the first green CI run as engineering completion.
+- Identified the through-drive brake weakness and added a direct-carrier passive brake-ring/caliper architecture study so transmission failure cannot casually remove the only holding path.
+- Strengthened secondary retention with distributed capture/common-cause analysis requirements rather than a single local hub catch feature.
+- Added independent/diverse overspeed plausibility, separate brake-fails-to-release/apply handling, no-freewheel manual recovery and jerk-limited motion-profile studies.
+- Promoted bearing mounting flatness, support rigidity, fastener preload, post-mount torque/runout and transmission reactions to first-class qualification inputs.
+- Added a commissioning/service state model that distinguishes stopped, held, mechanically locked, fault-held and retention-engaged conditions.
+- Added a detailed T1-T4 dynamic test plan plus a physical-test record schema that forbids a `passed` result before controlled acceptance criteria exist.
+- Added a kinetic hazard/risk-assessment input register covering normal operation, service, fault, recovery and interface hazards without assigning unsupported PL, SIL or category values.
+- Added regression gates so future final kinetic release logic must also consume the hardening package, state model, physical-test gates and released risk assessment.
+- Preserved the fixed-side powered-system/no-slip-ring boundary and all controlled geometry/composition authority.
+
+## 2026-09-04 - VX4800 kinetic pre-prototype / RFQ engineering
+
+- Added a machine-readable prototype interface package that separates primary bearing, positive drive, direct-carrier brake, service lock, secondary retention, feedback, trim and service-access zones without changing controlled setout.
+- Marked bearing section, support-ring stiffness, bolt/preload detail, drive-ring diameter, transmission width/tension, brake radius/ring section, lock section, retention gap/section, feedback air gap and trim capacity as explicit load- or selection-dependent TBDs.
+- Added six supplier RFQ packages for bearing, motor/reducer, synchronous transmission, direct-carrier brake, fixed-side feedback and prototype fabrication, with mandatory assumption disclosure and exact-variant documentation.
+- Recorded current manufacturer evidence from Kaydon, Gates, RINGSPANN and HEIDENHAIN as architecture/RFQ evidence only, not component selection.
+- Added a schedule-derived T1 single-suspension rig and T2 mixed-cluster rig architecture with controlled instrumentation, raw-data traceability, guarding and pre-build risk/structural gates.
+- Added schemas and regression tests that block prototype release while measured mass inputs, interface reviews, T1/T2 build releases and prototype drawings remain open.
+- Added a prototype/RFQ engineering document with P0/P1/P2 drawing progression and the recommended execution order from RFQ through T1/T2 evidence to later T3/T4 qualification.
+
+## 2026-09-04 - VX4800 kinetic interface control and calculation readiness
+
+- Added a CAD-facing functional datum framework for fixed structure, rotation axis, service/index azimuth and carrier interface plane without converting coordination references into fabrication dimensions.
+- Split bearing, positive drive, direct-carrier brake, service lock, distributed secondary retention, primary/diverse feedback, balance/trim and service access into explicit mechanical interfaces with reaction paths and common-cause prohibitions.
+- Added a parameter ledger where all selection/load-dependent dimensions remain `null`/`tbd` and each field names the evidence permitted to close it.
+- Added closed-loop tolerance requirements for bearing mounting, drive alignment, brake runout, service-lock engagement, retention normal clearance, feedback air gap and component extraction.
+- Added explicit CAD failure-state configurations for transmission disconnect, brake application, service locking, primary-support separation, retention engagement, manual recovery and feedback faults.
+- Added thirteen traceable normal, fault and service calculation/load cases covering static bearing load, start, steady operation, maximum speed, normal stop, power-loss stop, safe overspeed validation, snag/drag, imbalance, transmission disconnect, service lock, retention engagement and manual recovery.
+- Kept all unresolved calculation outputs `null` and required physical T1/T2/T3/T4 correlation for suspended-field transients rather than treating rigid-body inertia as final transient truth.
+- Hardened schemas so final interface release requires released non-null parameters and closed tolerance loops, while final calculation release requires every case and output to be verified plus all evidence gates closed.
+- Added a deterministic fail-safe P0 DXF generator that reproduces only controlled canopy/carrier coordination, all 240 suspension exits and all 14 fixed accent-head locations while leaving unresolved mechanism footprints as annotation-only TBD callouts.
+- Explicitly separated vertical rotation-axis direction from its still-unresolved physical XY datum; the P0 drawing no longer infers the composition origin as the bearing/shaft axis.
+- Added regression coverage for authority boundaries, no-slip-ring/fixed-side sensing, common-cause separation, failure-state geometry, traceable TBDs, physical rotation-axis datum gating, P0 drawing behavior and fail-closed release behavior.
+
+## 2026-09-04 - VX4800 kinetic RFQ execution controls
+
+- Added a supplier-response schema that normalizes exact family/model/variant identity, evidence revision/provenance, assumptions, missing inputs, compliance status, mating data, maintenance data and numeric rating conditions.
+- Removed any direct `selected` state from supplier response intake; supplier responses can become at most `shortlisted-not-selected` until separate engineering release gates close.
+- Hardened numeric-rating intake so published/calculated values require bound evidence and supplier estimates require explicit operating/application conditions.
+- Added a fail-closed dispatch register that distinguishes contact-qualified targets, ready-to-issue packages and actually issued RFQs; issue date plus external channel reference remain mandatory before `issued` can be claimed.
+- Added a public contact-evidence schema and archive so `contact-qualified` is itself traceable and cannot be assigned without a current source reference.
+- Verified current official public routes for Kaydon Bearings, Schaeffler Canada, SEW-EURODRIVE Canada, Gates Corporation, RINGSPANN, Mayr and HEIDENHAIN.
+- Added Bormill as a contact-qualified Ontario fabrication-enquiry target based on its published large vertical turning, fabrication/welding and prototype-machining capabilities, while leaving distortion control, traceability, NDT, inspection and proof-load capability as unanswered RFQ questions.
+- Advanced all six controlled RFQ packages to `ready-to-issue` without claiming any package was sent or any supplier/fabricator was technically approved.
+- Added a fail-closed outbound-manifest schema and manifest that keep all six supplier-specific drafts in `prepared-not-sent` state.
+- Prepared tailored outbound drafts for bearing, motor/reducer, synchronous transmission, direct-carrier brake, fixed-side feedback and prototype fabrication, each preserving the package-specific unknowns rather than inventing final sizing inputs.
+- Added regression tests preventing shortlist candidacy without exact variant identity/assumption disclosure, preventing technical-comparison status without review gates, preventing false dispatch claims, requiring contact-evidence linkage and checking that outbound preparation cannot silently mutate dispatch state.
+- Added a controlled RFQ execution guide covering contact qualification, outbound preparation, dispatch, response normalization, clarification, technical comparison and the selection firewall.
+- Opened GitHub Issue #29 to track actual external dispatches and normalized supplier-response intake.

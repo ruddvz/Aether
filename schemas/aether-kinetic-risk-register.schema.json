@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-risk-register.schema.json",
+  "title": "AETHERIA VX4800 kinetic hazard and risk-assessment input register",
+  "type": "object",
+  "required": ["schemaVersion", "fixtureId", "registerRevision", "status", "authority", "finalRiskAssessmentReleased", "scopeBoundary", "standardsInputs", "hazards", "safetyRelatedFunctionCandidates", "promotionGate"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "registerRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "authority": {"enum": ["engineering-development-input", "controlled"]},
+    "finalRiskAssessmentReleased": {"type": "boolean"},
+    "scopeBoundary": {"type": "object"},
+    "standardsInputs": {"type": "array", "minItems": 2, "items": {"type": "object"}},
+    "hazards": {
+      "type": "array",
+      "minItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["id", "hazard", "lifecyclePhases", "causes", "potentialHarm", "existingDesignMeasures", "furtherAssessmentRequired", "status"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "hazard": {"type": "string", "minLength": 1},
+          "lifecyclePhases": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "causes": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "potentialHarm": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "existingDesignMeasures": {"type": "array", "items": {"type": "string"}},
+          "furtherAssessmentRequired": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "status": {"enum": ["identified-risk-estimation-pending", "risk-reduction-defined-validation-pending", "controlled"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "safetyRelatedFunctionCandidates": {"type": "array", "minItems": 4, "items": {"type": "object"}},
+    "promotionGate": {
+      "type": "object",
+      "required": ["intendedUseAndReasonableMisuseDefined", "hazardIdentificationReviewed", "riskEstimationMethodApproved", "riskReductionMeasuresVerified", "emergencyStopNeedAndBehaviorResolved", "safetyRelatedControlFunctionsAllocated", "residualRiskDocumentationReleased", "validationEvidenceLinked"],
+      "properties": {
+        "intendedUseAndReasonableMisuseDefined": {"type": "boolean"},
+        "hazardIdentificationReviewed": {"type": "boolean"},
+        "riskEstimationMethodApproved": {"type": "boolean"},
+        "riskReductionMeasuresVerified": {"type": "boolean"},
+        "emergencyStopNeedAndBehaviorResolved": {"type": "boolean"},
+        "safetyRelatedControlFunctionsAllocated": {"type": "boolean"},
+        "residualRiskDocumentationReleased": {"type": "boolean"},
+        "validationEvidenceLinked": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"finalRiskAssessmentReleased": {"const": true}}, "required": ["finalRiskAssessmentReleased"]},
+      "then": {
+        "properties": {
+          "authority": {"const": "controlled"},
+          "status": {"const": "released"},
+          "promotionGate": {
+            "properties": {
+              "intendedUseAndReasonableMisuseDefined": {"const": true},
+              "hazardIdentificationReviewed": {"const": true},
+              "riskEstimationMethodApproved": {"const": true},
+              "riskReductionMeasuresVerified": {"const": true},
+              "emergencyStopNeedAndBehaviorResolved": {"const": true},
+              "safetyRelatedControlFunctionsAllocated": {"const": true},
+              "residualRiskDocumentationReleased": {"const": true},
+              "validationEvidenceLinked": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": true
+}

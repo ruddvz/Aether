@@ -1,0 +1,223 @@
+{
+  "$schema": "../../../schemas/aether-kinetic-state-model.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "modelRevision": "1.0.0",
+  "status": "engineering-development-input-not-approved",
+  "authority": "engineering-development-input",
+  "finalStateModelApproved": false,
+  "purpose": "Separate stopped, held, mechanically locked, motion-enabled and fault states so commissioning/service procedures and future controls cannot imply access safety from software state alone.",
+  "states": [
+    {
+      "id": "SERVICE_LOCKED",
+      "motionAllowed": false,
+      "accessAllowed": true,
+      "mechanicalConditions": ["verified zero speed", "positive service lock fully engaged and directly verified", "kinetic LOTO/isolation applied before mechanical access", "normal holding brake condition known or treated as potentially unavailable"]
+    },
+    {
+      "id": "ISOLATED_UNLOCKED",
+      "motionAllowed": false,
+      "accessAllowed": false,
+      "mechanicalConditions": ["kinetic power isolated", "service lock disengaged", "carrier is not considered safe for mechanical access merely because power is off"]
+    },
+    {
+      "id": "ENERGISED_HELD",
+      "motionAllowed": false,
+      "accessAllowed": false,
+      "mechanicalConditions": ["valid zero-speed feedback", "holding/fault brake applied or holding state otherwise verified", "service lock disengaged", "no access inside moving sweep"]
+    },
+    {
+      "id": "RUN_READY",
+      "motionAllowed": false,
+      "accessAllowed": false,
+      "mechanicalConditions": ["zero speed", "service lock disengaged", "feedback valid", "brake and drive ready", "no active motion fault", "pre-start clear-sweep/service-panel checks satisfied"]
+    },
+    {
+      "id": "RUNNING",
+      "motionAllowed": true,
+      "accessAllowed": false,
+      "mechanicalConditions": ["released motion profile active", "speed within released envelope", "feedback and fault plausibility valid", "all guards/service panels in released condition"]
+    },
+    {
+      "id": "STOPPING",
+      "motionAllowed": true,
+      "accessAllowed": false,
+      "mechanicalConditions": ["controlled deceleration or qualified stopping sequence active", "zero speed not yet verified"]
+    },
+    {
+      "id": "JOG_READY",
+      "motionAllowed": false,
+      "accessAllowed": false,
+      "mechanicalConditions": ["commissioning authority active", "reduced test-derived jog limits loaded", "service lock disengaged", "sweep clear", "technician control station active"]
+    },
+    {
+      "id": "JOGGING",
+      "motionAllowed": true,
+      "accessAllowed": false,
+      "mechanicalConditions": ["restricted commissioning motion only", "test-derived reduced speed/acceleration/jerk", "operator deliberate command maintained where required by final risk assessment"]
+    },
+    {
+      "id": "FAULT_STOPPING",
+      "motionAllowed": true,
+      "accessAllowed": false,
+      "mechanicalConditions": ["fault response is actively removing propulsion and/or applying validated stop path", "carrier may still be moving", "fault reset prohibited"]
+    },
+    {
+      "id": "FAULT_HELD",
+      "motionAllowed": false,
+      "accessAllowed": false,
+      "mechanicalConditions": ["zero speed verified", "fault remains latched", "holding condition established", "mechanical access still requires transition to SERVICE_LOCKED"]
+    },
+    {
+      "id": "RETENTION_ENGAGED",
+      "motionAllowed": false,
+      "accessAllowed": false,
+      "mechanicalConditions": ["secondary retention has contacted or is suspected to have contacted", "fixture is out of service", "no motion or routine restart permitted", "engineering inspection/recovery plan required"]
+    },
+    {
+      "id": "MANUAL_RECOVERY_LOCKED",
+      "motionAllowed": false,
+      "accessAllowed": true,
+      "mechanicalConditions": ["verified zero speed", "positive service lock engaged and directly verified", "kinetic LOTO applied", "controlled manual brake/drive release may be performed only under released recovery procedure"]
+    }
+  ],
+  "transitions": [
+    {
+      "from": "SERVICE_LOCKED",
+      "to": "ISOLATED_UNLOCKED",
+      "trigger": "close mechanical access and intentionally disengage service lock",
+      "permissives": ["all personnel/tools clear", "service panels/guards restored as required", "direct confirmation lock fully withdrawn"]
+    },
+    {
+      "from": "ISOLATED_UNLOCKED",
+      "to": "ENERGISED_HELD",
+      "trigger": "restore kinetic control power",
+      "permissives": ["no mechanical access", "controller self-check", "valid feedback after startup", "no automatic motion command"]
+    },
+    {
+      "from": "ENERGISED_HELD",
+      "to": "RUN_READY",
+      "trigger": "request normal run enable",
+      "permissives": ["zero speed", "service lock disengaged", "brake/drive ready", "feedback valid", "no active fault", "pre-start clear-sweep check"]
+    },
+    {
+      "from": "RUN_READY",
+      "to": "RUNNING",
+      "trigger": "deliberate normal start command",
+      "permissives": ["released motion profile selected", "no restart lockout", "settling/restart criterion satisfied where applicable"]
+    },
+    {
+      "from": "RUNNING",
+      "to": "STOPPING",
+      "trigger": "normal stop request",
+      "permissives": ["healthy control/feedback available for normal controlled deceleration"]
+    },
+    {
+      "from": "STOPPING",
+      "to": "ENERGISED_HELD",
+      "trigger": "normal stop completes",
+      "permissives": ["verified zero speed", "holding path applied/verified"]
+    },
+    {
+      "from": "ENERGISED_HELD",
+      "to": "JOG_READY",
+      "trigger": "enter restricted commissioning mode",
+      "permissives": ["authorized commissioning procedure", "zero speed", "sweep clear", "jog limits controlled"]
+    },
+    {
+      "from": "JOG_READY",
+      "to": "JOGGING",
+      "trigger": "deliberate jog command",
+      "permissives": ["service lock disengaged", "feedback valid", "no active fault", "reduced motion limits active"]
+    },
+    {
+      "from": "JOGGING",
+      "to": "JOG_READY",
+      "trigger": "jog command released or target reached",
+      "permissives": ["validated jog stop sequence", "zero speed verified before next mechanical action"]
+    },
+    {
+      "from": "RUNNING",
+      "to": "FAULT_STOPPING",
+      "trigger": "motion fault, overspeed, snag/jam, feedback disagreement, drive fault or safety-chain demand",
+      "permissives": ["none; transition must not require operator acknowledgement"]
+    },
+    {
+      "from": "JOGGING",
+      "to": "FAULT_STOPPING",
+      "trigger": "motion fault or safety-chain demand",
+      "permissives": ["none; transition must not require operator acknowledgement"]
+    },
+    {
+      "from": "FAULT_STOPPING",
+      "to": "FAULT_HELD",
+      "trigger": "fault stop completes",
+      "permissives": ["verified zero speed", "holding condition established", "fault remains latched"]
+    },
+    {
+      "from": "FAULT_HELD",
+      "to": "ENERGISED_HELD",
+      "trigger": "deliberate fault reset",
+      "permissives": ["root cause inspected/dispositioned as required", "feedback valid", "zero speed", "reset itself does not command motion"]
+    },
+    {
+      "from": "FAULT_HELD",
+      "to": "SERVICE_LOCKED",
+      "trigger": "prepare for mechanical fault inspection",
+      "permissives": ["verified zero speed", "align service receiver by released controlled procedure if movement is still allowed", "positive lock engaged/directly verified", "kinetic LOTO applied"]
+    },
+    {
+      "from": "ENERGISED_HELD",
+      "to": "SERVICE_LOCKED",
+      "trigger": "planned service request",
+      "permissives": ["verified zero speed", "move to approved service index if necessary before isolation", "isolate kinetic power", "positive lock engaged/directly verified before access"]
+    },
+    {
+      "from": "SERVICE_LOCKED",
+      "to": "MANUAL_RECOVERY_LOCKED",
+      "trigger": "released recovery procedure requires manual brake/drive release",
+      "permissives": ["LOTO active", "service lock proof state directly verified", "recovery procedure identifies stored-energy hazards", "no freewheel path created"]
+    },
+    {
+      "from": "MANUAL_RECOVERY_LOCKED",
+      "to": "SERVICE_LOCKED",
+      "trigger": "manual recovery step complete",
+      "permissives": ["normal holding path restored before service lock removal", "all manual releases reset and verified"]
+    },
+    {
+      "from": "ANY_MOTION_OR_HELD_STATE",
+      "to": "RETENTION_ENGAGED",
+      "trigger": "secondary-retention contact/engagement confirmed or credibly suspected",
+      "permissives": ["none; ordinary restart is prohibited"]
+    }
+  ],
+  "operatorUxRequirements": [
+    "Never label a software-held zero-speed condition as safe for mechanical access; only SERVICE_LOCKED or an approved equivalent mechanically restrained state permits access under LOTO.",
+    "Display or label STOPPED/HELD separately from MECHANICALLY LOCKED.",
+    "Provide a directly visible mechanical indication of service-lock engagement; an electrical indicator may supplement but not replace it.",
+    "Fault reset is a separate deliberate action and never resumes a previous run/jog command.",
+    "Jog controls must visibly indicate restricted commissioning mode and the active reduced motion limits.",
+    "A service-index request should show that alignment motion can occur and must not imply the carrier is locked when the index is reached.",
+    "Present active fault identity and latched status; where logging is implemented include command, carrier feedback, drive load estimate and stop outcome.",
+    "RETENTION_ENGAGED must present an out-of-service condition that cannot be cleared through ordinary operator reset.",
+    "Manual release/recovery controls or instructions must state that positive service lock and LOTO precede release of the normal holding path.",
+    "Avoid ambiguous colour-only status communication; labels and physical state cues must remain understandable without relying solely on colour.",
+    "Do not expose automatic direction reversal as a normal operator option while reversal remains unapproved.",
+    "Power restoration must return to a non-moving held/fault state, never silently restore the previous motion command."
+  ],
+  "manualRecoveryRules": [
+    "No manual brake/drive release before zero speed and positive service-lock engagement are independently verified.",
+    "No recovery procedure may intentionally create uncontrolled free rotation of the 240-element field.",
+    "If service-index alignment cannot be achieved under powered controlled motion, a project-specific recovery method must be engineered before access rather than improvising force on the carrier.",
+    "Restore the normal holding/braking path and verify it before withdrawing the service lock.",
+    "Any retention engagement or structural contact requires engineering disposition before manual movement."
+  ],
+  "promotionGate": {
+    "stateTransitionsReviewed": false,
+    "physicalLockStateVerified": false,
+    "jogModeValidated": false,
+    "faultResetValidated": false,
+    "manualRecoveryValidated": false,
+    "operatorIndicationsValidated": false
+  }
+}

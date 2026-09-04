@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-test-plan.schema.json",
+  "title": "AETHERIA VX4800 kinetic dynamic test plan",
+  "type": "object",
+  "required": ["schemaVersion", "fixtureId", "planRevision", "status", "authority", "testCases", "stagePromotionRules", "promotionGate"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "planRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "authority": {"enum": ["engineering-development-input", "controlled"]},
+    "testCases": {
+      "type": "array",
+      "minItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["id", "stage", "purpose", "prerequisites", "stimulus", "measurements", "acceptanceCriteriaStatus", "blocksGates"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "stage": {"enum": ["T1", "T2", "T3", "T4"]},
+          "purpose": {"type": "string", "minLength": 1},
+          "prerequisites": {"type": "array", "items": {"type": "string"}},
+          "stimulus": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "measurements": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "acceptanceCriteriaStatus": {"enum": ["tbd-physical-baseline-required", "controlled"]},
+          "blocksGates": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+    "stagePromotionRules": {"type": "array", "minItems": 4, "items": {"type": "string"}},
+    "promotionGate": {
+      "type": "object",
+      "required": ["t1CriteriaControlled", "t1Passed", "t2CriteriaControlled", "t2Passed", "t3CriteriaControlled", "t3Passed", "t4CriteriaControlled", "t4Passed", "faultCasesPassed", "endurancePassed"],
+      "properties": {
+        "t1CriteriaControlled": {"type": "boolean"},
+        "t1Passed": {"type": "boolean"},
+        "t2CriteriaControlled": {"type": "boolean"},
+        "t2Passed": {"type": "boolean"},
+        "t3CriteriaControlled": {"type": "boolean"},
+        "t3Passed": {"type": "boolean"},
+        "t4CriteriaControlled": {"type": "boolean"},
+        "t4Passed": {"type": "boolean"},
+        "faultCasesPassed": {"type": "boolean"},
+        "endurancePassed": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

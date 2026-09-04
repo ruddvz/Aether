@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-rfq-outbound.schema.json",
+  "title": "AETHERIA VX4800 kinetic RFQ outbound package manifest",
+  "type": "object",
+  "required": ["schemaVersion", "fixtureId", "outboundRevision", "status", "documents", "dispatchBoundary"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "outboundRevision": {"type": "string"},
+    "status": {"const": "prepared-not-sent"},
+    "documents": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["rfqPackageId", "primaryTarget", "alternateTargets", "contactEvidenceRefs", "documentPath", "subject", "outboundStatus", "unknownsNotToInvent"],
+        "properties": {
+          "rfqPackageId": {"enum": ["RFQ-KIN-BRG-01", "RFQ-KIN-DRV-01", "RFQ-KIN-BELT-01", "RFQ-KIN-BRK-01", "RFQ-KIN-FBK-01", "RFQ-KIN-FAB-01"]},
+          "primaryTarget": {"type": "string", "minLength": 1},
+          "alternateTargets": {"type": "array", "items": {"type": "string"}},
+          "contactEvidenceRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "documentPath": {"type": "string", "pattern": "^docs/rfq/vx4800/.*\\.md$"},
+          "subject": {"type": "string", "minLength": 1},
+          "outboundStatus": {"const": "prepared-not-sent"},
+          "unknownsNotToInvent": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "dispatchBoundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

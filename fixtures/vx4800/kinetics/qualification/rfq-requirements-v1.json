@@ -1,0 +1,81 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-rfq.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "rfqRevision": "1.0.0",
+  "status": "supplier-enquiry-input-not-selection",
+  "purpose": "Request comparable, traceable technical responses for the rotating-carrier mechanism without allowing suppliers to infer final product loads from incomplete decorative mass assumptions.",
+  "commonInformationToAllSuppliers": [
+    "fixture VX4800-BF-01",
+    "240 suspended elements rotate as one field",
+    "vertical rotation axis",
+    "operating speed envelope 0.08 to 0.65 rpm",
+    "2400 x 1500 x 150 mm canopy envelope",
+    "rotating carrier coordination envelope approximately 2260 x 1330 mm with 24 mm coordination thickness parameter",
+    "no powered rotating loads and no slip ring under current architecture",
+    "actual rotating mass, center of gravity, dynamic amplification, bearing loads, drive torque and brake torque remain controlled unknowns pending physical evidence"
+  ],
+  "supplierPackages": [
+    {
+      "id": "RFQ-KIN-BRG-01",
+      "scope": "primary bearing / slewing or crossed-roller architecture",
+      "selectionStatus": "rfq-study-only",
+      "informationToSupplier": ["speed envelope", "available canopy envelope", "vertical-axis suspended rotating carrier", "combined load calculation will be supplied before final selection", "very low running noise and torque are product requirements"],
+      "requiredSupplierResponse": ["recommended bearing family and exact candidate variant only if the supplier has enough data to recommend one", "required axial/radial/moment design inputs", "combined-load calculation method or load diagram", "starting/running torque method and available values for proposed variant", "mounting flatness, rigidity, datum and fastener requirements", "bolt grade/count/preload or tensioning procedure", "lubrication and corrosion protection requirements", "runout/play/preload information", "service life calculation method", "inspection/re-lubrication intervals", "CAD/mating dimensions", "replaceability requirements", "lead time and application-engineering contact"],
+      "prohibitedAssumptions": ["do not assume suspended glass/acrylic mass", "do not treat catalog maximum load as VX4800 design load", "do not assume mounting structure is perfectly rigid", "do not assume a bearing with internal seals provides secondary retention"]
+    },
+    {
+      "id": "RFQ-KIN-DRV-01",
+      "scope": "fixed motor/reducer and positive carrier drive",
+      "selectionStatus": "rfq-study-only",
+      "informationToSupplier": ["carrier output speed 0.08 to 0.65 rpm", "jerk-limited motion is preferred study", "normal direction reversal is not currently approved", "drive must not be primary structural support", "final torque and inertia will follow measured mass/dynamic tests"],
+      "requiredSupplierResponse": ["motor/reducer family suitable for continuous very-low-speed motion", "speed regulation method and minimum stable speed", "output bearing/load limits", "backlash/torsional compliance", "efficiency and thermal data across proposed operating range", "audible/structure-borne noise information where available", "manual/service movement provisions", "mounting orientation limits", "lubrication/maintenance", "exact drive-control interface assumptions", "CAD/mating dimensions", "torque-speed curves once final load inputs are issued"],
+      "prohibitedAssumptions": ["do not size final torque before approved load cases", "do not use gearbox self-locking as the service lock", "do not assume motor brake alone contains transmission failure"]
+    },
+    {
+      "id": "RFQ-KIN-BELT-01",
+      "scope": "synchronous belt / toothed carrier ring transmission",
+      "selectionStatus": "rfq-study-only",
+      "informationToSupplier": ["positive non-slip transmission preferred over friction drive", "carrier speed envelope", "large carrier ring packaging study", "bearing/support reactions from belt tension must be controlled"],
+      "requiredSupplierResponse": ["recommended belt/tooth family for large-diameter slow positioning duty", "minimum pulley/tooth engagement requirements", "belt width selection method", "installation tension calculation method", "predicted static tension and shaft/separation forces after torque case is provided", "tensioner approach", "alignment and runout tolerances", "tooth-jump/ratcheting avoidance requirements", "wear/inspection/re-tension guidance", "ring/sprocket fabrication tolerance guidance", "noise information where available"],
+      "prohibitedAssumptions": ["do not set belt tension from rule of thumb", "do not ignore pretension in bearing/support reactions", "do not assume low rpm eliminates tooth-jump or alignment risks"]
+    },
+    {
+      "id": "RFQ-KIN-BRK-01",
+      "scope": "direct-carrier power-off holding/fault brake",
+      "selectionStatus": "rfq-study-only",
+      "informationToSupplier": ["fixed-side brake preferred", "passive rotating annular brake ring/disc", "spring-applied/electrically released or equivalent power-off architecture under study", "service lock remains separate", "final holding/stopping torque and energy remain unknown"],
+      "requiredSupplierResponse": ["candidate caliper/brake family for direct disc/ring application", "spring-applied/power-off behavior", "required disc/ring thickness and friction material compatibility", "clamping/tangential force data and method to convert to holding torque at selected radius", "static holding versus dynamic-stop capability and any limitations of each duty", "maximum energy and thermal duty method", "release time/apply time", "manual release method and safeguards", "wear monitoring/air-gap adjustment", "brake-state switch options", "electrical release requirements", "mounting stiffness/alignment/runout limits", "CAD/mating dimensions", "inspection and replacement procedure"],
+      "prohibitedAssumptions": ["do not select final brake size before approved torque/energy cases", "do not assume static holding rating equals emergency-stop capability", "do not treat brake as mechanical service lock", "do not require rotating electrical power"]
+    },
+    {
+      "id": "RFQ-KIN-FBK-01",
+      "scope": "fixed-side carrier position/speed feedback with passive rotating target",
+      "selectionStatus": "rfq-study-only",
+      "informationToSupplier": ["powered electronics should remain fixed", "carrier speed can be as low as 0.08 rpm", "service index/reference may be required", "runout and air-gap tolerance must be designed rather than assumed"],
+      "requiredSupplierResponse": ["fixed readhead plus passive ring/scale/target options", "incremental versus absolute capability", "index/reference options", "resolution and update behavior at very low speed", "air-gap/runout and concentricity tolerances", "contamination/environment limitations", "startup/reference behavior after power restoration", "diagnostic outputs", "independent second-channel options if risk assessment requires overspeed plausibility", "CAD/mating dimensions", "interface and cable requirements"],
+      "prohibitedAssumptions": ["do not introduce powered rotating encoder electronics without architecture change", "do not claim functional-safety capability unless the exact variant and complete safety architecture support it", "do not assume one feedback channel is sufficient before risk assessment"]
+    },
+    {
+      "id": "RFQ-KIN-FAB-01",
+      "scope": "prototype structural hub/support ring, service lock and secondary-retention fabrication",
+      "selectionStatus": "rfq-study-only",
+      "informationToSupplier": ["controlled outer canopy/carrier envelopes", "primary and secondary structural paths are separate", "precision bearing support requirements will follow selected bearing", "service lock and retention require proof-test access"],
+      "requiredSupplierResponse": ["fabrication/machining capability for large flat bearing support rings", "achievable post-weld machining flatness and inspection method", "material traceability", "weld procedure/heat distortion control", "fastener access and torque/tensioning capability", "NDT options for critical structural features", "removable/replaceable module strategy", "prototype measurement report format", "proof-load fixture capability", "CAD format support"],
+      "prohibitedAssumptions": ["do not weld after final bearing-face machining without controlled distortion review", "do not use decorative skin as structure", "do not combine primary bearing bolts and secondary-retention attachments by convenience without approved common-cause review"]
+    }
+  ],
+  "commonSubmittals": [
+    "exact manufacturer and candidate family/variant identification",
+    "current controlled datasheet/manual revision",
+    "2D mating drawing and 3D CAD where available",
+    "installation and maintenance instructions",
+    "declared assumptions and missing inputs",
+    "all numeric ratings tied to the exact proposed variant and operating condition",
+    "application-engineering calculation or selection record where supplied",
+    "service/replacement access requirements",
+    "commercial lead time separated from technical approval"
+  ],
+  "commercialAndTechnicalSeparation": "A low price, short lead time or supplier recommendation cannot close an engineering promotion gate without the required calculation and physical evidence.",
+  "releaseRule": "RFQ responses may populate the qualification shortlist, but no bearing, drive, belt/gear, brake or feedback component becomes selected until exact measured inputs and approved load/fault cases are available and the repository promotion gates are deliberately updated."
+}

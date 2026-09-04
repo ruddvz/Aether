@@ -1,0 +1,78 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-rfq-dispatch.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "dispatchRevision": "1.0.0",
+  "status": "dispatch-planning",
+  "packages": [
+    {
+      "rfqPackageId": "RFQ-KIN-BRG-01",
+      "candidateTargets": [
+        {"name": "Kaydon Bearings", "basis": "Repository manufacturer evidence exists for slewing-bearing mounting/installation requirements and a current official engineering-support route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRG-KAYDON-01"},
+        {"name": "Schaeffler Canada Inc.", "basis": "Crossed-roller bearing family remains an approved alternate study family and a current official Canadian contact route has now been verified; no Schaeffler variant is selected.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRG-SCHAEFFLER-01"}
+      ],
+      "dispatchStatus": "ready-to-issue",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-DRV-01",
+      "candidateTargets": [
+        {"name": "SEW-EURODRIVE Company of Canada Ltd.", "basis": "Current official Canadian technical/online-support route is verified; supplier remains an RFQ target only and no exact gearmotor/reducer variant is selected.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-DRV-SEW-01"}
+      ],
+      "dispatchStatus": "ready-to-issue",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-BELT-01",
+      "candidateTargets": [
+        {"name": "Gates Corporation", "basis": "Repository manufacturer evidence exists for synchronous-belt design tension/reactions and a current official Industrial Technical & Engineering Support route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BELT-GATES-01"}
+      ],
+      "dispatchStatus": "ready-to-issue",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-BRK-01",
+      "candidateTargets": [
+        {"name": "RINGSPANN Corporation / RINGSPANN GmbH", "basis": "Repository manufacturer evidence exists for spring-activated electromagnetically released brake-caliper architecture and a current official North American contact route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRK-RINGSPANN-01"},
+        {"name": "Chr. Mayr GmbH + Co. KG", "basis": "Direct-carrier fail-safe brake families have been reviewed as architecture precedents and the current official safety-brake technical enquiry route is verified; no Mayr model or safety performance is selected.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRK-MAYR-01"}
+      ],
+      "dispatchStatus": "ready-to-issue",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-FBK-01",
+      "candidateTargets": [
+        {"name": "HEIDENHAIN", "basis": "Repository manufacturer evidence exists for modular fixed-readhead/passive-scale angle encoders and a current official International Sales/application-advice route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-FBK-HEIDENHAIN-01"}
+      ],
+      "dispatchStatus": "ready-to-issue",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-FAB-01",
+      "candidateTargets": [
+        {"name": "Bormill Inc.", "basis": "Official capacity information shows large vertical turning, fabrication/welding and prototype machining with a current Ontario quote/contact route. This qualifies an RFQ enquiry only; distortion control, traceability, inspection/NDT and proof-load capability remain unanswered technical requirements.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-FAB-BORMILL-01"}
+      ],
+      "dispatchStatus": "ready-to-issue",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    }
+  ],
+  "releaseRule": "A candidate target is not an issued RFQ. Contact qualification proves only that a current public route exists, not technical approval. Dispatch status may move to issued only after an external channel/reference and issue date are recorded. A response may become comparable only through a validated RFQ response record; no dispatch state selects a component or fabricator."
+}
