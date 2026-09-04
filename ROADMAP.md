@@ -70,7 +70,10 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [x] Define CAD-facing functional datums, independent mechanical interfaces, tolerance closures, failure-state models and fail-closed interface release gates
   - [x] Define thirteen traceable normal/fault/service load cases with explicit evidence classes and no unsupported numeric results
   - [x] Generate fail-safe P0 DXF coordination output from controlled setout while refusing unresolved mechanism footprints and any inferred physical rotation-axis XY datum
-  - [ ] Issue kinetic RFQs and archive supplier application-engineering responses/CAD
+  - [x] Define machine-verifiable RFQ dispatch and supplier-response intake with exact-variant, assumption, evidence and provenance gates
+  - [x] Create RFQ execution issue and dispatch register that distinguish research targets from actual external issue/response states
+  - [ ] Qualify external application-engineering channels and issue the six kinetic RFQ packages
+  - [ ] Archive supplier responses/CAD in validated response records and disposition clarifications
   - [ ] Populate exact supplier mating data and close bearing/drive/brake/lock/retention/feedback tolerance loops
   - [ ] Replace P0 annotation-only mechanism callouts with supplier/evidence-backed parametric interface geometry and failure-state configurations without changing controlled setout
   - [ ] Control rotating mass, center of gravity, production variation and dynamic load cases
