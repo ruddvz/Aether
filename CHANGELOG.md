@@ -51,3 +51,12 @@ All notable repository and product presentation changes are recorded here.
 - Replaced archive-oriented build steps with `scripts/build_product.py`, which builds repository product artifacts directly without generating ZIP packages.
 - Removed ZIP-specific CI gates and download publication from the active repository workflow.
 - Kept engineering revision 1.3.0 and presentation revision 5.2.0 unchanged; the new web tooling remains review-only and cannot become manufacturing authority.
+
+## 2026-09-04 - VX4800 rotating-carrier engineering architecture
+
+- Added a machine-readable kinetic architecture for primary load path, bearing/drive studies, braking, positive service locking, independent annular secondary retention, balance/trim, feedback, faults, power loss, dynamic clearance and maintenance.
+- Added a manufacturer-scoped qualification shortlist without selecting final bearing, drive, brake or encoder ratings before measured mass/load evidence exists.
+- Added calculation frameworks that consume controlled S/M/L mass records, production variation and physical dynamic-test evidence instead of decorative-material assumptions.
+- Added staged T1 through T4 dynamic testing ending in a full 240-element factory pre-hang.
+- Added JSON Schema and regression gates that prevent final kinetic approval while required mass, component-selection, safety, clearance, test and maintenance gates remain open.
+- Preserved the 240-element engineering schedule, S66/M144/L30 allocation, 14 fixed LEDs, canopy envelope, manufacturing authority and fixed-side no-slip-ring electrical boundary.
