@@ -18,8 +18,7 @@
       "viewerTemplate": "fixtures/vx4800/presentation/v5.2.0/viewer.template.html",
       "presentationStudy": "fixtures/vx4800/presentation/v5.2.0/study.json",
       "photometry": "fixtures/vx4800/photometry/concept-v5.2.0.json",
-      "publicPath": "products/vx4800/",
-      "releaseOutputName": "AETHERIA_VORTEX_v5.2.0.zip"
+      "publicPath": "products/vx4800/"
     }
   }
 }
