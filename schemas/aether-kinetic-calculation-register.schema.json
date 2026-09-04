@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-calculation-register.schema.json",
+  "title": "AETHERIA VX4800 kinetic calculation and load-case register",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "registerRevision",
+    "status",
+    "authority",
+    "finalCalculationPackageReleased",
+    "controlledBaseline",
+    "evidenceClasses",
+    "calculationRules",
+    "loadCases",
+    "releaseGates"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "registerRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "authority": {"enum": ["engineering-development-input", "controlled"]},
+    "finalCalculationPackageReleased": {"type": "boolean"},
+    "controlledBaseline": {
+      "type": "object",
+      "required": ["elementCount", "sizeAllocation", "canopyEnvelopeMm", "rotatingCarrierCoordinationMm", "speedRpm", "fixedAccentHeadCount", "slipRingStatus"],
+      "properties": {
+        "elementCount": {"const": 240},
+        "sizeAllocation": {"const": {"S": 66, "M": 144, "L": 30}},
+        "canopyEnvelopeMm": {"const": [2400, 1500, 150]},
+        "rotatingCarrierCoordinationMm": {"const": {"width": 2260, "depth": 1330, "thicknessParameter": 24}},
+        "speedRpm": {"const": {"minimum": 0.08, "nominal": 0.36, "maximum": 0.65}},
+        "fixedAccentHeadCount": {"const": 14},
+        "slipRingStatus": {"const": "not-required-by-current-architecture"}
+      },
+      "additionalProperties": true
+    },
+    "evidenceClasses": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "published-manufacturer-data",
+          "engineering-calculation",
+          "prototype-measurement",
+          "controlled-production-measurement",
+          "assumption",
+          "design-target"
+        ]
+      }
+    },
+    "calculationRules": {"type": "array", "minItems": 5, "items": {"type": "string"}},
+    "loadCases": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "status", "purpose", "requiredInputs", "sourceEvidence", "outputs", "prohibitedAssumptions", "verificationMethod"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "name": {"type": "string", "minLength": 1},
+          "status": {"enum": ["blocked-inputs", "calculation-ready", "verified"]},
+          "purpose": {"type": "string", "minLength": 1},
+          "requiredInputs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "sourceEvidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["class", "source", "status"],
+              "properties": {
+                "class": {"enum": ["published-manufacturer-data", "engineering-calculation", "prototype-measurement", "controlled-production-measurement", "assumption", "design-target"]},
+                "source": {"type": "string", "minLength": 1},
+                "status": {"enum": ["required", "available", "controlled", "not-applicable"]}
+              }
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "value", "unit", "status"],
+              "properties": {
+                "id": {"type": "string", "minLength": 1},
+                "value": {"type": ["number", "string", "null"]},
+                "unit": {"type": ["string", "null"]},
+                "status": {"enum": ["tbd", "calculated", "verified"]}
+              }
+            }
+          },
+          "prohibitedAssumptions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "verificationMethod": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        }
+      }
+    },
+    "releaseGates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "massMapControlled",
+        "cgControlled",
+        "suspendedFieldDynamicsCorrelated",
+        "bearingSupplierDataControlled",
+        "driveSupplierDataControlled",
+        "brakeSupplierDataControlled",
+        "structureModelControlled",
+        "retentionFailureCaseControlled",
+        "serviceLockLoadCaseControlled",
+        "calculationsIndependentlyChecked"
+      ],
+      "properties": {
+        "massMapControlled": {"type": "boolean"},
+        "cgControlled": {"type": "boolean"},
+        "suspendedFieldDynamicsCorrelated": {"type": "boolean"},
+        "bearingSupplierDataControlled": {"type": "boolean"},
+        "driveSupplierDataControlled": {"type": "boolean"},
+        "brakeSupplierDataControlled": {"type": "boolean"},
+        "structureModelControlled": {"type": "boolean"},
+        "retentionFailureCaseControlled": {"type": "boolean"},
+        "serviceLockLoadCaseControlled": {"type": "boolean"},
+        "calculationsIndependentlyChecked": {"type": "boolean"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"finalCalculationPackageReleased": {"const": true}}, "required": ["finalCalculationPackageReleased"]},
+      "then": {
+        "properties": {
+          "authority": {"const": "controlled"},
+          "status": {"const": "released"},
+          "loadCases": {
+            "not": {"contains": {"properties": {"status": {"const": "blocked-inputs"}}, "required": ["status"]}}
+          },
+          "releaseGates": {
+            "properties": {
+              "massMapControlled": {"const": true},
+              "cgControlled": {"const": true},
+              "suspendedFieldDynamicsCorrelated": {"const": true},
+              "bearingSupplierDataControlled": {"const": true},
+              "driveSupplierDataControlled": {"const": true},
+              "brakeSupplierDataControlled": {"const": true},
+              "structureModelControlled": {"const": true},
+              "retentionFailureCaseControlled": {"const": true},
+              "serviceLockLoadCaseControlled": {"const": true},
+              "calculationsIndependentlyChecked": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": true
+}
