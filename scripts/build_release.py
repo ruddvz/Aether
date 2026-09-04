@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-import base64
 import hashlib
 import json
 import shutil
@@ -12,8 +11,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 FIX = ROOT / "fixtures/vx4800"
 BUILD = ROOT / "build/vx4800"
-AUTH_DIR = ROOT / "releases/vx4800/5.2.0"
-AUTH_PATH = AUTH_DIR / "authority.json"
+AUTH_PATH = ROOT / "releases/vx4800/5.2.0/authority.json"
 BUILD.mkdir(parents=True, exist_ok=True)
 
 FINAL_NAME = "AETHERIA_VORTEX_v5.2.0.zip"
@@ -74,10 +72,10 @@ def generate_current_sources() -> list[tuple[str, Path]]:
 def historical_member_bytes(archive_name: str, source_path: Path) -> bytes:
     data = source_path.read_bytes()
     if archive_name == "product/fixture.json":
-        # The verified V5.2 release used the same canonical JSON semantics with
-        # standard two-space pretty formatting. The GitHub recovery commit later
-        # compacted formatting only. Re-serialization reproduces the released member
-        # while ensuring any future semantic change still fails the authority hash.
+        # The recovered repository compacted this JSON after V5.2 was released.
+        # The historical release used the same parsed object serialized with
+        # two-space indentation and one trailing newline. Reproduce that exact
+        # serialization without making formatting part of live product authority.
         data = (json.dumps(json.loads(data), indent=2) + "\n").encode("utf-8")
     return data
 
@@ -127,28 +125,6 @@ def verify_member_bytes(zip_path: Path, auth: dict, label: str) -> None:
         raise SystemExit(1)
 
 
-def restore_immutable_release(auth: dict) -> Path:
-    chunk_paths = sorted(AUTH_DIR.glob(auth["release"]["chunkGlob"]))
-    if not chunk_paths:
-        raise SystemExit("No immutable V5.2 release chunks found")
-    encoded = "".join(path.read_text().strip() for path in chunk_paths)
-    try:
-        data = base64.b64decode(encoded, validate=True)
-    except Exception as exc:
-        raise SystemExit(f"Immutable V5.2 base64 decode failed: {exc}") from exc
-
-    expected_length = auth["release"]["byteLength"]
-    expected_sha = auth["release"]["sha256"]
-    if len(data) != expected_length:
-        raise SystemExit(f"Immutable V5.2 release byte length {len(data)} != {expected_length}")
-    digest = sha256_bytes(data)
-    if digest != expected_sha:
-        raise SystemExit(f"Immutable V5.2 release sha256 {digest} != {expected_sha}")
-    FINAL_OUT.write_bytes(data)
-    verify_member_bytes(FINAL_OUT, auth, "immutable release")
-    return FINAL_OUT
-
-
 def build() -> Path:
     auth = authority()
     candidate = build_candidate()
@@ -156,25 +132,21 @@ def build() -> Path:
 
     expected_sha = auth["release"]["sha256"]
     candidate_sha = sha256(candidate)
+    if candidate_sha != expected_sha:
+        raise SystemExit(
+            f"Rebuilt V5.2 archive sha256 {candidate_sha} != immutable authority {expected_sha}"
+        )
+
+    shutil.copyfile(candidate, FINAL_OUT)
+    if FINAL_OUT.stat().st_size != auth["release"]["byteLength"]:
+        raise SystemExit("Final V5.2 release byte length differs from immutable authority")
+    verify_member_bytes(FINAL_OUT, auth, "final release")
+
     print(candidate)
     print(f"rebuilt candidate sha256: {candidate_sha}")
-
-    if candidate_sha == expected_sha:
-        # Preferred path: the pinned build already reproduces the exact historical
-        # archive, so no binary recovery material is required at runtime.
-        shutil.copyfile(candidate, FINAL_OUT)
-        final = FINAL_OUT
-        print("rebuilt candidate is byte-identical to immutable V5.2 authority")
-    else:
-        print("rebuilt ZIP stream differs; using immutable binary fallback")
-        final = restore_immutable_release(auth)
-
-    if sha256(final) != expected_sha:
-        raise SystemExit("Final V5.2 release does not match immutable authority SHA")
-    verify_member_bytes(final, auth, "final release")
-    print(final)
-    print(f"immutable release sha256: {sha256(final)}")
-    return final
+    print(FINAL_OUT)
+    print(f"immutable release sha256: {sha256(FINAL_OUT)}")
+    return FINAL_OUT
 
 
 if __name__ == "__main__":
