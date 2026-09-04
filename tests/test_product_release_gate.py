@@ -6,6 +6,8 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[1]
 GATE = ROOT / "fixtures/vx4800/compliance/release-gate-v1.json"
 SCHEMA = ROOT / "schemas/aether-product-release-gate.schema.json"
+EVIDENCE_INDEX = ROOT / "fixtures/vx4800/compliance/evidence-index-v1.json"
+EVIDENCE_SCHEMA = ROOT / "schemas/aether-qualification-evidence-index.schema.json"
 FIXTURE = ROOT / "fixtures/vx4800/fixture.json"
 
 
@@ -24,6 +26,16 @@ def test_release_gate_schema_and_identity():
     assert gate["status"] == "open"
 
 
+def test_evidence_index_schema_identity_and_unique_ids():
+    index = load_json(EVIDENCE_INDEX)
+    schema = load_json(EVIDENCE_SCHEMA)
+    errors = list(Draft202012Validator(schema).iter_errors(index))
+    assert not errors, [e.message for e in errors]
+    assert index["fixtureId"] == "vx4800-bf-01"
+    ids = [entry["id"] for entry in index["records"]]
+    assert len(ids) == len(set(ids)), "Duplicate evidence IDs are not allowed"
+
+
 def test_repository_validation_is_not_physical_or_certification_evidence():
     gate = load_json(GATE)
     boundary = gate["validationBoundary"]
@@ -38,6 +50,11 @@ def test_repository_validation_is_not_physical_or_certification_evidence():
     assert classes["ENGINEERING"]["canClosePhysicalTest"] is False
     assert classes["PHYSICAL"]["canClosePhysicalTest"] is True
     assert classes["THIRD_PARTY"]["canClosePhysicalTest"] is True
+
+    index = load_json(EVIDENCE_INDEX)
+    for entry in index["records"]:
+        if entry["evidenceClass"] in {"REPOSITORY", "SUPPLIER", "ENGINEERING"}:
+            assert entry["canClosePhysicalTest"] is False, entry["id"]
 
 
 def test_standards_are_targets_not_certification_claims():
@@ -80,11 +97,26 @@ def test_physical_domains_require_physical_evidence():
 
 def test_passed_or_not_applicable_rows_require_traceable_references():
     gate = load_json(GATE)
+    index = load_json(EVIDENCE_INDEX)
+    records = {entry["id"]: entry for entry in index["records"]}
+
     for entry in gate["evidenceMatrix"]:
+        evidence_refs = entry.get("evidenceRefs", [])
+        deviation_refs = entry.get("deviationRefs", [])
+
+        for evidence_ref in evidence_refs:
+            assert evidence_ref in records, f"Dangling evidence ref {evidence_ref} in {entry['id']}"
+
         if entry["status"] == "passed":
-            assert entry.get("evidenceRefs"), f"Passed requirement lacks evidence refs: {entry['id']}"
+            assert evidence_refs, f"Passed requirement lacks evidence refs: {entry['id']}"
+            if "PHYSICAL" in entry["requiredEvidence"] or "THIRD_PARTY" in entry["requiredEvidence"]:
+                closing_classes = {records[ref]["evidenceClass"] for ref in evidence_refs}
+                assert closing_classes & {"PHYSICAL", "THIRD_PARTY"}, (
+                    f"Physical/third-party requirement {entry['id']} lacks physical/third-party evidence"
+                )
+
         if entry["status"] == "not-applicable":
-            assert entry.get("deviationRefs"), f"N/A requirement lacks disposition refs: {entry['id']}"
+            assert deviation_refs, f"N/A requirement lacks disposition refs: {entry['id']}"
 
 
 def test_first_article_and_release_stages_are_not_released():
