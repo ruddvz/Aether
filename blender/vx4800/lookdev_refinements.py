@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import bpy
 
-VISUALIZATION_REVISION = "0.11.0"
+VISUALIZATION_REVISION = "0.12.0"
 
 FINISH_MATERIALS = {
     "dark_champagne": "MAT_PVD_DARK_CHAMPAGNE",
