@@ -123,11 +123,10 @@ def _build_staircase(collection: bpy.types.Collection) -> None:
     for index in range(12):
         y = -0.8 + index * 0.46
         z = -5.80 + index * 0.235
-        depth = 0.52
         _cube(
             f"ENV_STAIR_TREAD_{index + 1:02d}",
             collection,
-            (2.55, depth, 0.12),
+            (2.55, 0.52, 0.12),
             (3.55, y, z),
             walnut,
             env,
@@ -254,8 +253,12 @@ def prepare_additional_environment_render(camera_name: str) -> str | None:
     if collection is None:
         raise RuntimeError(f"Environment collection is missing: {selected_config['collection']}")
     collection.hide_render = False
-    for obj in collection.all_objects:
-        obj.hide_render = False
+    # Variant environments are intentionally flat collections. Iterate direct
+    # members rather than all_objects, which can expose a transient null weak
+    # reference after a saved .blend is reloaded headlessly.
+    for obj in collection.objects:
+        if obj is not None:
+            obj.hide_render = False
 
     backdrop = bpy.data.objects.get("STAGE_BACKDROP")
     if backdrop is not None:
