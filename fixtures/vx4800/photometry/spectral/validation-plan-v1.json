@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../../schemas/aether-spectral-validation-report.schema.json",
+  "$schema": "../../../../schemas/aether-spectral-validation-plan.schema.json",
   "schemaVersion": "1.0.0",
   "fixtureId": "vx4800-bf-01",
   "designRevision": "1.3.0",
