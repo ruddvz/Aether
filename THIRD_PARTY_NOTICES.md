@@ -1,7 +1,9 @@
 # Third-party notices
 
-This repository currently relies on or is designed to interoperate with permissively licensed tooling including Three.js (MIT), CadQuery (Apache-2.0), ezdxf (MIT), trimesh (MIT), jsonschema (MIT), pandas (BSD-3-Clause), NumPy (BSD-3-Clause), Pillow (HPND), and pytest (MIT).
+This repository currently relies on or is designed to interoperate with permissively licensed tooling including Three.js (MIT), CadQuery (Apache-2.0), ezdxf (MIT), trimesh (MIT), jsonschema (MIT), pandas (BSD-3-Clause), NumPy (BSD-3-Clause), Pillow (HPND), pytest (MIT), glTF-Transform CLI 4.5.0 (MIT), and three-mesh-bvh 0.9.14 (MIT).
 
-The V5.2 viewer loads pinned Three.js 0.185.1 modules from jsDelivr at runtime. A future offline release should vendor reviewed pinned modules and include their license text.
+The V5.2 presentation viewer loads pinned Three.js 0.185.1 modules from jsDelivr at runtime. The VX4800 technical inspector additionally loads pinned three-mesh-bvh 0.9.14 and Three.js GLTFLoader/MeshoptDecoder modules from jsDelivr. A future offline release should vendor reviewed pinned modules and include their license text.
+
+glTF-Transform CLI 4.5.0 is used only to create a derived Meshopt-compressed coordination GLB for browser review. The original coordination GLB remains the source asset for coordination QA, and neither file is manufacturing authority.
 
 See `docs/architecture/THIRD_PARTY_POLICY.md` and `docs/research/OPEN_SOURCE_LIGHTING_LANDSCAPE.md` for the broader integration policy.

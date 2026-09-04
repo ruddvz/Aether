@@ -43,9 +43,9 @@ This roadmap describes repository capabilities, not promised commercial release 
 ## Viewer and review tooling
 - [x] Refactor single-file development source into reusable Three.js modules
 - [x] Keep generated standalone HTML as a release artifact
-- [ ] Add optimized GLB pipeline with glTF-Transform
-- [ ] Add three-mesh-bvh inspection and proximity tools
-- [ ] Add measurement/annotation mode
+- [x] Add optimized GLB pipeline with glTF-Transform
+- [x] Add three-mesh-bvh inspection and proximity tools
+- [x] Add measurement/annotation mode
 - [ ] Visual QA across iPhone, Android, Safari, Chrome and desktop
 - [ ] Performance budgets and Lighthouse checks
 - [ ] Open Graph/share artwork

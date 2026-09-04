@@ -39,3 +39,15 @@ All notable repository and product presentation changes are recorded here.
 - Added a renderer-neutral measured-distribution browser adapter gated by controlled SHA-256 and provenance.
 - Added explicit rejection of unsupported multi-plane distributions in the first browser adapter.
 - Kept V5.2 presentation output unchanged until exact supplier/laboratory files are controlled.
+
+## 2026-09-04 - VX4800 technical inspection slice
+
+- Added a derived Meshopt web-geometry pipeline using pinned glTF-Transform CLI 4.5.0.
+- Added an optimization manifest and QA that preserve all 240 element nodes, 240 suspension-cable nodes and 14 fixed LED-head nodes.
+- Added the dedicated `/products/vx4800/inspect/` browser inspector with pinned Three.js 0.185.1 and three-mesh-bvh 0.9.14.
+- Added BVH-accelerated picking, exact nearest coordination-mesh surface clearance, point-to-point measurement and browser-local review annotations.
+- Replaced the early fixed 18-candidate proximity shortcut with lower-bound branch-and-bound traversal so nearest-clearance review is exact for the loaded coordination meshes.
+- Added Pages publication for the technical inspector, source coordination GLB, derived Meshopt GLB and optimization manifest.
+- Recovered the verified historical V5.2 release authority and traced an apparent ZIP-hash drift to compacted `fixture.json` formatting rather than changed product semantics.
+- Added historical member serialization plus archive/member SHA gates so `AETHERIA_VORTEX_v5.2.0.zip` reproduces the verified SHA-256 `4cffd5a003a718d359811bf6f3b406d8ad197a92cc3632f9321c6859dca48f79`.
+- Kept engineering revision 1.3.0 and presentation revision 5.2.0 unchanged; the new web tooling remains review-only and cannot become manufacturing authority.

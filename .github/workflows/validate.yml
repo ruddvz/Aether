@@ -21,6 +21,10 @@ jobs:
           cache-dependency-path: |
             requirements-dev.txt
             requirements-geometry.txt
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
       - name: Install validation dependencies
         run: pip install -r requirements-dev.txt -r requirements-geometry.txt
       - name: Validate canonical product data
@@ -29,6 +33,8 @@ jobs:
         run: python scripts/qa_geometry.py
       - name: Web geometry QA
         run: python scripts/qa_web_geometry.py
+      - name: Optimized web geometry QA
+        run: python scripts/qa_optimized_web_geometry.py
       - name: Run regression tests
         run: pytest -q
       - name: Build deterministic release
@@ -40,4 +46,8 @@ jobs:
           test -f _site/index.html
           test -f _site/products/vx4800/index.html
           test -f _site/products/vx4800/versions/5.2.0/index.html
+          test -f _site/products/vx4800/inspect/index.html
+          test -f _site/products/vx4800/inspect/inspector.app.js
+          test -f _site/downloads/vx4800/1.3.0/vx4800-coordination-v1.3.0.optimized.glb
+          test -f _site/downloads/vx4800/1.3.0/optimization-manifest.json
           test -f _site/downloads/vx4800/5.2.0/AETHERIA_VORTEX_v5.2.0.zip
