@@ -57,10 +57,22 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [x] Define positive mechanical service lock and normally-clear annular secondary retention
   - [x] Define balance/trim, fixed-side feedback, abnormal-motion and no-auto-restart requirements
   - [x] Define calculation inputs and staged physical dynamics/clearance validation
+  - [x] Complete adversarial fault-containment review and identify drive-transmission / holding-path common-cause risk
+  - [x] Define direct-carrier brake-ring study without selecting a final brake rating
+  - [x] Define distributed secondary-retention common-cause review requirements
+  - [x] Define commissioning/service mechanical state model separating held, locked and safe-to-access states
+  - [x] Define executable T1-T4 dynamic test plan and physical test-record schema
+  - [x] Define kinetic hazard register without inventing PL/SIL/category values
   - [ ] Control rotating mass, center of gravity, production variation and dynamic load cases
   - [ ] Select bearing and approve combined-load/mounting calculation
-  - [ ] Select drive/brake and approve torque/stopping calculations
-  - [ ] Validate service lock, secondary retention, feedback and fault handling
+  - [ ] Resolve direct-carrier holding/fault-brake architecture and transmission-failure containment
+  - [ ] Select drive and approve torque/stopping calculations
+  - [ ] Validate service lock, distributed secondary retention, feedback and fault handling
+  - [ ] Resolve independent/diverse overspeed monitoring need from released risk assessment
+  - [ ] Release kinetic risk assessment and safety-related function allocation
+  - [ ] Correlate suspended-field dynamics with drive/brake calculations
+  - [ ] Control acoustic acceptance and endurance duty
+  - [ ] Pass staged T1-T4 physical qualification and release maintenance plan
 - [ ] Structural calculation and site interface reactions
 - [ ] Full factory pre-hang and dynamic-clearance test
 - [ ] Electrical architecture and service access
