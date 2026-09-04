@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-rfq-response.schema.json",
+  "title": "AETHERIA VX4800 kinetic supplier RFQ response",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "responseRevision",
+    "rfqPackageId",
+    "responseStatus",
+    "supplier",
+    "exactVariant",
+    "suppliedEvidence",
+    "declaredAssumptions",
+    "missingInputs",
+    "complianceMatrix",
+    "technicalResponse",
+    "selectionState",
+    "releaseGates"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "responseRevision": {"type": "string"},
+    "rfqPackageId": {
+      "enum": [
+        "RFQ-KIN-BRG-01",
+        "RFQ-KIN-DRV-01",
+        "RFQ-KIN-BELT-01",
+        "RFQ-KIN-BRK-01",
+        "RFQ-KIN-FBK-01",
+        "RFQ-KIN-FAB-01"
+      ]
+    },
+    "responseStatus": {
+      "enum": [
+        "template-not-issued",
+        "issued-awaiting-response",
+        "received-unreviewed",
+        "technical-review",
+        "clarification-required",
+        "technically-comparable",
+        "rejected-insufficient-evidence"
+      ]
+    },
+    "supplier": {
+      "type": "object",
+      "required": ["manufacturer", "respondingEntity", "contactName", "contactReference", "responseDate"],
+      "properties": {
+        "manufacturer": {"type": ["string", "null"]},
+        "respondingEntity": {"type": ["string", "null"]},
+        "contactName": {"type": ["string", "null"]},
+        "contactReference": {"type": ["string", "null"]},
+        "responseDate": {"type": ["string", "null"], "format": "date"}
+      },
+      "additionalProperties": false
+    },
+    "exactVariant": {
+      "type": "object",
+      "required": ["family", "modelCode", "variantCode", "configurationNotes", "fullyIdentified"],
+      "properties": {
+        "family": {"type": ["string", "null"]},
+        "modelCode": {"type": ["string", "null"]},
+        "variantCode": {"type": ["string", "null"]},
+        "configurationNotes": {"type": ["string", "null"]},
+        "fullyIdentified": {"type": "boolean"}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"fullyIdentified": {"const": true}}},
+          "then": {
+            "properties": {
+              "family": {"type": "string", "minLength": 1},
+              "modelCode": {"type": "string", "minLength": 1},
+              "variantCode": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      ]
+    },
+    "suppliedEvidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "title", "revision", "sourceReference", "sha256", "exactVariantBound"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "type": {"enum": ["datasheet", "manual", "mating-drawing", "cad", "application-calculation", "test-report", "certificate", "commercial-only", "other"]},
+          "title": {"type": "string", "minLength": 1},
+          "revision": {"type": ["string", "null"]},
+          "sourceReference": {"type": ["string", "null"]},
+          "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "exactVariantBound": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "declaredAssumptions": {"type": "array", "items": {"type": "string"}},
+    "missingInputs": {"type": "array", "items": {"type": "string"}},
+    "complianceMatrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["requirement", "status", "evidenceRefs", "notes"],
+        "properties": {
+          "requirement": {"type": "string", "minLength": 1},
+          "status": {"enum": ["met", "partial", "not-met", "not-addressed", "not-applicable"]},
+          "evidenceRefs": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "technicalResponse": {
+      "type": "object",
+      "required": ["numericRatings", "matingData", "maintenanceData", "applicationEngineeringNotes"],
+      "properties": {
+        "numericRatings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value", "unit", "condition", "evidenceRef", "status"],
+            "properties": {
+              "name": {"type": "string"},
+              "value": {"type": ["number", "string", "null"]},
+              "unit": {"type": ["string", "null"]},
+              "condition": {"type": ["string", "null"]},
+              "evidenceRef": {"type": ["string", "null"]},
+              "status": {"enum": ["supplier-published", "supplier-calculated", "supplier-estimate", "not-provided"]}
+            },
+            "additionalProperties": false
+          }
+        },
+        "matingData": {"type": "array", "items": {"type": "string"}},
+        "maintenanceData": {"type": "array", "items": {"type": "string"}},
+        "applicationEngineeringNotes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "selectionState": {
+      "enum": ["not-selected", "candidate-for-shortlist", "shortlisted-not-selected", "rejected"]
+    },
+    "releaseGates": {
+      "type": "object",
+      "required": [
+        "exactVariantIdentified",
+        "assumptionsDisclosed",
+        "requiredSubmittalsPresent",
+        "numericRatingsVariantBound",
+        "loadInputsControlled",
+        "technicalReviewComplete",
+        "comparisonReady"
+      ],
+      "properties": {
+        "exactVariantIdentified": {"type": "boolean"},
+        "assumptionsDisclosed": {"type": "boolean"},
+        "requiredSubmittalsPresent": {"type": "boolean"},
+        "numericRatingsVariantBound": {"type": "boolean"},
+        "loadInputsControlled": {"type": "boolean"},
+        "technicalReviewComplete": {"type": "boolean"},
+        "comparisonReady": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "selectionState": {"enum": ["candidate-for-shortlist", "shortlisted-not-selected"]}
+        }
+      },
+      "then": {
+        "properties": {
+          "exactVariant": {"properties": {"fullyIdentified": {"const": true}}},
+          "releaseGates": {
+            "properties": {
+              "exactVariantIdentified": {"const": true},
+              "assumptionsDisclosed": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}
