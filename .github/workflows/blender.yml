@@ -111,16 +111,20 @@ jobs:
             test -s "build/blender/$output"
           }
 
+          # Core framing/optical regressions.
           render_shot product_hero landscape_preview VX4800_PRODUCT_HERO_PREVIEW.png
-          render_shot product_hero_low landscape_preview VX4800_PRODUCT_HERO_LOW_PREVIEW.png
           render_shot full_elevation landscape_preview VX4800_FULL_ELEVATION_PREVIEW.png
-          render_shot canopy_detail square_preview VX4800_CANOPY_DETAIL_PREVIEW.png
           render_shot butterfly_macro square_preview VX4800_BUTTERFLY_MACRO_PREVIEW.png
-          render_shot tail_detail square_preview VX4800_TAIL_DETAIL_PREVIEW.png
+
+          # Installed contexts.
           render_shot residential_wide landscape_preview VX4800_RESIDENTIAL_WIDE_PREVIEW.png
           render_shot residential_medium landscape_preview VX4800_RESIDENTIAL_MEDIUM_PREVIEW.png
           render_shot vertical_marketing vertical_preview VX4800_VERTICAL_MARKETING_PREVIEW.png
+          render_shot staircase_wide landscape_preview VX4800_STAIRCASE_WIDE_PREVIEW.png
+          render_shot hospitality_wide landscape_preview VX4800_HOSPITALITY_WIDE_PREVIEW.png
+          render_shot atrium_wide landscape_preview VX4800_ATRIUM_WIDE_PREVIEW.png
 
+          # Finish-study regressions on the same fixed canopy composition.
           render_shot canopy_detail square_preview VX4800_FINISH_BLACK_TITANIUM_PREVIEW.png --finish black_titanium
           render_shot canopy_detail square_preview VX4800_FINISH_BRUSHED_BRASS_PREVIEW.png --finish brushed_brass
           render_shot canopy_detail square_preview VX4800_FINISH_SATIN_NICKEL_PREVIEW.png --finish satin_nickel
