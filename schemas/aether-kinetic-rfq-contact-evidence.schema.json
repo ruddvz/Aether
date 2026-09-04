@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-rfq-contact-evidence.schema.json",
+  "title": "AETHERIA VX4800 kinetic RFQ contact evidence",
+  "type": "object",
+  "required": ["schemaVersion", "fixtureId", "evidenceRevision", "status", "records", "qualificationRule"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "evidenceRevision": {"type": "string"},
+    "status": {"const": "public-contact-evidence-not-dispatch-proof"},
+    "records": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["id", "rfqPackageIds", "organization", "sourceUrl", "accessedDate", "channelType", "publicContactReference", "qualificationStatus"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "rfqPackageIds": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "organization": {"type": "string", "minLength": 1},
+          "sourceUrl": {"type": "string", "minLength": 1},
+          "accessedDate": {"type": "string", "format": "date"},
+          "channelType": {"enum": ["engineering-support", "technical-support", "sales-application-engineering", "regional-sales-service", "online-support"]},
+          "publicContactReference": {"type": "string", "minLength": 1},
+          "qualificationStatus": {"const": "contact-qualified-not-issued"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "qualificationRule": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
