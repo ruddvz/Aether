@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-qualification-evidence-index.schema.json",
+  "title": "AETHERIA Qualification Evidence Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "fixtureId", "status", "records"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "enum": ["active", "frozen"]},
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "evidenceClass",
+          "authority",
+          "status",
+          "sourceType",
+          "reference",
+          "claim",
+          "canClosePhysicalTest"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^EVID-[A-Z0-9-]+$"},
+          "evidenceClass": {
+            "type": "string",
+            "enum": ["REPOSITORY", "SUPPLIER", "ENGINEERING", "PHYSICAL", "THIRD_PARTY"]
+          },
+          "authority": {
+            "type": "string",
+            "enum": ["reference", "controlled", "external-controlled"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["available", "superseded", "withdrawn"]
+          },
+          "sourceType": {
+            "type": "string",
+            "enum": [
+              "repository-file",
+              "supplier-document",
+              "engineering-calculation",
+              "physical-test-record",
+              "laboratory-report",
+              "certificate",
+              "inspection-report"
+            ]
+          },
+          "reference": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "claim": {"type": "string", "minLength": 1},
+          "canClosePhysicalTest": {"type": "boolean"},
+          "notes": {"type": "string"}
+        }
+      }
+    }
+  }
+}
