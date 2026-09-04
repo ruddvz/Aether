@@ -99,13 +99,12 @@ def build(output_dir=None):
             dxfattribs={"layer": "CONTROLLED_FIXED_LEDS"},
         )
 
-    # Annotation-only crosshair for the existing functional coordinate origin.
-    # It does not represent a bearing bore, shaft, bolt circle or released physical datum feature.
-    model.add_line((-20, 0), (20, 0), dxfattribs={"layer": "FUNCTIONAL_DATUM"})
-    model.add_line((0, -20), (0, 20), dxfattribs={"layer": "FUNCTIONAL_DATUM"})
+    # The architecture controls only that the rotation axis is vertical. It does not yet
+    # establish an XY physical datum feature. Do not infer that the composition origin is
+    # the bearing/shaft axis merely because the controlled setout is centered around it.
     model.add_text(
-        "KD-B FUNCTIONAL ROTATION AXIS / COORDINATE ORIGIN - PHYSICAL DATUM FEATURE TBD",
-        dxfattribs={"height": 16, "layer": "FUNCTIONAL_DATUM"},
+        "KD-B VERTICAL ROTATION AXIS - XY PHYSICAL DATUM LOCATION / FEATURE TBD; COMPOSITION ORIGIN IS NOT SUBSTITUTED",
+        dxfattribs={"height": 14, "layer": "FUNCTIONAL_DATUM"},
     ).set_placement((-1120, 700))
 
     model.add_text(
@@ -163,7 +162,8 @@ def build(output_dir=None):
         },
         "interfaceControlSource": "fixtures/vx4800/kinetics/interface-control-v1.json",
         "physicalInterfaceFootprintsDrawn": False,
-        "reason": "All load/selection-dependent interface parameters remain TBD/null; P0 must not invent mating geometry.",
+        "rotationAxisXYPhysicalDatumDrawn": False,
+        "reason": "All load/selection-dependent interface parameters remain TBD/null; P0 must not invent mating geometry or infer a physical rotation-axis XY datum from the composition origin.",
         "interfaceIds": [item["id"] for item in interface["mechanicalInterfaces"]],
         "tbdParameterIds": [item["id"] for item in interface["interfaceParameters"]],
     }
