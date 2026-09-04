@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-photometry-role-set.schema.json",
+  "title": "AETHERIA VX4800 photometry role set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "fixtureId", "designRevision", "authority", "status", "productBindings", "roles", "consistency", "eligibility", "generatedAt"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"const": "1.0.0"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "designRevision": {"const": "1.3.0"},
+    "authority": {"const": "derived-system-review-input"},
+    "status": {"enum": ["incomplete", "eligible-for-system-validation"]},
+    "productBindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selectionBriefPath", "selectionBriefSha256", "ledSetoutPath", "ledSetoutSha256", "headCount", "cctK"],
+      "properties": {
+        "selectionBriefPath": {"type": "string", "minLength": 1},
+        "selectionBriefSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "ledSetoutPath": {"type": "string", "minLength": 1},
+        "ledSetoutSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "headCount": {"const": 14},
+        "cctK": {"const": 3000}
+      }
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "quantity", "targetBeamDeg", "acceptableRangeDeg", "evidencePackagePath", "evidencePackageSha256", "packageId", "configurationId", "candidateId", "manufacturer", "family", "exactModelCode", "opticCode", "cctK", "packageEligibleForFurtherReview", "roleMatchesPackage", "cctMatchesProduct"],
+        "properties": {
+          "role": {"enum": ["deep-tail narrow", "mid-field spot", "upper-field flood"]},
+          "quantity": {"type": "integer", "minimum": 1},
+          "targetBeamDeg": {"type": "number"},
+          "acceptableRangeDeg": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2},
+          "evidencePackagePath": {"type": "string", "minLength": 1},
+          "evidencePackageSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "packageId": {"type": "string", "minLength": 1},
+          "configurationId": {"type": "string", "minLength": 1},
+          "candidateId": {"type": "string", "minLength": 1},
+          "manufacturer": {"type": "string", "minLength": 1},
+          "family": {"type": "string", "minLength": 1},
+          "exactModelCode": {"type": "string", "minLength": 1},
+          "opticCode": {"type": "string", "minLength": 1},
+          "cctK": {"type": "number"},
+          "packageEligibleForFurtherReview": {"type": "boolean"},
+          "roleMatchesPackage": {"type": "boolean"},
+          "cctMatchesProduct": {"type": "boolean"}
+        }
+      }
+    },
+    "consistency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requiredRolesPresentExactlyOnce", "quantitiesMatchSelectionBrief", "totalHeadCountMatchesSetout", "allRolePackagesEligible", "allRoleNamesMatchPackages", "allCctMatch", "configurationIdsUnique", "singleManufacturerFamily", "allSystemInputChecksPass"],
+      "properties": {
+        "requiredRolesPresentExactlyOnce": {"type": "boolean"},
+        "quantitiesMatchSelectionBrief": {"type": "boolean"},
+        "totalHeadCountMatchesSetout": {"type": "boolean"},
+        "allRolePackagesEligible": {"type": "boolean"},
+        "allRoleNamesMatchPackages": {"type": "boolean"},
+        "allCctMatch": {"type": "boolean"},
+        "configurationIdsUnique": {"type": "boolean"},
+        "singleManufacturerFamily": {"type": "boolean"},
+        "allSystemInputChecksPass": {"type": "boolean"}
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roleSetEligibleForSystemValidation", "full14HeadPhotometricValidationCompleted", "applicationPerformanceValidated", "productPhotometryApproved"],
+      "properties": {
+        "roleSetEligibleForSystemValidation": {"type": "boolean"},
+        "full14HeadPhotometricValidationCompleted": {"const": false},
+        "applicationPerformanceValidated": {"const": false},
+        "productPhotometryApproved": {"const": false}
+      }
+    },
+    "generatedAt": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "eligible-for-system-validation"}}},
+      "then": {
+        "properties": {
+          "consistency": {"properties": {"allSystemInputChecksPass": {"const": true}}},
+          "eligibility": {"properties": {"roleSetEligibleForSystemValidation": {"const": true}}}
+        }
+      }
+    }
+  ]
+}

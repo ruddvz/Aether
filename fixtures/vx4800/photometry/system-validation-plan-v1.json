@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authority": "qualification-plan",
+  "status": "open",
+  "purpose": "Define the evidence inputs, model boundaries and promotion gates for full 14-head VX4800 photometric system validation after an exact three-role photometry set becomes eligible.",
+  "controlledInputs": {
+    "roleSetRequired": true,
+    "engineeringLedSetoutRequired": true,
+    "headCount": 14,
+    "presentationLightingIsAuthority": false,
+    "blenderLightingIsAuthority": false,
+    "syntheticPhotometryMayCloseProductGate": false
+  },
+  "sceneRequirements": [
+    "controlled project or test-scene geometry",
+    "controlled head mounting coordinates",
+    "controlled per-head aim vectors or target definitions",
+    "controlled surface locations and normals for evaluated targets",
+    "documented surface reflectance/material assumptions where interreflection is evaluated",
+    "documented obstruction model including relevant canopy/sculpture geometry when occlusion is evaluated",
+    "documented calculation grid/sensor definitions",
+    "documented dimming/output state",
+    "documented Radiance/toolchain version and command parameters"
+  ],
+  "metricsRequiringReleasedAcceptanceCriteriaBeforePass": [
+    "illuminance or irradiance on named target surfaces",
+    "minimum/maximum/average relationships where applicable",
+    "beam overlap and coverage",
+    "spill light on named non-target regions",
+    "glare/source visibility metric where applicable",
+    "occlusion/shadowing effects where relevant",
+    "sensitivity to aiming tolerance",
+    "sensitivity to construction/setout tolerance"
+  ],
+  "validationLayers": [
+    {
+      "id": "L1-DIRECT",
+      "name": "direct-light distribution",
+      "status": "not-run",
+      "note": "Use exact source photometry and controlled head poses to verify direct distribution before adding scene complexity."
+    },
+    {
+      "id": "L2-OCCLUSION",
+      "name": "fixture/sculpture occlusion",
+      "status": "not-run",
+      "note": "Include relevant fixed canopy and butterfly-field obstruction geometry only from controlled/reviewed geometry sources."
+    },
+    {
+      "id": "L3-REFLECTANCE",
+      "name": "architectural interreflection",
+      "status": "not-run",
+      "note": "Requires controlled/documented reflectance assumptions; do not infer finish reflectance from Blender shaders."
+    },
+    {
+      "id": "L4-TOLERANCE",
+      "name": "aim/setout sensitivity",
+      "status": "not-run",
+      "note": "Test released construction/commissioning tolerances rather than arbitrary perturbations."
+    }
+  ],
+  "promotionGate": {
+    "exactRoleSetControlled": false,
+    "controlledSceneGeometryReleased": false,
+    "controlledHeadAimingReleased": false,
+    "surfaceAssumptionsReleased": false,
+    "acceptanceCriteriaReleased": false,
+    "directDistributionValidated": false,
+    "occlusionAssessmentCompleted": false,
+    "reflectanceAssessmentCompletedWhereRequired": false,
+    "toleranceSensitivityValidated": false,
+    "independentReviewCompleted": false,
+    "full14HeadPhotometricValidationCompleted": false,
+    "applicationPerformanceValidated": false,
+    "productPhotometryApproved": false
+  },
+  "rules": [
+    "No system-level pass is permitted before acceptance criteria are released.",
+    "Synthetic IES or SPD may exercise the software pipeline only and cannot close product gates.",
+    "Presentation or Blender light positions/aiming are not engineering input unless promoted through controlled design change.",
+    "A single idealized scene does not establish tolerance robustness.",
+    "Photometric simulation does not replace site commissioning measurements where those are required by the released project plan.",
+    "Product photometry approval remains a separate controlled release decision after system validation evidence is reviewed."
+  ]
+}
