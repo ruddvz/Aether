@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0c">
+<title>AETHERIA VORTEX Technical Inspector</title>
+<link rel="stylesheet" href="inspector.css">
+<script type="importmap">{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.min.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/",
+  "three-mesh-bvh":"https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.9.14/build/index.module.js"
+}}</script>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div>
+      <div class="brand">AETHERIA</div>
+      <div class="title">VORTEX technical inspector</div>
+    </div>
+    <div class="status"><span id="loadDot"></span><span id="loadStatus">Loading coordination model</span></div>
+  </header>
+
+  <main id="viewport" aria-label="Interactive VX4800 coordination model"></main>
+
+  <aside id="panel">
+    <div class="panelHead">
+      <div>
+        <div class="ey">Coordination review</div>
+        <h1>VX4800-BF-01</h1>
+      </div>
+      <button id="panelToggle" aria-label="Toggle inspector panel">×</button>
+    </div>
+
+    <section>
+      <div class="ey">Selection</div>
+      <div id="selectionName" class="selectionName">Nothing selected</div>
+      <div id="selectionMeta" class="muted">Choose Inspect, then click model geometry.</div>
+      <div class="kv">
+        <span>Type</span><b id="selectionType">—</b>
+        <span>World point</span><b id="selectionPoint">—</b>
+        <span>Nearest element</span><b id="nearestName">—</b>
+        <span>Coordination clearance</span><b id="nearestDistance">—</b>
+      </div>
+    </section>
+
+    <section>
+      <div class="ey">Measurements</div>
+      <div id="measurementSummary" class="muted">No measurements yet.</div>
+      <div id="measurementList" class="list"></div>
+    </section>
+
+    <section>
+      <div class="ey">Review annotations</div>
+      <div class="muted">Annotations stay in this browser only. They are not controlled product data.</div>
+      <div id="annotationList" class="list"></div>
+    </section>
+
+    <section class="authority">
+      <div class="ey">Authority boundary</div>
+      <p>This inspector uses a Meshopt-compressed derivative of the coordination GLB. It is for browser review only and does not replace controlled engineering, manufacturing geometry, structural analysis, or certification.</p>
+    </section>
+  </aside>
+
+  <nav class="toolbar" aria-label="Inspector tools">
+    <button data-mode="inspect" class="active">Inspect</button>
+    <button data-mode="measure">Measure</button>
+    <button data-mode="annotate">Annotate</button>
+    <span class="divider"></span>
+    <button id="fitBtn">Fit</button>
+    <button id="clearBtn">Clear review</button>
+    <button id="panelBtn" class="mobilePanel">Panel</button>
+  </nav>
+
+  <div id="hint">Inspect mode: click an element, cable, head, carrier or canopy.</div>
+  <div id="toast" role="status"></div>
+  <div id="loading"><div><div class="loaderTitle">VORTEX</div><div class="loaderBar"><i></i></div></div></div>
+</div>
+<script type="module" src="inspector.app.js"></script>
+</body>
+</html>
