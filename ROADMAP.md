@@ -107,7 +107,7 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [ ] IfcOpenShell IFC export
 - [ ] pyGDTF export for controllable products
 - [ ] pyMVR scene export
-- [ ] Loss-reporting adapter framework
+- [x] Loss-reporting adapter framework
 
 ## Multi-product platform
 - [x] Registry-driven AETHERIA catalog root
