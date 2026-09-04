@@ -25,6 +25,13 @@ def test_inspector_source_pins_bvh_and_parses():
     subprocess.run(["node", "--check", str(js)], check=True)
 
 
+def test_nearest_clearance_uses_lower_bound_not_candidate_cap():
+    text = (ROOT / "site/inspectors/vx4800/inspector.app.js").read_text()
+    assert ".slice(0, 18)" not in text
+    assert "candidate.lowerBound >= best.distance" in text
+    assert "sourceSphere.center.distanceTo(s.center) - sourceSphere.radius - s.radius" in text
+
+
 def test_pages_publish_inspector_and_optimized_coordination_asset(built_site):
     meta = json.loads((built_site / "products/vx4800/meta.json").read_text())
     assert meta["inspectorPath"] == "products/vx4800/inspect/"
