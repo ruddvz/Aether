@@ -32,6 +32,9 @@ This roadmap describes repository capabilities, not promised commercial release 
 
 ## VORTEX product engineering
 - [ ] Resolve actual installed mass and center of gravity
+  - [x] Define controlled physical S/M/L suspended-assembly mass record
+  - [ ] Build production-intent S/M/L samples and measure complete suspended-assembly masses
+  - [ ] Establish production mass tolerance and balance inputs
 - [ ] Select rated suspension cable/gripper/yoke system
   - [x] Formal 0.81-1.0 mm stainless cable/gripper supplier-qualification shortlist
   - [ ] Control final S/M/L butterfly and lower-yoke masses
@@ -40,6 +43,13 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [ ] Resolve independent secondary retention
   - [ ] Complete supplier sample pull/slip/fatigue qualification
 - [ ] Resolve butterfly attachment detail and material tier
+  - [x] Formal ARC / LUX / ART material and attachment qualification architecture
+  - [ ] Select exact ARC material/process and validate attachment
+  - [ ] Select exact LUX material/process and validate attachment
+  - [ ] Select ART glassmaker/process and validate attachment
+  - [ ] Freeze optical/cosmetic acceptance standards by tier
+  - [ ] Pass production-equivalent attachment proof and fatigue tests
+  - [ ] Resolve occupied-space failure/fragment retention strategy
 - [ ] Engineer rotating carrier, bearing, drive, braking and secondary retention
 - [ ] Structural calculation and site interface reactions
 - [ ] Full factory pre-hang and dynamic-clearance test

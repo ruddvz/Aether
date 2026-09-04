@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-butterfly-mass-measurement.schema.json",
+  "title": "AETHERIA physical butterfly suspended-assembly mass measurement",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "sampleId",
+    "measuredAt",
+    "tier",
+    "sizeFamily",
+    "material",
+    "processRevision",
+    "scale",
+    "massG",
+    "evidence",
+    "status"
+  ],
+  "properties": {
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "sampleId": {"type": "string", "minLength": 1},
+    "measuredAt": {"type": "string", "format": "date-time"},
+    "tier": {"enum": ["ARC", "LUX", "ART"]},
+    "sizeFamily": {"enum": ["S", "M", "L"]},
+    "material": {
+      "type": "object",
+      "required": ["supplier", "gradeOrComposition", "batchOrLot"],
+      "properties": {
+        "supplier": {"type": "string", "minLength": 1},
+        "gradeOrComposition": {"type": "string", "minLength": 1},
+        "batchOrLot": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "processRevision": {"type": "string", "minLength": 1},
+    "attachmentRevision": {"type": ["string", "null"]},
+    "scale": {
+      "type": "object",
+      "required": ["id", "resolutionG", "calibrationStatus"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "resolutionG": {"type": "number", "exclusiveMinimum": 0},
+        "calibrationStatus": {"enum": ["in-date", "verified-with-reference-mass"]},
+        "calibrationEvidence": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "massG": {
+      "type": "object",
+      "required": ["butterflyOnly", "attachmentHardware", "lowerBridleAndTerminals", "completeSuspendedAssembly"],
+      "properties": {
+        "butterflyOnly": {"type": "number", "exclusiveMinimum": 0},
+        "attachmentHardware": {"type": "number", "minimum": 0},
+        "lowerBridleAndTerminals": {"type": "number", "minimum": 0},
+        "completeSuspendedAssembly": {"type": "number", "exclusiveMinimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "centerOfGravity": {
+      "type": ["object", "null"],
+      "properties": {
+        "method": {"type": "string"},
+        "reference": {"type": "string"},
+        "offsetMm": {
+          "type": "array",
+          "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}],
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "additionalProperties": true
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["operator", "photoOrRecordRefs"],
+      "properties": {
+        "operator": {"type": "string", "minLength": 1},
+        "photoOrRecordRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "notes": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "status": {"enum": ["prototype-measurement", "production-intent-measurement", "controlled"]}
+  },
+  "additionalProperties": true
+}
