@@ -4,16 +4,116 @@
   "fixtureId": "vx4800-bf-01",
   "status": "active",
   "records": [
-    {"id":"EVID-REPO-PACKAGE-VALIDATION-130","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/documents/final-validation-v1.3.0.md","claim":"Validates repository/package consistency and design-intent geometry conditions stated in the document only.","canClosePhysicalTest":false,"notes":"The document explicitly does not certify the rotating mechanism, structure, drive or occupied-space installation."},
-    {"id":"EVID-REPO-SUSPENSION-QUAL-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/suspension/qualification/shortlist-v1.json","claim":"Records the controlled suspension supplier-qualification shortlist and unresolved promotion gates.","canClosePhysicalTest":false},
-    {"id":"EVID-REPO-MATERIAL-QUAL-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/materials/qualification/shortlist-v1.json","claim":"Records the ARC/LUX/ART material and attachment qualification shortlist and unresolved promotion gates.","canClosePhysicalTest":false},
-    {"id":"EVID-REPO-ELECTRICAL-ARCH-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/electrical/architecture-v1.json","claim":"Defines the current conceptual electrical/service architecture, authority boundaries and unresolved promotion gates.","canClosePhysicalTest":false},
-    {"id":"EVID-REPO-RELEASE-GATE-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/compliance/release-gate-v1.json","claim":"Defines the qualification evidence matrix and promotion gates; it is not proof that those gates have been passed.","canClosePhysicalTest":false},
-    {"id":"EVID-REPO-STRUCTURAL-BRIEF-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/structural/interface-brief-v1.json","claim":"Defines structural/site-interface inputs, load-case requirements and unresolved promotion gates; it does not provide approved reactions, anchors or a project structural calculation.","canClosePhysicalTest":false},
-    {"id":"EVID-REPO-MFG-QUALITY-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/manufacturing/quality-plan-v1.json","claim":"Defines manufacturing quality, traceability, substitution, inspection, FAT and production-release gates; it does not prove the production process or first article has been validated.","canClosePhysicalTest":false},
-    {"id":"EVID-REPO-INSTALL-COMMISSION-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/installation/commissioning-plan-v1.json","claim":"Defines site receipt, installation, commissioning, handover and service-baseline evidence requirements; it does not prove any physical site stage has passed.","canClosePhysicalTest":false},
-    {"id":"EVID-REPO-LIFECYCLE-SERVICE-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/service/lifecycle-plan-v1.json","claim":"Defines lifecycle inspection, maintenance, spares, post-service verification and service-history requirements; it does not establish inspection intervals or prove maintenance/service evidence.","canClosePhysicalTest":false},
-    {"id":"EVID-REPO-SPECTRAL-VALIDATION-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"fixtures/vx4800/photometry/spectral/validation-plan-v1.json","claim":"Defines SPD provenance, colour-quality cross-check methods and promotion gates; it does not provide supplier/laboratory SPD evidence, a current TM-30-24 report, or product photometry approval.","canClosePhysicalTest":false},
-    {"id":"EVID-REPO-PHOTOMETRY-EVIDENCE-PACKAGE-V1","evidenceClass":"REPOSITORY","authority":"controlled","status":"available","sourceType":"repository-file","reference":"docs/VX4800_EXACT_PHOTOMETRY_EVIDENCE_PACKAGE.md","claim":"Defines the exact-configuration evidence binding between candidate identity, controlled angular photometry, Radiance cross-check, controlled SPD and current TM-30 primary evidence; it does not supply any missing supplier/laboratory evidence or approve product photometry.","canClosePhysicalTest":false}
+    {
+      "id": "EVID-REPO-PACKAGE-VALIDATION-130",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/documents/final-validation-v1.3.0.md",
+      "claim": "Validates repository/package consistency and design-intent geometry conditions stated in the document only.",
+      "canClosePhysicalTest": false,
+      "notes": "The document explicitly does not certify the rotating mechanism, structure, drive or occupied-space installation."
+    },
+    {
+      "id": "EVID-REPO-SUSPENSION-QUAL-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/suspension/qualification/shortlist-v1.json",
+      "claim": "Records the controlled suspension supplier-qualification shortlist and unresolved promotion gates.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-MATERIAL-QUAL-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/materials/qualification/shortlist-v1.json",
+      "claim": "Records the ARC/LUX/ART material and attachment qualification shortlist and unresolved promotion gates.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-ELECTRICAL-ARCH-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/electrical/architecture-v1.json",
+      "claim": "Defines the current conceptual electrical/service architecture, authority boundaries and unresolved promotion gates.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-RELEASE-GATE-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/compliance/release-gate-v1.json",
+      "claim": "Defines the qualification evidence matrix and promotion gates; it is not proof that those gates have been passed.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-STRUCTURAL-BRIEF-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/structural/interface-brief-v1.json",
+      "claim": "Defines structural/site-interface inputs, load-case requirements and unresolved promotion gates; it does not provide approved reactions, anchors or a project structural calculation.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-MFG-QUALITY-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/manufacturing/quality-plan-v1.json",
+      "claim": "Defines manufacturing quality, traceability, substitution, inspection, FAT and production-release gates; it does not prove the production process or first article has been validated.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-INSTALL-COMMISSION-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/installation/commissioning-plan-v1.json",
+      "claim": "Defines site receipt, installation, commissioning, handover and service-baseline evidence requirements; it does not prove any physical site stage has passed.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-LIFECYCLE-SERVICE-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/service/lifecycle-plan-v1.json",
+      "claim": "Defines lifecycle inspection, maintenance, spares, post-service verification and service-history requirements; it does not establish inspection intervals or prove maintenance/service evidence.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-SPECTRAL-VALIDATION-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/photometry/spectral/validation-plan-v1.json",
+      "claim": "Defines SPD provenance, colour-quality cross-check methods and promotion gates; it does not provide supplier/laboratory SPD evidence, a current TM-30-24 report, or product photometry approval.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-PHOTOMETRY-EVIDENCE-PACKAGE-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "docs/VX4800_EXACT_PHOTOMETRY_EVIDENCE_PACKAGE.md",
+      "claim": "Defines the exact-configuration evidence binding between candidate identity, controlled angular photometry, Radiance cross-check, controlled SPD and current TM-30 primary evidence; it does not supply any missing supplier/laboratory evidence or approve product photometry.",
+      "canClosePhysicalTest": false
+    }
   ]
 }
