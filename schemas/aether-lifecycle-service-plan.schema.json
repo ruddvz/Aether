@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-lifecycle-service-plan.schema.json",
+  "title": "AETHERIA Lifecycle Service Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "fixtureId", "designRevision", "authority", "status", "purpose", "boundaries", "serviceBaseline", "inspectionDomains", "eventTriggeredInspection", "maintenanceControl", "sparesControl", "postServiceVerification", "faultAndHistory", "intervalRelease", "promotionGate", "rules"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"type": "string", "minLength": 1},
+    "designRevision": {"type": "string", "minLength": 1},
+    "authority": {"type": "string", "enum": ["qualification-plan", "controlled"]},
+    "status": {"type": "string", "enum": ["open", "approved"]},
+    "purpose": {"type": "string", "minLength": 1},
+    "boundaries": {"type": "object", "minProperties": 9, "additionalProperties": {"type": "boolean"}},
+    "serviceBaseline": {
+      "type": "object", "additionalProperties": false,
+      "required": ["requiredRecords", "status"],
+      "properties": {
+        "requiredRecords": {"type": "array", "minItems": 5, "items": {"type": "string", "minLength": 1}},
+        "status": {"type": "string", "enum": ["not-established", "controlled"]}
+      }
+    },
+    "inspectionDomains": {
+      "type": "array", "minItems": 6,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "criticality", "intervalStatus", "checks"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "criticality": {"type": "string", "enum": ["safety-critical", "qualification-dependent", "quality"]},
+          "intervalStatus": {"type": "string", "enum": ["not-defined", "released"]},
+          "checks": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "eventTriggeredInspection": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "additionalProperties": false, "required": ["id", "required", "trigger", "minimumScope"], "properties": {"id": {"type": "string"}, "required": {"type": "boolean"}, "trigger": {"type": "string", "minLength": 1}, "minimumScope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}}
+    },
+    "maintenanceControl": {"type": "object", "minProperties": 10, "additionalProperties": {"type": "boolean"}},
+    "sparesControl": {
+      "type": "object", "additionalProperties": false,
+      "required": ["criticalSparesListRequired", "exactQualifiedIdentityRequiredForSafetyCriticalSpares", "spareQuantityStrategyStatus", "butterflyTierAndFinishMatchRequired", "replacementButterflyMassBalanceImpactReviewRequired", "lightingReplacementPhotometricElectricalEquivalenceReviewRequired", "kineticReplacementQualificationImpactReviewRequired", "obsoletePartSubstitutionRequiresEngineeringReview", "uncontrolledCannibalizationPermitted"],
+      "properties": {
+        "criticalSparesListRequired": {"type": "boolean"},
+        "exactQualifiedIdentityRequiredForSafetyCriticalSpares": {"type": "boolean"},
+        "spareQuantityStrategyStatus": {"type": "string", "enum": ["not-defined", "released"]},
+        "butterflyTierAndFinishMatchRequired": {"type": "boolean"},
+        "replacementButterflyMassBalanceImpactReviewRequired": {"type": "boolean"},
+        "lightingReplacementPhotometricElectricalEquivalenceReviewRequired": {"type": "boolean"},
+        "kineticReplacementQualificationImpactReviewRequired": {"type": "boolean"},
+        "obsoletePartSubstitutionRequiresEngineeringReview": {"type": "boolean"},
+        "uncontrolledCannibalizationPermitted": {"type": "boolean"}
+      }
+    },
+    "postServiceVerification": {
+      "type": "array", "minItems": 7,
+      "items": {"type": "object", "additionalProperties": false, "required": ["id", "required", "requirement"], "properties": {"id": {"type": "string"}, "required": {"type": "boolean"}, "requirement": {"type": "string", "minLength": 1}}}
+    },
+    "faultAndHistory": {"type": "object", "minProperties": 8, "additionalProperties": {"type": "boolean"}},
+    "intervalRelease": {
+      "type": "object", "additionalProperties": false,
+      "required": ["initialIntervalsRequireSelectedComponentManufacturerInputs", "initialIntervalsRequireQualificationTestInputs", "initialIntervalsRequireCommissionedDutyCycle", "fieldHistoryMayShortenInterval", "intervalMayBeExtendedWithoutEngineeringReview", "currentIntervalStatus"],
+      "properties": {
+        "initialIntervalsRequireSelectedComponentManufacturerInputs": {"type": "boolean"},
+        "initialIntervalsRequireQualificationTestInputs": {"type": "boolean"},
+        "initialIntervalsRequireCommissionedDutyCycle": {"type": "boolean"},
+        "fieldHistoryMayShortenInterval": {"type": "boolean"},
+        "intervalMayBeExtendedWithoutEngineeringReview": {"type": "boolean"},
+        "currentIntervalStatus": {"type": "string", "enum": ["not-released", "released"]}
+      }
+    },
+    "promotionGate": {"type": "object", "minProperties": 11, "additionalProperties": {"type": "boolean"}},
+    "rules": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  }
+}
