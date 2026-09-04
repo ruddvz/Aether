@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "draft": {
+    "engine": "CYCLES",
+    "samples": 16,
+    "adaptiveThreshold": 0.08,
+    "denoising": true,
+    "colorDepth": "8"
+  },
+  "lookdev": {
+    "engine": "CYCLES",
+    "samples": 64,
+    "adaptiveThreshold": 0.03,
+    "denoising": true,
+    "colorDepth": "8"
+  },
+  "production": {
+    "engine": "CYCLES",
+    "samples": 256,
+    "adaptiveThreshold": 0.012,
+    "denoising": true,
+    "colorDepth": "16"
+  },
+  "hero": {
+    "engine": "CYCLES",
+    "samples": 512,
+    "adaptiveThreshold": 0.008,
+    "denoising": true,
+    "colorDepth": "16"
+  }
+}

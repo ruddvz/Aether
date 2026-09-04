@@ -51,3 +51,22 @@ All notable repository and product presentation changes are recorded here.
 - Replaced archive-oriented build steps with `scripts/build_product.py`, which builds repository product artifacts directly without generating ZIP packages.
 - Removed ZIP-specific CI gates and download publication from the active repository workflow.
 - Kept engineering revision 1.3.0 and presentation revision 5.2.0 unchanged; the new web tooling remains review-only and cannot become manufacturing authority.
+
+## 2026-09-04 - VX4800 Blender visualization and photoreal pipeline
+
+- Added a Blender 5.2.1 LTS visualization master generated from controlled VX4800 repository data.
+- Preserved all 240 engineering element identities, the controlled 66 S / 144 M / 30 L allocation, 240 main suspension splines, 720 visual yoke/lead splines and 14 fixed head positions.
+- Added Blender-native validation for controlled counts, source provenance, cameras, environments, optical lookdev, motion-reference metadata, repeated-refinement idempotence and sequential finish switching.
+- Added linked faceted S/M/L optical butterfly studies with physically plausible transmission/IOR lookdev, restrained visualization-only absorption and a reduced sculptural centre.
+- Added dark-champagne, black-titanium, brushed-brass and satin-nickel render-time finish studies without promoting any finish to manufacturing authority.
+- Separated the 14 fixture-integrated conceptual light studies from product, macro and architectural photographic rigs.
+- Added dark premium studio product photography plus isolated butterfly macro review.
+- Added four visualization-only installed contexts: double-height residential, staircase void, hospitality lobby and gallery atrium.
+- Added thirteen traceable product/detail/technical/architectural cameras and thirteen validated named shots.
+- Added independent `draft`, `lookdev`, `production` and `hero` quality tiers plus landscape, vertical and square output profiles while retaining legacy preset compatibility.
+- Added a constant-speed rotating-field visualization action whose cycle length is derived from controlled nominal RPM and scene FPS; acceleration, braking, jam response and dynamic safety remain outside Blender authority.
+- Reworked CI into one checksum-pinned authoritative Blender build/validation job, parallel independent Cycles QA renders, and one combined validation/render artifact.
+- Closed the final 0.13 visual QA with approved product hero, full elevation, optical macro, residential wide/medium, vertical marketing, staircase, hospitality, atrium and alternate-finish previews.
+- Corrected headless environment activation for saved `.blend` reloads and made final refinement/finish operations safe for repeated interactive use.
+- Corrected human documentation so local complete-master builds use the same `build_entrypoint.py` path and authority model as GitHub Actions.
+- Kept engineering revision 1.3.0, presentation revision 5.2.0, controlled coordinates, fixed head set-out and all unresolved physical qualification gates unchanged throughout the visualization work.

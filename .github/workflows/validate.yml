@@ -29,6 +29,8 @@ jobs:
         run: pip install -r requirements-dev.txt -r requirements-geometry.txt
       - name: Validate canonical product data
         run: python scripts/validate_repository.py
+      - name: Blender source QA
+        run: python scripts/validate_blender_source.py
       - name: Geometry QA
         run: python scripts/qa_geometry.py
       - name: Web geometry QA
