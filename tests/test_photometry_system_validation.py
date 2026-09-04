@@ -64,7 +64,7 @@ def test_horizontal_reduction_rules_do_not_invent_ambiguous_symmetry():
     assert reduce_horizontal_angle([0.0, 180.0], 270.0) == pytest.approx(90.0)
     assert reduce_horizontal_angle([0.0, 90.0, 180.0, 270.0, 360.0], 315.0) == pytest.approx(315.0)
     with pytest.raises(Exception, match="ambiguous"):
-        reduce_horizontal_angle([0.0, 120.0], 60.0)
+        reduce_horizontal_angle([0.0, 200.0], 60.0)
 
 
 def test_synthetic_14_head_pipeline_passes_without_promoting_product_authority():
