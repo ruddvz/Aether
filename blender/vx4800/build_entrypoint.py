@@ -20,10 +20,12 @@ from lookdev_modes import apply_master_lookdev
 from lookdev_refinements import apply_master_refinements
 
 apply_master_lookdev()
-apply_master_refinements()
 apply_nominal_rotation_reference()
 build_environment_library()
 build_additional_environments()
+# Run the final lookdev refinement layer last so environment builders cannot
+# overwrite the authoritative visualization revision metadata.
+apply_master_refinements()
 
 # Preserve the complete finish-study and environment material libraries in the
 # generated master, including variants intentionally hidden in the default view.
