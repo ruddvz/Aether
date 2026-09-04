@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-rfq-dispatch.schema.json",
+  "title": "AETHERIA VX4800 kinetic RFQ dispatch register",
+  "type": "object",
+  "required": ["schemaVersion", "fixtureId", "dispatchRevision", "status", "packages", "releaseRule"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "dispatchRevision": {"type": "string"},
+    "status": {"enum": ["dispatch-planning", "dispatch-active", "dispatch-closed"]},
+    "packages": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["rfqPackageId", "candidateTargets", "dispatchStatus", "issuedDate", "dispatchChannelReference", "responseRecord", "technicalDisposition"],
+        "properties": {
+          "rfqPackageId": {
+            "enum": ["RFQ-KIN-BRG-01", "RFQ-KIN-DRV-01", "RFQ-KIN-BELT-01", "RFQ-KIN-BRK-01", "RFQ-KIN-FBK-01", "RFQ-KIN-FAB-01"]
+          },
+          "candidateTargets": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "basis", "targetStatus"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1},
+                "basis": {"type": "string", "minLength": 1},
+                "targetStatus": {"enum": ["repository-evidence-target", "research-required", "contact-qualified"]}
+              },
+              "additionalProperties": false
+            }
+          },
+          "dispatchStatus": {"enum": ["not-issued", "ready-to-issue", "issued", "response-received", "clarification-open", "closed"]},
+          "issuedDate": {"type": ["string", "null"], "format": "date"},
+          "dispatchChannelReference": {"type": ["string", "null"]},
+          "responseRecord": {"type": ["string", "null"]},
+          "technicalDisposition": {"enum": ["not-reviewed", "insufficient-evidence", "clarification-required", "comparable-not-selected", "rejected"]}
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {"properties": {"dispatchStatus": {"enum": ["issued", "response-received", "clarification-open", "closed"]}}},
+            "then": {
+              "properties": {
+                "issuedDate": {"type": "string", "format": "date"},
+                "dispatchChannelReference": {"type": "string", "minLength": 1}
+              }
+            }
+          },
+          {
+            "if": {"properties": {"dispatchStatus": {"enum": ["response-received", "clarification-open", "closed"]}}},
+            "then": {"properties": {"responseRecord": {"type": "string", "minLength": 1}}}
+          }
+        ]
+      }
+    },
+    "releaseRule": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
