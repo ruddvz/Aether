@@ -14,6 +14,9 @@ on:
       - "blender/vx4800/render_shot.py"
       - "blender/vx4800/scene_manifest.json"
       - "blender/vx4800/render_presets.json"
+      - "blender/vx4800/render_quality.json"
+      - "blender/vx4800/output_profiles.json"
+      - "blender/vx4800/shot_catalogue.json"
       - ".github/workflows/blender.yml"
       - "fixtures/vx4800/fixture.json"
       - "fixtures/vx4800/composition/engineering-v1.3.0.csv"
@@ -28,7 +31,7 @@ permissions:
 jobs:
   build-blend:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
         with:
@@ -97,52 +100,40 @@ jobs:
             git push
           fi
 
-      - name: Render quick Cycles hero preview
+      - name: Render Cycles visual QA suite
         shell: bash
         run: |
           set -euo pipefail
           BLENDER="$GITHUB_WORKSPACE/.blender-cache/blender-5.2.1-linux-x64/blender"
-          "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
-            --python blender/vx4800/render_shot.py -- \
-            --repo-root "$GITHUB_WORKSPACE" \
-            --camera CAM_HERO_FRONT_3Q \
-            --preset preview \
-            --output build/blender/VX4800_HERO_PREVIEW.png
-          test -s build/blender/VX4800_HERO_PREVIEW.png
+          render_shot() {
+            local shot="$1"
+            local profile="$2"
+            local output="$3"
+            "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
+              --python blender/vx4800/render_shot.py -- \
+              --repo-root "$GITHUB_WORKSPACE" \
+              --shot "$shot" \
+              --quality lookdev \
+              --output-profile "$profile" \
+              --output "build/blender/$output"
+            test -s "build/blender/$output"
+          }
 
-      - name: Render quick Cycles butterfly macro preview
-        shell: bash
-        run: |
-          set -euo pipefail
-          BLENDER="$GITHUB_WORKSPACE/.blender-cache/blender-5.2.1-linux-x64/blender"
-          "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
-            --python blender/vx4800/render_shot.py -- \
-            --repo-root "$GITHUB_WORKSPACE" \
-            --camera CAM_BUTTERFLY_MACRO \
-            --preset preview \
-            --output build/blender/VX4800_BUTTERFLY_MACRO_PREVIEW.png
-          test -s build/blender/VX4800_BUTTERFLY_MACRO_PREVIEW.png
-
-      - name: Render quick Cycles residential wide preview
-        shell: bash
-        run: |
-          set -euo pipefail
-          BLENDER="$GITHUB_WORKSPACE/.blender-cache/blender-5.2.1-linux-x64/blender"
-          "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
-            --python blender/vx4800/render_shot.py -- \
-            --repo-root "$GITHUB_WORKSPACE" \
-            --camera CAM_ARCH_RESIDENTIAL_WIDE \
-            --preset preview \
-            --output build/blender/VX4800_RESIDENTIAL_WIDE_PREVIEW.png
-          test -s build/blender/VX4800_RESIDENTIAL_WIDE_PREVIEW.png
+          render_shot product_hero landscape_preview VX4800_PRODUCT_HERO_PREVIEW.png
+          render_shot product_hero_low landscape_preview VX4800_PRODUCT_HERO_LOW_PREVIEW.png
+          render_shot full_elevation landscape_preview VX4800_FULL_ELEVATION_PREVIEW.png
+          render_shot canopy_detail square_preview VX4800_CANOPY_DETAIL_PREVIEW.png
+          render_shot butterfly_macro square_preview VX4800_BUTTERFLY_MACRO_PREVIEW.png
+          render_shot tail_detail square_preview VX4800_TAIL_DETAIL_PREVIEW.png
+          render_shot residential_wide landscape_preview VX4800_RESIDENTIAL_WIDE_PREVIEW.png
+          render_shot residential_medium landscape_preview VX4800_RESIDENTIAL_MEDIUM_PREVIEW.png
+          render_shot vertical_marketing vertical_preview VX4800_VERTICAL_MARKETING_PREVIEW.png
 
       - name: Upload Blender validation outputs
         uses: actions/upload-artifact@v4
         with:
           name: vx4800-blender-validation
           path: |
-            build/blender/VX4800_HERO_PREVIEW.png
-            build/blender/VX4800_BUTTERFLY_MACRO_PREVIEW.png
-            build/blender/VX4800_RESIDENTIAL_WIDE_PREVIEW.png
+            build/blender/VX4800_*_PREVIEW.png
             build/blender/validation.json
           if-no-files-found: error

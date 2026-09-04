@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0.0",
+  "landscape_preview": {"resolution": [1280, 720], "percentage": 100, "transparent": false, "fileFormat": "PNG", "aspect": "landscape"},
+  "landscape_4k": {"resolution": [3840, 2160], "percentage": 100, "transparent": false, "fileFormat": "PNG", "aspect": "landscape"},
+  "vertical_preview": {"resolution": [720, 1280], "percentage": 100, "transparent": false, "fileFormat": "PNG", "aspect": "vertical"},
+  "vertical_4k": {"resolution": [2160, 3840], "percentage": 100, "transparent": false, "fileFormat": "PNG", "aspect": "vertical"},
+  "square_preview": {"resolution": [1024, 1024], "percentage": 100, "transparent": false, "fileFormat": "PNG", "aspect": "square"},
+  "square_detail": {"resolution": [4096, 4096], "percentage": 100, "transparent": false, "fileFormat": "PNG", "aspect": "square"}
+}
