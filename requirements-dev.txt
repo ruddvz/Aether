@@ -1,0 +1,5 @@
+jsonschema==4.25.1
+pytest==8.4.2
+pandas==2.3.2
+numpy==2.3.2
+Pillow==11.3.0

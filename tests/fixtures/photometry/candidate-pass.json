@@ -1,0 +1,78 @@
+{
+  "$schema": "../../../schemas/aether-photometry-candidate.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "candidateId": "test-light-family",
+  "status": "photometry-received",
+  "manufacturer": "TEST ONLY",
+  "family": "TEST FAMILY",
+  "regionAvailability": ["test"],
+  "finishOptions": ["black"],
+  "configurations": [
+    {
+      "role": "deep-tail narrow",
+      "exactModelCode": "TEST-N",
+      "opticCode": "N5",
+      "cctK": 3000,
+      "cri": 95,
+      "beamAngleDegPublished": 5,
+      "powerW": 12,
+      "lumens": 800,
+      "dimensionsMm": [40, 40, 80],
+      "driverModel": "TEST-DRV",
+      "dimming": ["DALI"],
+      "photometryStatus": "parsed",
+      "iesPath": "test-n.ies",
+      "iesSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "notes": "Synthetic evaluator test only"
+    },
+    {
+      "role": "mid-field spot",
+      "exactModelCode": "TEST-S",
+      "opticCode": "S15",
+      "cctK": 3000,
+      "cri": 95,
+      "beamAngleDegPublished": 15,
+      "powerW": 12,
+      "lumens": 800,
+      "dimensionsMm": [40, 40, 80],
+      "driverModel": "TEST-DRV",
+      "dimming": ["DALI"],
+      "photometryStatus": "parsed",
+      "iesPath": "test-s.ies",
+      "iesSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "notes": "Synthetic evaluator test only"
+    },
+    {
+      "role": "upper-field flood",
+      "exactModelCode": "TEST-F",
+      "opticCode": "F30",
+      "cctK": 3000,
+      "cri": 95,
+      "beamAngleDegPublished": 30,
+      "powerW": 12,
+      "lumens": 800,
+      "dimensionsMm": [40, 40, 80],
+      "driverModel": "TEST-DRV",
+      "dimming": ["DALI"],
+      "photometryStatus": "parsed",
+      "iesPath": "test-f.ies",
+      "iesSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "notes": "Synthetic evaluator test only"
+    }
+  ],
+  "sources": {
+    "productPage": "https://example.invalid/test-product",
+    "datasheet": "https://example.invalid/test-datasheet",
+    "photometryDownload": "https://example.invalid/test-photometry",
+    "manufacturerContact": null
+  },
+  "review": {
+    "exactConfigurationConfirmed": true,
+    "officialPhotometryAvailable": true,
+    "meetsPhysicalTarget": true,
+    "meetsOpticalTarget": true,
+    "meetsControlTarget": true,
+    "notes": "Synthetic evaluator test only"
+  }
+}

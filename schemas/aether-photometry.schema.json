@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-photometry.schema.json",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "status",
+    "heads",
+    "warning"
+  ],
+  "properties": {
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"type": "string"},
+    "designRevision": {"type": "string"},
+    "presentationRevision": {"type": "string"},
+    "status": {"enum": ["conceptual", "supplier-data", "simulated", "tested"]},
+    "cctIntentK": {"type": "number"},
+    "criTarget": {"type": "number"},
+    "warning": {"type": "string"},
+    "centralAccent": {"type": "object"},
+    "heads": {"type": "array", "minItems": 1},
+    "scenes": {"type": "object"},
+    "futureMeasuredData": {"type": "object"}
+  }
+}

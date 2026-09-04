@@ -1,0 +1,229 @@
+{
+  "$schema": "../../../schemas/aether-photometry.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "presentationRevision": "5.2.0",
+  "status": "conceptual",
+  "cctIntentK": 3000,
+  "criTarget": 92,
+  "warning": "WebGL intensity values are presentation-only and are not lumens, lux, candela, or tested IES data.",
+  "centralAccent": {
+    "beamAngleDegApprox": 8,
+    "status": "conceptual"
+  },
+  "heads": [
+    {
+      "id": "L01",
+      "kind": "narrow",
+      "beam": 5,
+      "x": 1.1960181127277931,
+      "z": 0.14685255880320272,
+      "targetX": -0.244786,
+      "targetY": -3.7910459999999997,
+      "targetZ": 0.082417,
+      "targetDepth": 0.7754073668919061,
+      "ambient": 120,
+      "gallery": 900,
+      "flight": 1850
+    },
+    {
+      "id": "L02",
+      "kind": "narrow",
+      "beam": 5,
+      "x": 1.013858147702633,
+      "z": 0.6512423944561548,
+      "targetX": -0.222454,
+      "targetY": -4.027103,
+      "targetZ": 0.021501000000000003,
+      "targetDepth": 0.8293846090876185,
+      "ambient": 120,
+      "gallery": 900,
+      "flight": 1850
+    },
+    {
+      "id": "L03",
+      "kind": "narrow",
+      "beam": 5,
+      "x": 0.6308911423707767,
+      "z": 1.0266456869232425,
+      "targetX": -0.17855600000000002,
+      "targetY": -4.402931,
+      "targetZ": -0.099913,
+      "targetDepth": 0.9153221537481457,
+      "ambient": 120,
+      "gallery": 900,
+      "flight": 1850
+    },
+    {
+      "id": "L04",
+      "kind": "narrow",
+      "beam": 5,
+      "x": 0.12296840892029226,
+      "z": 1.1987092101121155,
+      "targetX": -0.135465,
+      "targetY": -4.258764,
+      "targetZ": -0.221806,
+      "targetDepth": 0.8823566535696753,
+      "ambient": 120,
+      "gallery": 900,
+      "flight": 1850
+    },
+    {
+      "id": "L05",
+      "kind": "spot",
+      "beam": 15,
+      "x": -0.40930972602542187,
+      "z": 1.133353673034589,
+      "targetX": -0.322532,
+      "targetY": -1.8570719999999998,
+      "targetZ": -0.427325,
+      "targetDepth": 0.33318119694900994,
+      "ambient": 90,
+      "gallery": 560,
+      "flight": 1080
+    },
+    {
+      "id": "L06",
+      "kind": "spot",
+      "beam": 15,
+      "x": -0.8605190498774397,
+      "z": 0.843523541341929,
+      "targetX": -0.020056,
+      "targetY": -1.7420129999999998,
+      "targetZ": -0.506527,
+      "targetDepth": 0.3068715873640519,
+      "ambient": 90,
+      "gallery": 560,
+      "flight": 1080
+    },
+    {
+      "id": "L07",
+      "kind": "spot",
+      "beam": 15,
+      "x": -1.1412920223276624,
+      "z": 0.3866232271491652,
+      "targetX": 0.096881,
+      "targetY": -3.2465450000000002,
+      "targetZ": -0.28664100000000003,
+      "targetDepth": 0.65090073352451,
+      "ambient": 90,
+      "gallery": 560,
+      "flight": 1080
+    },
+    {
+      "id": "L08",
+      "kind": "spot",
+      "beam": 15,
+      "x": -1.1960181127277931,
+      "z": -0.14685255880320253,
+      "targetX": 0.32084199999999996,
+      "targetY": -3.071771,
+      "targetZ": -0.270221,
+      "targetDepth": 0.6109365785639986,
+      "ambient": 90,
+      "gallery": 560,
+      "flight": 1080
+    },
+    {
+      "id": "L09",
+      "kind": "spot",
+      "beam": 15,
+      "x": -1.0138581477026332,
+      "z": -0.6512423944561548,
+      "targetX": 0.253248,
+      "targetY": -3.245005,
+      "targetZ": -0.11276900000000001,
+      "targetDepth": 0.6505485941980702,
+      "ambient": 90,
+      "gallery": 560,
+      "flight": 1080
+    },
+    {
+      "id": "L10",
+      "kind": "spot",
+      "beam": 15,
+      "x": -0.6308911423707765,
+      "z": -1.0266456869232428,
+      "targetX": 0.346861,
+      "targetY": -3.497849,
+      "targetZ": 0.022143999999999997,
+      "targetDepth": 0.7083643837138763,
+      "ambient": 90,
+      "gallery": 560,
+      "flight": 1080
+    },
+    {
+      "id": "L11",
+      "kind": "flood",
+      "beam": 30,
+      "x": -0.12296840892029189,
+      "z": -1.1987092101121155,
+      "targetX": 1.0752490000000001,
+      "targetY": -0.79192,
+      "targetZ": 0.163853,
+      "targetDepth": 0.0896215165360283,
+      "ambient": 60,
+      "gallery": 300,
+      "flight": 560
+    },
+    {
+      "id": "L12",
+      "kind": "flood",
+      "beam": 30,
+      "x": 0.4093097260254222,
+      "z": -1.133353673034589,
+      "targetX": 0.950732,
+      "targetY": -1.289742,
+      "targetZ": 0.34064,
+      "targetDepth": 0.20345444105999425,
+      "ambient": 60,
+      "gallery": 300,
+      "flight": 560
+    },
+    {
+      "id": "L13",
+      "kind": "flood",
+      "beam": 30,
+      "x": 0.8605190498774399,
+      "z": -0.8435235413419286,
+      "targetX": 0.236544,
+      "targetY": -2.271929,
+      "targetZ": 0.292883,
+      "targetDepth": 0.42804318691578314,
+      "ambient": 60,
+      "gallery": 300,
+      "flight": 560
+    },
+    {
+      "id": "L14",
+      "kind": "flood",
+      "beam": 30,
+      "x": 1.1412920223276624,
+      "z": -0.3866232271491648,
+      "targetX": -0.009857,
+      "targetY": -2.1020320000000003,
+      "targetZ": 0.394447,
+      "targetDepth": 0.38919421604296467,
+      "ambient": 60,
+      "gallery": 300,
+      "flight": 560
+    }
+  ],
+  "scenes": {
+    "ambient": {
+      "description": "Low-contrast warm room presentation"
+    },
+    "gallery": {
+      "description": "Balanced sculpture presentation"
+    },
+    "flight": {
+      "description": "Higher-contrast visual highlight wave; no cable motion"
+    }
+  },
+  "futureMeasuredData": {
+    "iesRequired": true,
+    "spdPreferred": true,
+    "supplierOrLabReportRequired": true
+  }
+}

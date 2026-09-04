@@ -1,0 +1,18 @@
+{
+  "$schema":"../../../../schemas/aether-photometry-candidate.schema.json",
+  "schemaVersion":"1.0.0",
+  "fixtureId":"vx4800-bf-01",
+  "candidateId":"kit-concept-a90d-5l",
+  "status":"research-only",
+  "manufacturer":"KIT Concept",
+  "family":"Mini Magnet A90D-5L",
+  "regionAvailability":["Asia/OEM-style supplier; exact India distribution not verified"],
+  "finishOptions":["Black","Silver","White","Custom on request"],
+  "configurations":[
+    {"role":"deep-tail narrow","exactModelCode":"A90D-5L","opticCode":null,"cctK":3000,"cri":95,"beamAngleDegPublished":5,"powerW":6,"lumens":null,"dimensionsMm":[33,33,73.5],"driverModel":null,"dimming":["DALI","0-10V","PWM","1-10V"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Manufacturer publishes 400 lm at 3500K, not 3000K, so no lumen value is transferred. Exact optic ordering code is not published."},
+    {"role":"mid-field spot","exactModelCode":"A90D-5L","opticCode":null,"cctK":3000,"cri":95,"beamAngleDegPublished":15,"powerW":6,"lumens":null,"dimensionsMm":[33,33,73.5],"driverModel":null,"dimming":["DALI","0-10V","PWM","1-10V"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Official page lists 15 degrees but no exact optic ordering code or file."},
+    {"role":"upper-field flood","exactModelCode":"A90D-5L","opticCode":null,"cctK":3000,"cri":95,"beamAngleDegPublished":30,"powerW":6,"lumens":null,"dimensionsMm":[33,33,73.5],"driverModel":null,"dimming":["DALI","0-10V","PWM","1-10V"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Official page lists 30 degrees as an additional option but no exact optic ordering code or file."}
+  ],
+  "sources":{"productPage":"https://www.kit-concept.com/product-mini-magnet-a90d-5","datasheet":"https://www.kit-concept.com/product-mini-magnet-a90d-5","photometryDownload":null,"manufacturerContact":"https://www.kit-concept.com/"},
+  "review":{"exactConfigurationConfirmed":false,"officialPhotometryAvailable":false,"meetsPhysicalTarget":true,"meetsOpticalTarget":true,"meetsControlTarget":true,"notes":"Excellent nominal geometry and beam set, but the manufacturer page explicitly labels LDT and IES photometry as Coming Soon. Keep RESEARCH ONLY until exact files exist."}
+}

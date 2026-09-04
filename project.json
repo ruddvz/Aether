@@ -1,0 +1,25 @@
+{
+  "repositorySchema": 2,
+  "brand": "AETHERIA",
+  "repository": "ruddvz/Aether",
+  "defaultProduct": "vx4800",
+  "schemas": {
+    "fixture": "schemas/aether-fixture.schema.json",
+    "presentationStudy": "schemas/aether-presentation-study.schema.json",
+    "photometry": "schemas/aether-photometry.schema.json"
+  },
+  "products": {
+    "vx4800": {
+      "displayName": "VORTEX",
+      "model": "VX4800-BF-01",
+      "designRevision": "1.3.0",
+      "currentPresentation": "5.2.0",
+      "fixtureManifest": "fixtures/vx4800/fixture.json",
+      "viewerTemplate": "fixtures/vx4800/presentation/v5.2.0/viewer.template.html",
+      "presentationStudy": "fixtures/vx4800/presentation/v5.2.0/study.json",
+      "photometry": "fixtures/vx4800/photometry/concept-v5.2.0.json",
+      "publicPath": "products/vx4800/",
+      "releaseOutputName": "AETHERIA_VORTEX_v5.2.0.zip"
+    }
+  }
+}

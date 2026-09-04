@@ -1,0 +1,9 @@
+_site/
+build/
+.pytest_cache/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.venv/
+fixtures/vx4800/presentation/v5.2.0/assets/architectural-background.webp

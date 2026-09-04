@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>VORTEX</title>
+<style>
+__INLINE_CSS__</style>
+
+<script type="importmap">{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.min.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
+}}</script>
+</head>
+<body>
+<div id="app" class="scene-gallery">
+  <div id="ambient"></div><div id="ambientShade"></div>
+  <div id="frame">
+    <div id="backplate"></div><div id="sceneShade"></div><div id="lightWash"></div>
+    <div id="stage"></div><div id="edgeVignette"></div>
+  </div>
+
+  <div class="brandLockup hud"><div class="maker">AETHERIA</div><div class="product">VORTEX</div></div>
+
+  <div id="motionPanel" class="popover hud stay">
+    <div class="ey">Kinetic motion</div>
+    <div class="motionLine"><b id="rpmRead">0.36 rpm</b><small id="turnRead">167 s / turn</small></div>
+    <div class="segment"><button id="pauseBtn">Pause</button><button class="active" id="cwBtn">Clockwise</button><button id="ccwBtn">Counter</button></div>
+    <div class="range"><input id="speed" type="range" min="0.08" max="0.65" step="0.01" value="0.36"><div class="rangeLabels"><span>0.08</span><span>presentation</span><span>0.65 rpm</span></div></div>
+  </div>
+
+  <div id="lightPanel" class="popover hud stay">
+    <div class="ey">Lighting scene</div>
+    <div class="segment">
+      <button data-light="ambient">Ambient</button>
+      <button class="active" data-light="gallery">Gallery</button>
+      <button data-light="flight">Flight</button>
+    </div>
+    <div class="sceneInfo" id="lightInfo">Balanced 3000K-like sculpture lighting. The butterflies move visually because highlights travel across the field, not because the strings move.</div>
+  </div>
+
+  <nav id="dock" class="hud stay" aria-label="Vortex controls">
+    <div class="modeGroup">
+      <button class="view active" data-view="scene">Scene</button>
+      <button class="view" data-view="vortex">Vortex</button>
+      <button class="view" data-view="detail">Detail</button>
+    </div>
+    <div class="dockDivider"></div>
+    <div class="actionGroup">
+      <button class="dockIcon active" id="lightBtn" title="Lighting" aria-label="Lighting">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.7v2M12 19.3v2M2.7 12h2M19.3 12h2M5.4 5.4l1.4 1.4M17.2 17.2l1.4 1.4M18.6 5.4l-1.4 1.4M6.8 17.2l-1.4 1.4"/></svg>
+      </button>
+      <button class="dockIcon active" id="motionBtn" title="Motion" aria-label="Motion">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 9A8 8 0 1 1 5 16"/><path d="M4 4.5V10h5.5"/></svg>
+      </button>
+      <button class="dockIcon" id="infoBtn" title="Details" aria-label="Details">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 10.5v6M12 7.3h.01"/></svg>
+      </button>
+      <button class="dockIcon" id="fullBtn" title="Full screen" aria-label="Full screen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div class="contextHint hud" id="contextHint">Drag to rotate the chandelier</div>
+
+  <aside id="drawer" class="stay">
+    <div class="dh"><b>Vortex Version 5.2</b><button class="x" id="close">×</button></div>
+    <div class="db">
+      <div class="ey">V5 composition</div>
+      <div class="big">240 <small>stable suspended butterflies</small></div>
+      <p class="copy">Version 5.2 keeps the stable suspension logic and refines the review experience you identified: the suspension never twitches, oscillates or creates fake movement. Every cable and yoke is rigidly attached to the rotating field. The sensation of flight comes from controlled wing poses, changing viewing angle and a slow lighting wave.</p>
+
+      <div class="grid">
+        <div class="card"><b>54</b><span>Large · 186 mm</span></div>
+        <div class="card"><b>132</b><span>Medium · 146 mm</span></div>
+        <div class="card"><b>54</b><span>Small · 108 mm</span></div>
+        <div class="card"><b>38°</b><span>Median wing fold</span></div>
+      </div>
+
+      <div class="rule"></div>
+      <div class="ey">Why the butterflies read larger</div>
+      <p class="copy">The previous mix had only 30 large ornaments. V5 increases that to 54 and chooses those locations using both local 3D clearance and vortex depth. Large butterflies are concentrated where the field can visually support them without simply scaling every ornament until the composition collides.</p>
+      <div class="kv">
+        <span>Large-element minimum local clearance</span><span>145 mm</span>
+        <span>Wing-fold range</span><span>21–56°</span>
+        <span>Wing asymmetry</span><span>Small, fixed</span>
+        <span>Body pitch / roll</span><span>Restrained</span>
+      </div>
+
+      <div class="rule"></div>
+      <div class="ey">Stable suspension</div>
+      <div class="kv">
+        <span>Main suspension count</span><span>240</span>
+        <span>Main cable range</span><span>319–4705 mm</span>
+        <span>Visual cable diameter</span><span>≈1.0 mm</span>
+        <span>Main line type</span><span>Rigid instanced microcable</span>
+        <span>Yoke</span><span>30 mm + two short leads</span>
+      </div>
+      <p class="copy">The strings are now thin cylindrical geometry rather than one-pixel line primitives. They rotate smoothly with the entire assembly and never receive independent animation. In the architectural scene their opacity is intentionally very low; the Detail view increases it slightly so the suspension can still be inspected.</p>
+
+      <div class="rule"></div>
+      <div class="ey">Butterfly refinement</div>
+      <div class="kv">
+        <span>Wing structure</span><span>Four separate curved crystal wings</span>
+        <span>Thickness</span><span>Thin bevelled optical body</span>
+        <span>Facets</span><span>Subtle cool / warm prism variation</span>
+        <span>Perimeter</span><span>Champagne optical rim</span>
+        <span>Body</span><span>Segmented metallic anatomy</span>
+        <span>Fine detail</span><span>Antennae + restrained veins</span>
+      </div>
+
+      <div class="rule"></div>
+      <div class="ey">Flight effect</div>
+      <p class="copy">No cable motion. No wing flapping. Flight mode instead moves a very slow highlight wave through the fourteen fixed accent beams. As different faceted wings catch those beams, the sculpture appears alive while every physical suspension line remains stable.</p>
+      <div class="kv">
+        <span>Narrow tail accents</span><span>4 × ~5°</span>
+        <span>Mid-field spots</span><span>6 × ~15°</span>
+        <span>Upper-field floods</span><span>4 × ~30°</span>
+        <span>Central accent</span><span>Soft narrow beam</span>
+      </div>
+
+      <div class="rule"></div>
+      <div class="ey">Review modes</div>
+      <div class="kv">
+        <span>Scene</span><span>Architectural installation</span>
+        <span>Vortex</span><span>Warm ivory product cyclorama</span>
+        <span>Detail</span><span>High-detail L butterfly study</span>
+      </div>
+      <p class="copy">Vortex removes the room and places the complete fixture in a soft ivory cyclorama with a photographic horizon and controlled floor shadow. Detail removes the chandelier entirely and presents one dedicated large butterfly with separate wing roots, polished edge treatment, segmented body, thorax core, eyes, curved antennae, suspension eyelet, etched veins, facet boundaries and crystal accent facets.</p>
+
+      <div class="rule"></div>
+      <div class="ey">Presentation layers</div>
+      <div class="toggle"><div><b>Suspension system</b><small>Stable and almost invisible</small></div><button class="sw on" id="cableToggle"></button></div>
+      <div class="toggle"><div><b>Mechanism reference</b><small>Central bearing and exit positions</small></div><button class="sw" id="mechanism"></button></div>
+
+      <div class="rule"></div>
+      <div class="note">V5.2 is still a visual and kinematic design study. Final bearing, carrier, drive, structural reactions, cable rating, dynamic clearance, fatigue, anchorage and certification require engineering validation.</div>
+    </div>
+  </aside>
+
+  <div id="inspect"><div class="ey">Selected butterfly</div><div class="iid" id="iid"></div><div class="imeta" id="imeta"></div></div>
+  <div id="loader"><div><div class="load">VORTEX</div><div class="bar"><i></i></div></div></div>
+</div>
+
+<script>const DATA=__VIEWER_DATA__;</script>
+<script type="module">
+__INLINE_JS__</script>
+</body>
+</html>

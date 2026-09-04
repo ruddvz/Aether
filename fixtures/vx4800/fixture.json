@@ -1,0 +1,109 @@
+{
+  "$schema": "../../schemas/aether-fixture.schema.json",
+  "schemaVersion": "0.2.0",
+  "identity": {
+    "fixtureId": "vx4800-bf-01",
+    "productCode": "VX4800-BF-01",
+    "brand": "AETHERIA",
+    "collection": "FLIGHT",
+    "name": "VORTEX",
+    "designRevision": "1.3.0",
+    "presentationRevision": "5.2.0",
+    "lifecycle": "prototype",
+    "description": "240-element suspended butterfly vortex sculptural lighting concept."
+  },
+  "classification": {
+    "fixtureType": "suspended-sculpture",
+    "motion": "kinetic",
+    "applications": ["residential", "hospitality", "commercial", "contract"],
+    "environment": "indoor"
+  },
+  "physical": {
+    "envelopeMm": [2500, 1650, 4800],
+    "canopyEnvelopeMm": [2400, 1500, 150],
+    "maximumDropMm": 4800,
+    "massKg": {"status": "unknown"},
+    "mounting": {
+      "primarySupport": "site structure via engineered interface zones",
+      "secondaryRetention": "required; final system TBD",
+      "siteStructuralDesignRequired": true,
+      "interfaceZoneCount": 8
+    }
+  },
+  "optical": {
+    "status": "conceptual",
+    "cctK": [3000],
+    "cri": 92,
+    "emitters": [{"id": "accent-head-family", "type": "adjustable-led-spot", "quantity": 14, "photometryAssetId": "photometry-concept-5.2.0"}]
+  },
+  "composition": {
+    "authority": "engineering",
+    "elementCount": 240,
+    "families": [
+      {"id": "S", "count": 66, "nominalSizeMm": [108, 60, 5], "geometryAssetId": "butterfly-s-manufacturing"},
+      {"id": "M", "count": 144, "nominalSizeMm": [146, 82, 6], "geometryAssetId": "butterfly-m-manufacturing"},
+      {"id": "L", "count": 30, "nominalSizeMm": [186, 108, 7], "geometryAssetId": "butterfly-l-manufacturing"}
+    ],
+    "scheduleAssetId": "composition-engineering-1.3.0",
+    "suspension": {
+      "lineCount": 240,
+      "material": "AISI 316 stainless microcable target; final cable construction/rating TBD",
+      "nominalDiameterMm": [0.8, 1.0],
+      "minimumLengthMm": 318.676,
+      "maximumLengthMm": 4705.401
+    }
+  },
+  "kinematics": {
+    "status": "concept",
+    "axis": [0, 1, 0],
+    "speedRpm": {"minimum": 0.08, "nominal": 0.36, "maximum": 0.65},
+    "driveType": "TBD",
+    "bearingType": "TBD",
+    "braking": "TBD",
+    "secondaryRetentionRequired": true
+  },
+  "electrical": {
+    "status": "conceptual",
+    "dimming": ["dali", "phase"],
+    "notes": "Final driver topology, head selection, power and control architecture TBD."
+  },
+  "materials": [
+    {"id": "LUX-GL", "name": "Luxury optical glass/crystal tier", "status": "concept", "baseMaterial": "lead-free optical/decorative glass or engineered crystal; final specification TBD"},
+    {"id": "canopy-finish", "name": "Dark champagne / titanium-gold canopy finish", "status": "concept", "finish": "PVD or equivalent approved sample; final process TBD"}
+  ],
+  "assets": [
+    {"id": "composition-engineering-1.3.0", "role": "schedule", "path": "composition/engineering-v1.3.0.csv", "format": "csv", "authority": "controlled", "sha256": "0856e8d72efad88abec4a2091b359e1955e54915f5c08ba12a24ae44fbcdb6e4", "units": "mm", "coordinateSystem": "ceiling XY; drop-positive-down"},
+    {"id": "led-setout-engineering-1.3.0", "role": "schedule", "path": "photometry/led-setout-engineering-v1.3.0.csv", "format": "csv", "authority": "controlled", "sha256": "5006690468fb93f2341cd760e651f52e30ee5739f9fee3bb3915d42031a7ee8b", "units": "mm", "coordinateSystem": "ceiling XY"},
+    {"id": "motion-architecture", "role": "document", "path": "documents/kinetic-motion-architecture-v1.3.0.md", "format": "md", "authority": "controlled", "sha256": "ec5b033a7f313787ead2978dd2ab5211dea63f7f924dd98c36cf676e46f8581f"},
+    {"id": "final-validation", "role": "document", "path": "documents/final-validation-v1.3.0.md", "format": "md", "authority": "controlled", "sha256": "0b4717356b37f37684cd3024bf7ccb0ee3fd2b3e8f62005f5ea1ef0111106c87"},
+    {"id": "presentation-study-5.2.0", "role": "document", "path": "presentation/v5.2.0/study.json", "format": "json", "authority": "reference", "sha256": "51dede2d162a13a328349d951158e7295f19031a34703beaed3c340743ef3ed5"},
+    {"id": "presentation-background-5.2.0", "role": "preview", "path": "presentation/v5.2.0/assets/architectural-background.webp", "format": "webp", "authority": "visual", "sha256": "af89cc29b4313c809ba3e876f668eb9a29ec3e98abf676389fd1e1a978db8757"},
+    {"id": "presentation-template-5.2.0", "role": "source", "path": "presentation/v5.2.0/viewer.template.html", "format": "html", "authority": "visual", "sha256": "13a944a5d91bafaa55e677a91cab9c14416985756bc9426f1525b69427c83af3"},
+    {"id": "photometry-concept-5.2.0", "role": "photometry", "path": "photometry/concept-v5.2.0.json", "format": "json", "authority": "reference", "sha256": "d6759d36d2da5f22c88918cf89e2dc7e833116bc49916ee1a0e10138e3db5051"},
+    {"id": "geometry-manifest-1.3.0", "role": "document", "path": "geometry/manifest.json", "format": "json", "authority": "controlled", "sha256": "cc67949e9ee0a338fdb6aec1dd5b84372a9d678cf1d7589637b100f8440244f9"},
+    {"id": "geometry-parameters-1.3.0", "role": "source", "path": "geometry/parameters-v1.3.0.json", "format": "json", "authority": "controlled", "sha256": "52d9cf36164257356d691090b2b4d84d8822d834fa082bb8de84ffaa67c1d0ff"},
+    {"id": "presentation-styles-5.2.0", "role": "source", "path": "presentation/v5.2.0/viewer.styles.css", "format": "css", "authority": "visual", "sha256": "d91e85c952ba3a3a581b9b5d60e606d3d3b32847d61fd2b5ff52f5a8502aa9e6"},
+    {"id": "presentation-runtime-5.2.0", "role": "source", "path": "presentation/v5.2.0/viewer.app.js", "format": "js", "authority": "visual", "sha256": "adb3eb3b7463969a505e6849026898d4b7acb5fc11bb396274a2b57e6273ff21"}
+  ],
+  "interchange": {"ifc": {"class": "IfcLightFixture", "exportStatus": "planned"}, "gdtf": {"exportStatus": "planned"}, "mvr": {"exportStatus": "planned"}},
+  "manufacturing": {"firstArticleRequired": true, "fullFactoryPreHangRequired": true, "actualInstalledMassRequiredBeforeConstructionRelease": true, "manufacturingGeometryManifestAssetId": "geometry-manifest-1.3.0", "repositoryGeometryAuthority": "coordination-only"},
+  "compliance": {
+    "status": "target-defined",
+    "targetMarkets": ["India", "IEC-oriented markets", "North America"],
+    "standards": [
+      {"id": "IEC 60598-1:2024", "status": "target"},
+      {"id": "UL 1598", "status": "target"},
+      {"id": "CSA C22.2 No. 250.0", "status": "target"},
+      {"id": "IS 10322 applicable parts", "status": "target"}
+    ]
+  },
+  "provenance": {"createdAt": "2026-09-03T00:00:00Z", "updatedAt": "2026-09-03T00:00:00Z", "authors": ["AETHERIA / ruddvz"], "sourceReferences": ["VX4800 Product Release v1.3.0", "VORTEX Viewer v5.2.0"]},
+  "limitations": [
+    "RFQ/prototype design, not construction release.",
+    "Actual mass and centre of gravity are not yet controlled.",
+    "Site anchors must be designed for the actual structure and loads.",
+    "Lighting is conceptual until selected heads and measured/supplier IES data are controlled.",
+    "Kinetic bearing, drive, braking, redundant retention and dynamic validation are not final.",
+    "Presentation V5.2 size allocation and poses are not engineering authority."
+  ]
+}

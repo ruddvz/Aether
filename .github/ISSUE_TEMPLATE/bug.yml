@@ -1,0 +1,40 @@
+name: Viewer bug
+description: Report a reproducible viewer, mobile, rendering, or deployment defect.
+title: "[Bug] "
+labels: []
+body:
+  - type: dropdown
+    id: product
+    attributes:
+      label: Product
+      options:
+        - VORTEX / VX4800
+        - Repository / deployment
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: "5.2.0"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe exactly what is wrong.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      placeholder: "1. Open... 2. Tap... 3. Observe..."
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      placeholder: "iPhone 14 Pro, Safari"

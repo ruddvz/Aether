@@ -1,0 +1,88 @@
+{
+  "$schema": "../../../../schemas/aether-presentation-study.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "presentationRevision": "5.2.0",
+  "authority": "presentation-only",
+  "sourceViewer": "VX4800_VORTEX_Viewer_v5.2.0.html",
+  "expectedViewerDataSha256": "bb6014386e9422b7bf87969c28533e8e67645fb0afdc36965bac418be6865b4c",
+  "sizeAllocation": {
+    "S": 54,
+    "M": 132,
+    "L": 54
+  },
+  "sizeDimensionsMm": {
+    "S": [
+      108,
+      60,
+      5
+    ],
+    "M": [
+      146,
+      82,
+      6
+    ],
+    "L": [
+      186,
+      108,
+      7
+    ]
+  },
+  "poseModel": {
+    "description": "Deterministic visual pose study. Does not alter engineering schedule authority.",
+    "goldenAngleMethod": true,
+    "foldRangeDeg": [
+      12,
+      58
+    ],
+    "leftRightAsymmetryDeg": 2.6,
+    "rollAmplitudeDeg": 4.6,
+    "pitchAmplitudeDeg": 3.4,
+    "yawTrimAmplitudeDeg": 2.8
+  },
+  "kineticVisualization": {
+    "enabled": true,
+    "defaultRpm": 0.36,
+    "rangeRpm": [
+      0.08,
+      0.65
+    ],
+    "status": "conceptual"
+  },
+  "backgroundAsset": "assets/architectural-background.webp",
+  "runtimeDependencies": [
+    {
+      "name": "three",
+      "version": "0.185.1",
+      "source": "https://cdn.jsdelivr.net/npm/three@0.185.1/",
+      "requiredForOfflineUse": false
+    }
+  ],
+  "declaredDivergences": [
+    {
+      "field": "composition.sizeAllocation",
+      "engineering": "S66/M144/L30",
+      "presentation": "S54/M132/L54",
+      "requiresEngineeringReleaseBeforeManufacture": true
+    },
+    {
+      "field": "composition.wingPose",
+      "engineering": "42deg nominal symmetric",
+      "presentation": "deterministic variable folds/pitch/roll",
+      "requiresEngineeringReleaseBeforeManufacture": true
+    },
+    {
+      "field": "kinematics",
+      "engineering": "concept architecture requiring validation",
+      "presentation": "browser rotation visualization",
+      "requiresEngineeringReleaseBeforeManufacture": true
+    },
+    {
+      "field": "photometry",
+      "engineering": "head positions only; vendor photometry TBD",
+      "presentation": "conceptual WebGL intensity scenes",
+      "requiresEngineeringReleaseBeforeManufacture": true
+    }
+  ]
+}

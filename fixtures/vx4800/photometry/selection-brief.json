@@ -1,0 +1,57 @@
+{
+  "fixtureId": "vx4800-bf-01",
+  "status": "research-input",
+  "purpose": "Shortlist real architectural accent heads whose controlled supplier/lab photometry can replace the current conceptual V5.2 light field.",
+  "preferredFamilyStrategy": "Prefer one manufacturer family that offers interchangeable or sibling narrow, spot and flood optics so the canopy uses one visual/electrical language.",
+  "lightQuality": {
+    "cctK": 3000,
+    "criMinimum": 90,
+    "criPreferred": 95,
+    "tm30Preferred": true,
+    "macadamOrSdcMPreferred": "3-step or better",
+    "notes": "2700K may remain a future option, but the first controlled photometry package should use one exact 3000K configuration."
+  },
+  "optics": [
+    {"role": "deep-tail narrow", "quantity": 4, "targetBeamDeg": 5, "acceptableRangeDeg": [3, 7]},
+    {"role": "mid-field spot", "quantity": 6, "targetBeamDeg": 15, "acceptableRangeDeg": [10, 20]},
+    {"role": "upper-field flood", "quantity": 4, "targetBeamDeg": 30, "acceptableRangeDeg": [24, 36]}
+  ],
+  "physicalTargets": {
+    "smallAdjustableHead": true,
+    "apertureDiameterMmTargetMaximum": 45,
+    "remoteDriverPreferred": true,
+    "serviceableFromCanopy": true,
+    "finish": "dark bronze, dark champagne, black, or custom finish compatible with canopy"
+  },
+  "electricalTargets": {
+    "powerPerHeadWPreliminaryRange": [8, 20],
+    "daliPreferred": true,
+    "phaseDimmingUseful": true,
+    "constantCurrentOrManufacturerMatchedDriver": true
+  },
+  "mandatoryResearchReturns": [
+    "exact manufacturer",
+    "exact model/configuration code",
+    "optic code",
+    "3000K LED code",
+    "CRI specification",
+    "input power",
+    "lumen output if published",
+    "fixture dimensions",
+    "driver model",
+    "dimming/control options",
+    "official product page",
+    "official datasheet",
+    "official IES or LDT photometry file",
+    "photometry file URL or download source",
+    "country/region availability",
+    "notes on custom finish or OEM/private-label availability"
+  ],
+  "rejectionRules": [
+    "Do not accept a generic family page without the exact optic/LED configuration.",
+    "Do not treat a marketing beam angle as a substitute for an IES/LDT file.",
+    "Do not fabricate IES data from screenshots, lumen claims, or the current Three.js viewer.",
+    "Do not mix photometry from one wattage/CCT/optic with a different product configuration.",
+    "Do not shortlist a head if official photometry cannot be obtained unless it is clearly marked research-only."
+  ]
+}

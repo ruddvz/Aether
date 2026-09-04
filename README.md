@@ -1,66 +1,36 @@
-# AETHERIA / Aether
+# AETHERIA
 
-Aether is the design, visualization, release, and presentation repository for **AETHERIA sculptural lighting**. The first product in the repository is **VORTEX / VX4800-BF-01**, a 240-piece suspended butterfly composition with an interactive Three.js presentation viewer.
+AETHERIA is a design and engineering platform for architectural sculptural lighting. VORTEX (`VX4800-BF-01`) is the first fixture implemented on the platform.
 
-## Live site
+## Source-of-truth rule
 
-The GitHub Pages deployment is designed to publish at:
+`fixtures/<product>/fixture.json` plus controlled engineering assets are the product source of truth. HTML, glTF, IFC, GDTF, MVR, drawings and release packages are outputs/adapters, not product authority.
 
-**https://ruddvz.github.io/Aether/**
+For VORTEX, engineering revision **1.3.0** remains authoritative. Presentation revision **5.2.0** is an interactive visual study and intentionally contains declared visual divergences.
 
-The root site opens the current VORTEX viewer. Versioned product viewers remain available through immutable source folders and release ZIPs.
-
-> GitHub Pages requires a one-time repository setting to use GitHub Actions as the publishing source. The deployment workflow is already included. See `docs/GITHUB_PAGES.md`.
-
-## Repository layout
-
-```text
-Aether/
-├── .github/                 GitHub Actions, issue templates, CODEOWNERS
-├── docs/                    Architecture, versioning, decisions and setup
-├── products/                Editable product source and versioned viewers
-│   └── vx4800/
-│       ├── data/
-│       └── viewer/5.2.0/
-├── releases/                Immutable release ZIPs
-├── scripts/                 Build and validation tooling
-├── site/static/             Small static files used by GitHub Pages
-├── project.json             Product registry and current-version pointers
-├── CHANGELOG.md
-└── ROADMAP.md
-```
-
-## Current product
-
-| Field | Value |
-| --- | --- |
-| Brand | AETHERIA |
-| Collection | VORTEX |
-| Product | VX4800-BF-01 |
-| Viewer | v5.2.0 |
-| Suspended elements | 240 |
-| Live route | `/products/vx4800/` |
-
-## Development model
-
-`main` is always expected to be deployable. Product work should normally happen on a feature branch and merge through a pull request. A product release must update its versioned viewer, immutable ZIP, `project.json`, validation rules, and changelog together.
-
-The public GitHub Pages site is assembled by `scripts/build_site.py`. The deploy job never treats the entire repository as the website. This prevents internal documentation, tooling, and future manufacturing files from accidentally becoming site navigation.
-
-## Local validation
+## Validate locally
 
 ```bash
+pip install -r requirements-dev.txt -r requirements-geometry.txt
 python scripts/validate_repository.py
+python scripts/qa_geometry.py
+pytest -q
 python scripts/build_site.py
-python -m http.server 8000 --directory _site
 ```
 
-Then open `http://localhost:8000/`.
+## Repository domains
 
-## Important status
+- `schemas/` versioned canonical data contracts.
+- `fixtures/` product truth, controlled geometry, schedules, photometry status and presentation studies.
+- `scripts/` validators and deterministic builders.
+- `tests/` regression tests.
+- `site/` public static shell.
+- `docs/` architecture, research and process documentation.
 
-The VORTEX viewer is a design and presentation artifact. It is not a structural, electrical, photometric, fabrication, or certification release. Engineering-controlled deliverables should remain explicitly separated from presentation assets.
+## Photometry
 
-## Licensing
+Current VORTEX browser illumination is explicitly **conceptual**. The platform is ready for controlled LM-63 IES and spectral assets, but no browser intensity value is represented as tested lux, lumens or candela.
 
-No open-source license is granted by this repository unless a license file is added explicitly in the future. All rights are reserved by default.
+## License
+
+Third-party dependency policy and upstream research are documented under `docs/`. Product/design asset rights are separate from third-party software licenses.

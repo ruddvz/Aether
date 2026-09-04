@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authorityModel": {
+    "manufacturing": "External controlled VX4800 Product Release v1.3.0. Hashes preserved here; binaries are intentionally not duplicated in Git history.",
+    "repositoryGenerated": "Coordination/review geometry only. Generated outputs cannot silently replace manufacturing authority."
+  },
+  "manufacturingAssets": [
+    {
+      "id": "butterfly-s-manufacturing",
+      "filename": "Butterfly_S_v1.3.0.step",
+      "format": "STEP",
+      "sha256": "a8e1810a1033cd70e87a6de9ee53166e3a6008d79ced47f0f71740e2ecc7239d",
+      "nominalEnvelopeMm": [
+        108,
+        60,
+        76
+      ]
+    },
+    {
+      "id": "butterfly-m-manufacturing",
+      "filename": "Butterfly_M_v1.3.0.step",
+      "format": "STEP",
+      "sha256": "9137671f8c4597ba0c88a2f280c883a4684b02857db676c05f93a8fa71a40c0c",
+      "nominalEnvelopeMm": [
+        146,
+        82,
+        102
+      ]
+    },
+    {
+      "id": "butterfly-l-manufacturing",
+      "filename": "Butterfly_L_v1.3.0.step",
+      "format": "STEP",
+      "sha256": "bc286287f1292af5ce21a4bb805b38c78f1b91325b53e39e9e63d1713eea56d3",
+      "nominalEnvelopeMm": [
+        186,
+        108,
+        128
+      ]
+    },
+    {
+      "id": "rotating-carrier-manufacturing",
+      "filename": "Kinetic_Rotating_Carrier_240_Exits_v1.3.0.step",
+      "format": "STEP",
+      "sha256": "0d6de0375e02526dc563fafe17a4bc65f06d6b3c04da511ee18587f6db124c40",
+      "boundingBoxMm": [
+        2260,
+        1330,
+        50
+      ]
+    },
+    {
+      "id": "canopy-assembly-manufacturing",
+      "filename": "VX4800_Kinetic_Canopy_Assembly_v1.3.0.step",
+      "format": "STEP",
+      "sha256": "4c195e07bc5854524fa47ef2a972290a6555ba63f51a5d0c8bfeaae79e0bb940",
+      "boundingBoxMm": [
+        2400,
+        1500,
+        150
+      ]
+    },
+    {
+      "id": "setout-manufacturing",
+      "filename": "VX4800_Kinetic_True_Vortex_Setout_v1.3.0.dxf",
+      "format": "DXF",
+      "sha256": "e664e66034d928a0136d07ca763a142fe5bb6a0e678d577050bf0688160eb2fd",
+      "expectedLayers": {
+        "CABLE_EXITS": 240,
+        "FIXED_LEDS": 14
+      }
+    }
+  ],
+  "coordinationGeneration": {
+    "parameters": "parameters-v1.3.0.json",
+    "script": "scripts/generate_geometry.py",
+    "authority": "coordination",
+    "note": "Uses controlled dimensions and schedules to create lightweight review geometry, not manufacturing BREP authority."
+  }
+}
