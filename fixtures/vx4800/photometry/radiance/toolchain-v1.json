@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "authority": "validation-tooling",
+  "status": "active",
+  "radiance": {
+    "project": "LBNL-ETA/Radiance",
+    "release": "6.0.2",
+    "tag": "rad6R0P2",
+    "publishedAt": "2026-02-02T01:08:32Z",
+    "linuxAsset": "Radiance_c1700d56_Linux.zip",
+    "linuxAssetUrl": "https://github.com/LBNL-ETA/Radiance/releases/download/rad6R0P2/Radiance_c1700d56_Linux.zip",
+    "linuxAssetSha256": "04ee53cafbb64b943a53616b3d0ee379dd7ef80379c83aa7a145e547d9809c28",
+    "requiredExecutables": ["ies2rad", "oconv", "rtrace"]
+  },
+  "validationBoundary": {
+    "radianceIsIndependentOfAetheriaParser": true,
+    "syntheticFixtureCanValidatePipelineOnly": true,
+    "syntheticFixtureCanQualifyProductPhotometry": false,
+    "supplierOrLabRawIesRequiredForProductValidation": true,
+    "rawIesSha256MustBeControlled": true,
+    "exactHeadOpticConfigurationMustBeControlled": true,
+    "radiancePassAloneApprovesLuminaire": false
+  },
+  "method": {
+    "conversion": "ies2rad converts the controlled LM-63 file to Radiance source/data files.",
+    "sceneCompilation": "oconv compiles the converted source into an octree.",
+    "numericalCrossCheck": "rtrace samples direct irradiance below the luminaire at controlled angular offsets and compares normalized results against the AETHERIA LM-63 parser's candela distribution after geometric cosine/distance normalization.",
+    "defaultSamplingDistanceM": 10.0,
+    "defaultAnglesDeg": [0.0, 10.0, 20.0],
+    "relativeTolerance": 0.12
+  },
+  "sources": [
+    "https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/ies2rad.pdf",
+    "https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/man1all.pdf",
+    "https://github.com/LBNL-ETA/Radiance/releases/tag/rad6R0P2"
+  ]
+}
