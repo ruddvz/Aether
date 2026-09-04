@@ -3,14 +3,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
 import bpy
 
 
 def cli_args() -> argparse.Namespace:
-    argv = sys.argv
+    argv = __import__("sys").argv
     argv = argv[argv.index("--") + 1 :] if "--" in argv else []
     p = argparse.ArgumentParser()
     p.add_argument("--report", default=None)
@@ -30,6 +29,7 @@ def main() -> None:
         fail(errors, f"Blender {bpy.app.version_string} is older than the 5.2 pipeline target")
     if scene.get("aetheria_fixture_id") != "vx4800-bf-01": fail(errors, "scene fixture id is missing or incorrect")
     if scene.get("aetheria_design_revision") != "1.3.0": fail(errors, "scene design revision is missing or incorrect")
+    if scene.get("aetheria_visualization_revision") != "0.11.0": fail(errors, "scene visualization revision must be 0.11.0")
     if scene.get("aetheria_authority") != "visualization-only": fail(errors, "scene authority must remain visualization-only")
 
     instances = [o for o in bpy.data.objects if o.instance_type == "COLLECTION" and o.instance_collection and o.name.startswith("VX-")]
@@ -65,9 +65,28 @@ def main() -> None:
     missing_cameras = sorted(camera_names - set(bpy.data.objects.keys()))
     if missing_cameras: fail(errors, f"missing cameras: {missing_cameras}")
 
-    material_names = {"MAT_BUTTERFLY_OPTICAL_GLASS", "MAT_PVD_DARK_CHAMPAGNE", "MAT_PVD_BLACK_TITANIUM", "MAT_BRUSHED_BRASS", "MAT_SATIN_NICKEL", "MAT_CABLE_STAINLESS", "MAT_BUTTERFLY_BODY_CHAMPAGNE", "MAT_LED_HEAD_TITANIUM", "MAT_LED_LENS_3000K", "MAT_STAGE_IVORY"}
+    material_names = {
+        "MAT_BUTTERFLY_OPTICAL_GLASS", "MAT_PVD_DARK_CHAMPAGNE", "MAT_PVD_BLACK_TITANIUM",
+        "MAT_BRUSHED_BRASS", "MAT_SATIN_NICKEL", "MAT_CABLE_STAINLESS",
+        "MAT_BUTTERFLY_BODY_CHAMPAGNE", "MAT_LED_HEAD_TITANIUM", "MAT_LED_LENS_3000K", "MAT_STAGE_IVORY",
+    }
     missing_materials = sorted(material_names - set(bpy.data.materials.keys()))
     if missing_materials: fail(errors, f"missing materials: {missing_materials}")
+
+    glass = bpy.data.materials.get("MAT_BUTTERFLY_OPTICAL_GLASS")
+    absorption_density = None
+    if glass and glass.use_nodes and glass.node_tree:
+        absorption = glass.node_tree.nodes.get("AETHERIA_EDGE_ABSORPTION")
+        if absorption and absorption.inputs.get("Density"):
+            absorption_density = float(absorption.inputs["Density"].default_value)
+    if absorption_density is None or abs(absorption_density - 3.5) > 1e-6:
+        fail(errors, f"expected visualization glass absorption density 3.5, found {absorption_density}")
+
+    spines = [o for o in bpy.data.objects if o.name.startswith("CENTRAL_SPINE")]
+    if len(spines) != 3: fail(errors, f"expected 3 linked prototype spine objects, found {len(spines)}")
+    for spine in spines:
+        if spine.get("aetheria_spine_refinement") != "0.11-smaller-sculptural-centre":
+            fail(errors, f"{spine.name} is missing 0.11 spine refinement metadata")
 
     env = bpy.data.collections.get("85_ENV_RESIDENTIAL")
     env_objects = list(env.all_objects) if env else []
@@ -78,6 +97,17 @@ def main() -> None:
             fail(errors, f"residential environment object lacks visualization-only authority: {obj.name}")
     env_lights = [o for o in env_objects if o.type == "LIGHT" and o.name.startswith("ENV_RES_")]
     if len(env_lights) != 4: fail(errors, f"expected 4 residential photographic environment lights, found {len(env_lights)}")
+
+    rotor = bpy.data.objects.get("AETHERIA_ROTATING_FIELD")
+    animation_action = rotor.animation_data.action if rotor and rotor.animation_data else None
+    if rotor is None: fail(errors, "rotating field root is missing")
+    elif rotor.get("motion_status") != "conceptual-reference-only": fail(errors, "rotating field motion must remain conceptual-reference-only")
+    if not animation_action or animation_action.name != "PHYSICAL_NOMINAL_RPM_REFERENCE":
+        fail(errors, "derived nominal-RPM animation reference action is missing")
+    if scene.get("aetheria_animation_reference_status") != "visualization-only-constant-speed-reference":
+        fail(errors, "animation reference authority/status is missing")
+    if int(scene.get("aetheria_animation_reference_cycle_frames", 0)) <= 0:
+        fail(errors, "animation reference cycle frame count is missing")
 
     source_sha_keys = [k for k in scene.keys() if str(k).startswith("source_sha256_")]
     if len(source_sha_keys) < 5: fail(errors, "source SHA-256 provenance is incomplete")
@@ -97,6 +127,10 @@ def main() -> None:
         "renderLights": len(render_lights),
         "cameras": len([o for o in bpy.data.objects if o.type == "CAMERA"]),
         "materials": len(bpy.data.materials),
+        "glassAbsorptionDensity": absorption_density,
+        "refinedSpines": len(spines),
+        "animationAction": animation_action.name if animation_action else None,
+        "animationCycleFrames": scene.get("aetheria_animation_reference_cycle_frames"),
         "residentialEnvironmentObjects": len(env_objects),
         "residentialEnvironmentLights": len(env_lights),
         "errors": errors,
