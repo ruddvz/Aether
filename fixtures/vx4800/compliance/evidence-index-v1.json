@@ -134,6 +134,16 @@
       "reference": "docs/VX4800_PHOTOMETRY_SYSTEM_VALIDATION.md",
       "claim": "Defines and software-validates the 14-head Layer-1 direct-light aggregation, scene/report schemas and product-authority gates; synthetic pipeline success is not product, physical, site or certification evidence.",
       "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-PHOTOMETRY-OCCLUSION-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "docs/VX4800_PHOTOMETRY_OCCLUSION_VALIDATION.md",
+      "claim": "Defines and software-validates the L2 direct-path obstruction/attenuation model and authority gates; synthetic obstruction geometry and scalar transmission assumptions are not product, physical, site or certification evidence.",
+      "canClosePhysicalTest": false
     }
   ]
 }

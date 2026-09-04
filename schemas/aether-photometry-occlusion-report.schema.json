@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-photometry-occlusion-report.schema.json",
+  "title": "AETHERIA VX4800 L2 photometry occlusion report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "fixtureId", "designRevision", "authority", "status", "sourceClass", "bindings", "baseline", "model", "occlusionLayer", "summary", "warnings", "generatedAt"],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "schemaVersion": {"const": "1.0.0"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "designRevision": {"const": "1.3.0"},
+    "authority": {"const": "derived-occlusion-review"},
+    "status": {"enum": ["pipeline-pass", "pipeline-fail", "occlusion-layer-pass"]},
+    "sourceClass": {"enum": ["synthetic-test-only", "controlled-review-input"]},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["modelPath", "modelSha256", "systemScenePath", "systemSceneSha256", "systemSceneHashMatch"],
+      "properties": {
+        "modelPath": {"type": "string", "minLength": 1},
+        "modelSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "systemScenePath": {"type": "string", "minLength": 1},
+        "systemSceneSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "systemSceneHashMatch": {"type": "boolean"}
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["systemStatus", "pipelinePass", "directDistributionValidated", "headCount", "sensorCount"],
+      "properties": {
+        "systemStatus": {"type": "string", "minLength": 1},
+        "pipelinePass": {"type": "boolean"},
+        "directDistributionValidated": {"type": "boolean"},
+        "headCount": {"const": 14},
+        "sensorCount": {"type": "integer", "minimum": 1}
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coordinateSystem", "objects", "objectCount", "triangleCount", "rayObjectIntersectionCount", "controlledGeometryReady"],
+      "properties": {
+        "coordinateSystem": {"const": "ceiling XY; z-positive-down"},
+        "objects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["objectId", "category", "directTransmissionFactor", "triangleCount", "sourceReference", "sourceSha256"],
+            "properties": {
+              "objectId": {"type": "string", "minLength": 1},
+              "category": {"enum": ["canopy", "carrier", "butterfly-field", "architecture", "other"]},
+              "directTransmissionFactor": {"type": "number", "minimum": 0, "maximum": 1},
+              "triangleCount": {"type": "integer", "minimum": 1},
+              "sourceReference": {"type": ["string", "null"]},
+              "sourceSha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+            }
+          }
+        },
+        "objectCount": {"type": "integer", "minimum": 1},
+        "triangleCount": {"type": "integer", "minimum": 1},
+        "rayObjectIntersectionCount": {"type": "integer", "minimum": 0},
+        "controlledGeometryReady": {"type": "boolean"}
+      }
+    },
+    "occlusionLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "limitations", "sensors", "acceptance"],
+      "properties": {
+        "method": {"type": "string", "minLength": 1},
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "sensors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sensorId", "category", "pointM", "baselineIlluminanceLux", "occludedIlluminanceLux", "lossIlluminanceLux", "lossFraction", "contributions"],
+            "properties": {
+              "sensorId": {"type": "string", "minLength": 1},
+              "category": {"enum": ["target", "spill", "reference"]},
+              "pointM": {"$ref": "#/$defs/vector3"},
+              "baselineIlluminanceLux": {"type": "number", "minimum": 0},
+              "occludedIlluminanceLux": {"type": "number", "minimum": 0},
+              "lossIlluminanceLux": {"type": "number", "minimum": 0},
+              "lossFraction": {"type": "number", "minimum": 0, "maximum": 1},
+              "contributions": {
+                "type": "array",
+                "minItems": 14,
+                "maxItems": 14,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["ledId", "role", "baselineIlluminanceLux", "directTransmissionFactor", "intersectedObjects", "occludedIlluminanceLux"],
+                  "properties": {
+                    "ledId": {"type": "string", "pattern": "^LED-(0[1-9]|1[0-4])$"},
+                    "role": {"enum": ["deep-tail narrow", "mid-field spot", "upper-field flood"]},
+                    "baselineIlluminanceLux": {"type": "number", "minimum": 0},
+                    "directTransmissionFactor": {"type": "number", "minimum": 0, "maximum": 1},
+                    "intersectedObjects": {"type": "array", "items": {"type": "string"}},
+                    "occludedIlluminanceLux": {"type": "number", "minimum": 0}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "acceptance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "criteriaPass", "results"],
+          "properties": {
+            "status": {"enum": ["not-released", "released"]},
+            "criteriaPass": {"type": ["boolean", "null"]},
+            "results": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["sensorId", "lossFraction", "occludedIlluminanceLux", "maximumLossFraction", "minimumOccludedLux", "pass"],
+                "properties": {
+                  "sensorId": {"type": "string", "minLength": 1},
+                  "lossFraction": {"type": "number", "minimum": 0, "maximum": 1},
+                  "occludedIlluminanceLux": {"type": "number", "minimum": 0},
+                  "maximumLossFraction": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+                  "minimumOccludedLux": {"type": ["number", "null"], "minimum": 0},
+                  "pass": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pipelinePass", "controlledInputsReady", "maximumLossFraction", "averageLossFraction", "occlusionAssessmentCompleted", "reflectanceAssessmentCompletedWhereRequired", "toleranceSensitivityValidated", "full14HeadPhotometricValidationCompleted", "applicationPerformanceValidated", "productPhotometryApproved"],
+      "properties": {
+        "pipelinePass": {"type": "boolean"},
+        "controlledInputsReady": {"type": "boolean"},
+        "maximumLossFraction": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "averageLossFraction": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "occlusionAssessmentCompleted": {"type": "boolean"},
+        "reflectanceAssessmentCompletedWhereRequired": {"const": false},
+        "toleranceSensitivityValidated": {"const": false},
+        "full14HeadPhotometricValidationCompleted": {"const": false},
+        "applicationPerformanceValidated": {"const": false},
+        "productPhotometryApproved": {"const": false}
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "generatedAt": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "vector3": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"sourceClass": {"const": "synthetic-test-only"}}},
+      "then": {"properties": {"summary": {"properties": {"controlledInputsReady": {"const": false}, "occlusionAssessmentCompleted": {"const": false}, "productPhotometryApproved": {"const": false}}}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "occlusion-layer-pass"}}},
+      "then": {
+        "properties": {
+          "sourceClass": {"const": "controlled-review-input"},
+          "bindings": {"properties": {"systemSceneHashMatch": {"const": true}}},
+          "baseline": {"properties": {"pipelinePass": {"const": true}, "directDistributionValidated": {"const": true}}},
+          "model": {"properties": {"controlledGeometryReady": {"const": true}}},
+          "occlusionLayer": {"properties": {"acceptance": {"properties": {"status": {"const": "released"}, "criteriaPass": {"const": true}}}}},
+          "summary": {"properties": {"pipelinePass": {"const": true}, "controlledInputsReady": {"const": true}, "occlusionAssessmentCompleted": {"const": true}, "productPhotometryApproved": {"const": false}}}
+        }
+      }
+    }
+  ]
+}

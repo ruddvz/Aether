@@ -8,26 +8,34 @@ on:
       - "fixtures/vx4800/photometry/**"
       - "scripts/validate_radiance_photometry.py"
       - "scripts/validate_vx4800_photometry_system.py"
+      - "scripts/validate_vx4800_photometry_occlusion.py"
       - "tools/photometry/**"
       - "schemas/aether-radiance-validation-report.schema.json"
       - "schemas/aether-photometry-system-scene.schema.json"
       - "schemas/aether-photometry-system-report.schema.json"
+      - "schemas/aether-photometry-occlusion-model.schema.json"
+      - "schemas/aether-photometry-occlusion-report.schema.json"
       - "tests/fixtures/photometry/**"
       - "tests/test_radiance_photometry.py"
       - "tests/test_photometry_system_validation.py"
+      - "tests/test_photometry_occlusion_validation.py"
   pull_request:
     paths:
       - ".github/workflows/radiance.yml"
       - "fixtures/vx4800/photometry/**"
       - "scripts/validate_radiance_photometry.py"
       - "scripts/validate_vx4800_photometry_system.py"
+      - "scripts/validate_vx4800_photometry_occlusion.py"
       - "tools/photometry/**"
       - "schemas/aether-radiance-validation-report.schema.json"
       - "schemas/aether-photometry-system-scene.schema.json"
       - "schemas/aether-photometry-system-report.schema.json"
+      - "schemas/aether-photometry-occlusion-model.schema.json"
+      - "schemas/aether-photometry-occlusion-report.schema.json"
       - "tests/fixtures/photometry/**"
       - "tests/test_radiance_photometry.py"
       - "tests/test_photometry_system_validation.py"
+      - "tests/test_photometry_occlusion_validation.py"
   workflow_dispatch:
 
 permissions:
@@ -157,6 +165,44 @@ jobs:
           assert any(row['totalIlluminanceLux'] > 0 for row in sensors)
           assert all(len(row['contributions']) == 14 for row in sensors)
           print('Synthetic 14-head aggregation passed without promoting product authority.')
+          PY
+      - name: Run synthetic L2 occlusion aggregation
+        run: |
+          python scripts/validate_vx4800_photometry_occlusion.py \
+            tests/fixtures/photometry/vx4800-occlusion-synthetic.json \
+            --output _radiance_validation/occlusion-validation.report.json
+      - name: Validate L2 occlusion authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          report=json.loads(Path('_radiance_validation/occlusion-validation.report.json').read_text())
+          schema=json.loads(Path('schemas/aether-photometry-occlusion-report.schema.json').read_text())
+          errors=list(Draft202012Validator(schema).iter_errors(report))
+          assert not errors, [e.message for e in errors]
+          assert report['status'] == 'pipeline-pass'
+          assert report['sourceClass'] == 'synthetic-test-only'
+          assert report['summary']['pipelinePass'] is True
+          assert report['bindings']['systemSceneHashMatch'] is True
+          assert report['model']['objectCount'] == 1
+          assert report['model']['triangleCount'] == 2
+          assert report['model']['rayObjectIntersectionCount'] == 126
+          assert report['model']['controlledGeometryReady'] is False
+          assert report['summary']['controlledInputsReady'] is False
+          assert report['summary']['occlusionAssessmentCompleted'] is False
+          assert report['summary']['reflectanceAssessmentCompletedWhereRequired'] is False
+          assert report['summary']['toleranceSensitivityValidated'] is False
+          assert report['summary']['full14HeadPhotometricValidationCompleted'] is False
+          assert report['summary']['applicationPerformanceValidated'] is False
+          assert report['summary']['productPhotometryApproved'] is False
+          for sensor in report['occlusionLayer']['sensors']:
+              assert sensor['baselineIlluminanceLux'] > 0
+              assert sensor['occludedIlluminanceLux'] == 0
+              assert abs(sensor['lossFraction'] - 1.0) < 1e-12
+              assert len(sensor['contributions']) == 14
+          print('Synthetic L2 occlusion pipeline passed without promoting product authority.')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
