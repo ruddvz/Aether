@@ -136,6 +136,6 @@ def test_report_schema_hard_blocks_synthetic_product_eligibility():
 
 def test_script_never_exposes_product_approval_cli_switch():
     text = SCRIPT.read_text(encoding="utf-8")
-    assert "productPhotometryApproved\": False" in text
+    assert '"productPhotometryApproved": False' in text
     assert "--product-photometry-approved" not in text
     assert "TM-30-18 compatibility values are not TM-30-24" in text
