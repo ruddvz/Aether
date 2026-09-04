@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-test-rig.schema.json",
+  "title": "AETHERIA VX4800 kinetic T1/T2 test rig definition",
+  "type": "object",
+  "required": ["schemaVersion", "fixtureId", "rigRevision", "status", "rigStages", "instrumentation", "safetyBoundary", "buildGate"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "rigRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "rigStages": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "purpose", "geometrySource", "adjustability", "requiredMeasurements", "loadCapacityStatus"],
+        "properties": {
+          "id": {"enum": ["T1", "T2"]},
+          "loadCapacityStatus": {"enum": ["tbd-measured-mass-required", "controlled", "released"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "instrumentation": {"type": "array", "minItems": 6, "items": {"type": "object", "required": ["id", "function", "rangeStatus", "calibrationRequired"]}},
+    "safetyBoundary": {"type": "object", "required": ["occupiedInstallationSimulator", "physicalGuardingRequired", "emergencyStopRequired", "releasedRiskAssessmentRequiredBeforeBuild"]},
+    "buildGate": {
+      "type": "object",
+      "required": ["massEnvelopeControlled", "rigStructuralCalculationApproved", "instrumentRangesControlled", "guardingAndTestRiskAssessmentReleased", "testProcedureReleased"],
+      "properties": {
+        "massEnvelopeControlled": {"type": "boolean"},
+        "rigStructuralCalculationApproved": {"type": "boolean"},
+        "instrumentRangesControlled": {"type": "boolean"},
+        "guardingAndTestRiskAssessmentReleased": {"type": "boolean"},
+        "testProcedureReleased": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}
