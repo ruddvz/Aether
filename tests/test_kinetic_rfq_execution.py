@@ -53,18 +53,10 @@ def test_dispatch_register_covers_exactly_the_six_controlled_rfq_packages():
     assert len(dispatch_ids) == 6
 
 
-def test_ready_to_issue_is_not_misrepresented_as_external_dispatch():
+def test_all_six_packages_are_ready_to_issue_but_none_is_claimed_sent():
     dispatch = load(DISPATCH)
     assert dispatch["status"] == "dispatch-planning"
-    statuses = {item["rfqPackageId"]: item["dispatchStatus"] for item in dispatch["packages"]}
-    assert statuses == {
-        "RFQ-KIN-BRG-01": "ready-to-issue",
-        "RFQ-KIN-DRV-01": "ready-to-issue",
-        "RFQ-KIN-BELT-01": "ready-to-issue",
-        "RFQ-KIN-BRK-01": "ready-to-issue",
-        "RFQ-KIN-FBK-01": "ready-to-issue",
-        "RFQ-KIN-FAB-01": "not-issued",
-    }
+    assert all(item["dispatchStatus"] == "ready-to-issue" for item in dispatch["packages"])
     assert all(item["issuedDate"] is None for item in dispatch["packages"])
     assert all(item["dispatchChannelReference"] is None for item in dispatch["packages"])
     assert all(item["responseRecord"] is None for item in dispatch["packages"])
@@ -80,17 +72,30 @@ def test_contact_qualified_targets_are_bound_to_current_contact_evidence():
         for target in package["candidateTargets"]
         if target["targetStatus"] == "contact-qualified"
     ]
-    assert len(qualified) == 5
+    assert len(qualified) == 8
+    assert len(contact_ids) == 8
     assert all(target["contactEvidenceRef"] in contact_ids for target in qualified)
-
-    unresolved = [
-        target
+    assert all(
+        target["targetStatus"] == "contact-qualified" and target["contactEvidenceRef"]
         for package in dispatch["packages"]
         for target in package["candidateTargets"]
-        if target["targetStatus"] != "contact-qualified"
+    )
+
+
+def test_fabrication_contact_readiness_does_not_claim_technical_approval():
+    dispatch = load(DISPATCH)
+    fabrication = next(item for item in dispatch["packages"] if item["rfqPackageId"] == "RFQ-KIN-FAB-01")
+    assert fabrication["dispatchStatus"] == "ready-to-issue"
+    assert fabrication["candidateTargets"] == [
+        {
+            "name": "Bormill Inc.",
+            "basis": fabrication["candidateTargets"][0]["basis"],
+            "targetStatus": "contact-qualified",
+            "contactEvidenceRef": "KRC-FAB-BORMILL-01",
+        }
     ]
-    assert unresolved
-    assert all(target["contactEvidenceRef"] is None for target in unresolved)
+    assert "remain unanswered technical requirements" in fabrication["candidateTargets"][0]["basis"]
+    assert fabrication["technicalDisposition"] == "not-reviewed"
 
 
 def test_ready_to_issue_requires_at_least_one_contact_qualified_target():
@@ -212,6 +217,6 @@ def test_shortlisted_state_requires_technically_comparable_response():
 def test_dispatch_candidates_do_not_close_engineering_selection():
     dispatch_text = DISPATCH.read_text().lower()
     assert "candidate target is not an issued rfq" in dispatch_text
-    assert "no dispatch state selects a component" in dispatch_text
-    assert "contact qualification proves only that a current public route exists" in dispatch_text
-    assert "prototype precision fabricator target tbd" in dispatch_text
+    assert "no dispatch state selects a component or fabricator" in dispatch_text
+    assert "contact qualification proves only that a current public route exists, not technical approval" in dispatch_text
+    assert "bormill inc." in dispatch_text
