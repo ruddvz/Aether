@@ -6,6 +6,7 @@ on:
       - "feat/vx4800-blender-*"
     paths:
       - "blender/vx4800/aether_blender_lib.py"
+      - "blender/vx4800/build_entrypoint.py"
       - "blender/vx4800/build_scene.py"
       - "blender/vx4800/validate_scene.py"
       - "blender/vx4800/render_shot.py"
@@ -56,9 +57,8 @@ jobs:
         run: |
           set -euo pipefail
           BLENDER="$GITHUB_WORKSPACE/.blender-cache/blender-5.2.1-linux-x64/blender"
-          export PYTHONPATH="$GITHUB_WORKSPACE/blender/vx4800${PYTHONPATH:+:$PYTHONPATH}"
           "$BLENDER" --background --factory-startup \
-            --python blender/vx4800/build_scene.py -- \
+            --python blender/vx4800/build_entrypoint.py -- \
             --repo-root "$GITHUB_WORKSPACE" \
             --output blender/vx4800/VX4800_MASTER.blend \
             --render-preview build/blender/VX4800_HERO_PREVIEW.png
