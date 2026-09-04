@@ -1,0 +1,78 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-rfq-dispatch.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "dispatchRevision": "1.0.0",
+  "status": "dispatch-planning",
+  "packages": [
+    {
+      "rfqPackageId": "RFQ-KIN-BRG-01",
+      "candidateTargets": [
+        {"name": "Kaydon Bearings", "basis": "Repository manufacturer evidence exists for slewing-bearing mounting and installation requirements.", "targetStatus": "repository-evidence-target"},
+        {"name": "Schaeffler", "basis": "Crossed-roller bearing family remains an approved study family; exact application-engineering target still requires contact qualification.", "targetStatus": "research-required"}
+      ],
+      "dispatchStatus": "not-issued",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-DRV-01",
+      "candidateTargets": [
+        {"name": "drive application-engineering supplier target TBD", "basis": "No exact motor/reducer supplier has yet been qualified by this kinetic track; target research is required before dispatch.", "targetStatus": "research-required"}
+      ],
+      "dispatchStatus": "not-issued",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-BELT-01",
+      "candidateTargets": [
+        {"name": "Gates Corporation", "basis": "Repository manufacturer evidence exists for synchronous-belt design tension and bearing/shaft reaction implications.", "targetStatus": "repository-evidence-target"}
+      ],
+      "dispatchStatus": "not-issued",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-BRK-01",
+      "candidateTargets": [
+        {"name": "RINGSPANN GmbH", "basis": "Repository manufacturer evidence exists for spring-activated electromagnetically released brake-caliper architecture.", "targetStatus": "repository-evidence-target"},
+        {"name": "Mayr", "basis": "Direct-carrier fail-safe brake families have been reviewed as architecture precedents; exact application-engineering contact and variant evidence remain to be qualified.", "targetStatus": "research-required"}
+      ],
+      "dispatchStatus": "not-issued",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-FBK-01",
+      "candidateTargets": [
+        {"name": "HEIDENHAIN", "basis": "Repository manufacturer evidence exists for modular angle encoders using fixed scanning heads with passive rotating scale components.", "targetStatus": "repository-evidence-target"}
+      ],
+      "dispatchStatus": "not-issued",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    },
+    {
+      "rfqPackageId": "RFQ-KIN-FAB-01",
+      "candidateTargets": [
+        {"name": "prototype precision fabricator target TBD", "basis": "Fabricator must demonstrate large-ring machining, distortion control, traceability, inspection and proof-test capability before becoming a dispatch target.", "targetStatus": "research-required"}
+      ],
+      "dispatchStatus": "not-issued",
+      "issuedDate": null,
+      "dispatchChannelReference": null,
+      "responseRecord": null,
+      "technicalDisposition": "not-reviewed"
+    }
+  ],
+  "releaseRule": "A candidate target is not an issued RFQ. Dispatch status may move to issued only after an external channel/reference and issue date are recorded. A response may become comparable only through a validated RFQ response record; no dispatch state selects a component."
+}
