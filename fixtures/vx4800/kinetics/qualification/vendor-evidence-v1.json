@@ -1,0 +1,76 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-vendor-evidence.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "evidenceRevision": "1.0.0",
+  "status": "manufacturer-evidence-index-not-component-selection",
+  "records": [
+    {
+      "id": "KVE-BRG-KAYDON-MOUNTING-01",
+      "manufacturer": "Kaydon Bearings",
+      "sourceType": "manufacturer-web",
+      "sourceUrl": "https://www.kaydonbearings.com/white_papers_11.htm",
+      "accessedDate": "2026-09-04",
+      "publishedClaimUsed": "Slewing-bearing mounting structure flatness and rigidity materially affect load distribution, running torque and bearing life; mounting and fastening must follow bearing-specific requirements.",
+      "selectionImpact": "Supports explicit flatness/rigidity/fastener/preload RFQ requirements. Does not select a Kaydon bearing or establish VX4800 load capacity.",
+      "finalVariantSelected": false
+    },
+    {
+      "id": "KVE-BRG-KAYDON-INSTALL-01",
+      "manufacturer": "Kaydon Bearings",
+      "sourceType": "manufacturer-manual",
+      "sourceUrl": "https://www.kaydonbearings.com/downloads/catalog390/Kaydon_390_InstallMaintenance.pdf",
+      "accessedDate": "2026-09-04",
+      "publishedClaimUsed": "Bearing mounting faces require controlled flatness after welding/stress relief; tighter mounting control may be required for low rotational resistance or high precision.",
+      "selectionImpact": "Supports post-weld machining and mounted runout/torque verification requirements. Exact tolerances remain tied to the eventual bearing family/variant.",
+      "finalVariantSelected": false
+    },
+    {
+      "id": "KVE-DRV-GATES-SYNC-01",
+      "manufacturer": "Gates Corporation",
+      "sourceType": "manufacturer-manual",
+      "sourceUrl": "https://www.gates.com/content/dam/documents-library/catalogs/powergrip-gt3-drive-design-manual-en.pdf",
+      "accessedDate": "2026-09-04",
+      "publishedClaimUsed": "Synchronous-belt installation tension must be designed for the drive; overtension increases bearing/shaft load while undertension can cause ratcheting and transient separation forces.",
+      "selectionImpact": "Supports treating belt pretension and tangential/separation forces as structural/bearing inputs. Does not select a Gates belt family, width or tension value.",
+      "finalVariantSelected": false
+    },
+    {
+      "id": "KVE-BRK-RINGSPANN-01",
+      "manufacturer": "RINGSPANN GmbH",
+      "sourceType": "manufacturer-web",
+      "sourceUrl": "https://www.ringspann.com/en/service/downloads/installation-instructions/brakes/electromagnetic-brake-calipers",
+      "accessedDate": "2026-09-04",
+      "publishedClaimUsed": "RINGSPANN publishes spring-activated, electromagnetically released brake-caliper families, demonstrating an industrial fixed-caliper/power-off brake architecture suitable for further application study.",
+      "selectionImpact": "Supports the direct-carrier spring-applied/electrically released brake family study only. No RINGSPANN model, brake force, torque or safety performance is selected or claimed.",
+      "finalVariantSelected": false
+    },
+    {
+      "id": "KVE-FBK-HEIDENHAIN-01",
+      "manufacturer": "HEIDENHAIN",
+      "sourceType": "manufacturer-web",
+      "sourceUrl": "https://www.heidenhain.com/products/encoders/angle-encoders/modular",
+      "accessedDate": "2026-09-04",
+      "publishedClaimUsed": "HEIDENHAIN modular angle encoders pair circular scales or scale drums with separate scanning heads, including optical and magnetic architectures.",
+      "selectionImpact": "Supports a fixed scanning-head plus passive rotating scale/drum architecture without requiring powered rotating electronics. No encoder family, resolution or functional-safety claim is selected.",
+      "finalVariantSelected": false
+    },
+    {
+      "id": "KVE-FBK-HEIDENHAIN-ECA-01",
+      "manufacturer": "HEIDENHAIN",
+      "sourceType": "manufacturer-datasheet",
+      "sourceUrl": "https://www.heidenhain.com/product-details/modular-angle-encoders/1143118-01",
+      "accessedDate": "2026-09-04",
+      "publishedClaimUsed": "The TTR ECA 4400 is a scale drum for an absolute angle encoder without integral bearing, confirming a passive rotating scale component can be mechanically separated from its scanning electronics.",
+      "selectionImpact": "Architecture precedent only. The published 560.46 mm scale-drum variant is not selected and its accuracy/speed capability is not a VX4800 requirement.",
+      "finalVariantSelected": false
+    }
+  ],
+  "researchDiscipline": [
+    "Manufacturer evidence is recorded as published evidence, not an engineering calculation or prototype result.",
+    "A source can justify an RFQ requirement or candidate family without closing a product promotion gate.",
+    "Exact variant data must be rechecked at supplier selection and must not be mixed between families or variants.",
+    "Supplier component certifications or functional-safety options do not certify the complete VX4800 kinetic mechanism."
+  ],
+  "selectionRule": "No record in this evidence index constitutes component selection. Selection remains blocked until controlled VX4800 mass/load/fault inputs exist and exact variants are evaluated against them."
+}
