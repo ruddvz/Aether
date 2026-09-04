@@ -102,8 +102,11 @@ All notable repository and product presentation changes are recorded here.
 
 - Added a supplier-response schema that normalizes exact family/model/variant identity, evidence revision/provenance, assumptions, missing inputs, compliance status, mating data, maintenance data and numeric rating conditions.
 - Removed any direct `selected` state from supplier response intake; supplier responses can become at most `shortlisted-not-selected` until separate engineering release gates close.
-- Added a fail-closed dispatch register that distinguishes repository research targets from actually issued RFQs and requires an issue date plus external channel reference before `issued` can be claimed.
-- Added current evidence-backed dispatch targets for bearing, synchronous transmission, direct-carrier brake and fixed-side feedback while keeping unqualified drive/fabrication targets explicitly research-required.
-- Added regression tests preventing shortlist candidacy without exact variant identity/assumption disclosure and preventing false external-dispatch claims.
-- Added a controlled RFQ execution guide covering dispatch, response normalization, clarification, technical comparison and the selection firewall.
-- Opened GitHub Issue #29 to track real external dispatches and normalized supplier-response intake.
+- Hardened numeric-rating intake so published/calculated values require bound evidence and supplier estimates require explicit operating/application conditions.
+- Added a fail-closed dispatch register that distinguishes research targets, contact-qualified targets, ready-to-issue packages and actually issued RFQs; issue date plus external channel reference remain mandatory before `issued` can be claimed.
+- Added a public contact-evidence schema and archive so `contact-qualified` is itself traceable and cannot be assigned without a current source reference.
+- Verified current official public routes for Kaydon Bearings, SEW-EURODRIVE Canada, Gates Corporation, RINGSPANN and HEIDENHAIN and advanced the bearing, drive, synchronous-transmission, direct-brake and feedback packages to `ready-to-issue` without claiming they were sent.
+- Kept the prototype-fabrication RFQ `not-issued` because a precision fabricator has not yet been contact-qualified; Schaeffler and Mayr remain alternate research targets.
+- Added regression tests preventing shortlist candidacy without exact variant identity/assumption disclosure, preventing technical-comparison status without review gates, preventing false dispatch claims and requiring contact-evidence linkage for ready-to-issue targets.
+- Added a controlled RFQ execution guide covering contact qualification, dispatch, response normalization, clarification, technical comparison and the selection firewall.
+- Opened GitHub Issue #29 to track actual external dispatches and normalized supplier-response intake.
