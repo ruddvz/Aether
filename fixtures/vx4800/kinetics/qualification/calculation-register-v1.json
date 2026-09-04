@@ -1,0 +1,296 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-calculation-register.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "registerRevision": "1.0.0",
+  "status": "engineering-calculation-input-not-released",
+  "authority": "engineering-development-input",
+  "finalCalculationPackageReleased": false,
+  "controlledBaseline": {
+    "elementCount": 240,
+    "sizeAllocation": {"S": 66, "M": 144, "L": 30},
+    "canopyEnvelopeMm": [2400, 1500, 150],
+    "rotatingCarrierCoordinationMm": {"width": 2260, "depth": 1330, "thicknessParameter": 24},
+    "speedRpm": {"minimum": 0.08, "nominal": 0.36, "maximum": 0.65},
+    "fixedAccentHeadCount": 14,
+    "slipRingStatus": "not-required-by-current-architecture"
+  },
+  "evidenceClasses": [
+    "published-manufacturer-data",
+    "engineering-calculation",
+    "prototype-measurement",
+    "controlled-production-measurement",
+    "assumption",
+    "design-target"
+  ],
+  "calculationRules": [
+    "Catalog maximum ratings are not VX4800 design loads and cannot be copied into product calculations as applied loads.",
+    "Rigid-body polar inertia from the rotating mass map is a screening and drive-input quantity only; suspended elements can lag during acceleration and braking and require T1/T2/T3/T4 physical correlation.",
+    "Every numeric input must carry an evidence class and source; assumptions remain visibly labelled and cannot silently become controlled production values.",
+    "Drive sizing must include acceleration demand plus bearing resistance, transmission losses, drag, imbalance and other approved resistances rather than inertia alone.",
+    "Bearing/support calculations must include drive pretension/tangential reactions, brake reactions and structural mounting stiffness where applicable.",
+    "Fault-stop and retention cases must use approved failure scenarios from the released risk assessment rather than arbitrary emergency factors.",
+    "A load case may become verified only after its calculation is independently checked and its physical-correlation requirement, where applicable, is satisfied."
+  ],
+  "loadCases": [
+    {
+      "id": "KLC-001",
+      "name": "static gravity and combined bearing load",
+      "status": "blocked-inputs",
+      "purpose": "Establish primary static gravity, radial eccentricity and overturning-moment inputs for bearing/support selection and structural reactions.",
+      "requiredInputs": ["controlled full rotating mass map including carrier/drive rotating parts", "controlled rotating center of gravity", "site orientation/gravity case", "selected bearing/support geometry", "drive pretension reactions where present"],
+      "sourceEvidence": [
+        {"class": "controlled-production-measurement", "source": "Issue #9 production S/M/L mass records plus controlled rotating-component mass records", "status": "required"},
+        {"class": "engineering-calculation", "source": "approved mass-map and CG calculation", "status": "required"},
+        {"class": "published-manufacturer-data", "source": "exact selected bearing mounting/load method", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "bearingAxialLoad", "value": null, "unit": "N", "status": "tbd"},
+        {"id": "bearingRadialLoad", "value": null, "unit": "N", "status": "tbd"},
+        {"id": "bearingOverturningMoment", "value": null, "unit": "N*m", "status": "tbd"},
+        {"id": "fixedSupportReactions", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not infer total mass from visual material choice", "do not assume CG is exactly on the rotation axis", "do not omit drive pretension from support reactions"],
+      "verificationMethod": ["independent calculation check", "prototype mass/CG reconciliation", "supplier combined-load review for exact bearing variant"]
+    },
+    {
+      "id": "KLC-002",
+      "name": "jerk-limited start transient",
+      "status": "blocked-inputs",
+      "purpose": "Determine propulsion and support demand during the released start profile while accounting for suspended-field lag rather than treating the field as rigidly attached.",
+      "requiredInputs": ["controlled mass map and screening polar inertia", "candidate acceleration/jerk profile", "measured T1/T2 suspended-element lag and damping", "bearing running resistance", "transmission efficiency/compliance", "air-drag evidence"],
+      "sourceEvidence": [
+        {"class": "engineering-calculation", "source": "mass-map rigid-body inertia screening", "status": "required"},
+        {"class": "prototype-measurement", "source": "T1/T2 jerk/start response and drive-load correlation", "status": "required"},
+        {"class": "published-manufacturer-data", "source": "selected bearing and transmission data", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "startTorqueEnvelope", "value": null, "unit": "N*m", "status": "tbd"},
+        {"id": "startSupportReactionEnvelope", "value": null, "unit": null, "status": "tbd"},
+        {"id": "approvedStartAcceleration", "value": null, "unit": "rad/s^2", "status": "tbd"},
+        {"id": "approvedStartJerk", "value": null, "unit": "rad/s^3", "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not use rigid-body inertia as the complete suspended-field transient model", "do not invent acceleration or jerk from aesthetic animation timing", "do not infer final drive torque from test-rig motor rating"],
+      "verificationMethod": ["T1/T2 physical correlation", "later T3/T4 full-mechanism correlation", "independent drive-sizing check"]
+    },
+    {
+      "id": "KLC-003",
+      "name": "steady nominal operation",
+      "status": "blocked-inputs",
+      "purpose": "Establish nominal continuous drive load, thermal duty, bearing resistance and field offset at 0.36 rpm.",
+      "requiredInputs": ["selected bearing running torque under actual load/preload", "selected transmission losses", "measured airflow/drag sensitivity", "measured steady field lag/offset", "balance state"],
+      "sourceEvidence": [
+        {"class": "published-manufacturer-data", "source": "exact selected bearing and drive/reducer data", "status": "required"},
+        {"class": "prototype-measurement", "source": "T1/T2 and later T4 steady-state measurements", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "nominalDriveTorque", "value": null, "unit": "N*m", "status": "tbd"},
+        {"id": "nominalDrivePower", "value": null, "unit": "W", "status": "tbd"},
+        {"id": "nominalFieldOffset", "value": null, "unit": "deg", "status": "tbd"},
+        {"id": "nominalThermalState", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not equate low rpm with negligible friction or thermal duty", "do not assume zero aerodynamic offset"],
+      "verificationMethod": ["instrumented continuous operation", "temperature stabilization measurement", "command-versus-actual drive-load comparison"]
+    },
+    {
+      "id": "KLC-004",
+      "name": "maximum approved speed operation",
+      "status": "blocked-inputs",
+      "purpose": "Establish continuous and dynamic effects at the controlled maximum speed of 0.65 rpm without assuming nominal-speed behaviour scales trivially.",
+      "requiredInputs": ["controlled mass map", "measured field dynamics at maximum approved speed", "bearing running torque", "drag/airflow evidence", "transmission and reducer thermal data", "dynamic clearance evidence"],
+      "sourceEvidence": [
+        {"class": "design-target", "source": "controlled product maximum speed 0.65 rpm", "status": "controlled"},
+        {"class": "prototype-measurement", "source": "staged T1-T4 maximum-speed testing", "status": "required"},
+        {"class": "published-manufacturer-data", "source": "selected drive/bearing continuous-duty data", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "maxSpeedDriveLoad", "value": null, "unit": "N*m", "status": "tbd"},
+        {"id": "maxSpeedFieldLag", "value": null, "unit": "deg", "status": "tbd"},
+        {"id": "maxSpeedMinimumDynamicClearances", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not linearly scale all nominal results to maximum speed", "do not approve dynamic clearances from static/BVH screening alone"],
+      "verificationMethod": ["staged physical maximum-speed tests", "full-field T4 clearance and thermal verification"]
+    },
+    {
+      "id": "KLC-005",
+      "name": "controlled normal stop",
+      "status": "blocked-inputs",
+      "purpose": "Determine normal deceleration, stop travel, field excitation and settling requirements using the healthy drive and released motion profile.",
+      "requiredInputs": ["controlled mass/inertia screening", "candidate deceleration/jerk profile", "measured suspended-field stop response", "drive/bearing resistance", "required settling criterion"],
+      "sourceEvidence": [
+        {"class": "prototype-measurement", "source": "T1/T2 normal-stop response", "status": "required"},
+        {"class": "engineering-calculation", "source": "drive/deceleration screening calculation", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "normalStopTorqueEnvelope", "value": null, "unit": "N*m", "status": "tbd"},
+        {"id": "normalStopTime", "value": null, "unit": "s", "status": "tbd"},
+        {"id": "normalStopAngularTravel", "value": null, "unit": "deg", "status": "tbd"},
+        {"id": "restartSettlingCriterion", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not set stop time only from motor capability", "do not release restart before measured field settling is controlled"],
+      "verificationMethod": ["T1/T2 stop/settling correlation", "T4 stop and restart validation"]
+    },
+    {
+      "id": "KLC-006",
+      "name": "power-loss and fault stop",
+      "status": "blocked-inputs",
+      "purpose": "Establish required carrier holding/fault-stop torque, energy and suspended-field response when propulsion is removed and the qualified holding path acts.",
+      "requiredInputs": ["worst approved operating speed", "controlled mass map", "measured suspended-field power-loss response", "selected direct-carrier brake force/torque/energy data", "bearing/drag resistance", "risk-assessment stop behaviour"],
+      "sourceEvidence": [
+        {"class": "prototype-measurement", "source": "T1/T2 power-loss/fault-stop dynamics", "status": "required"},
+        {"class": "published-manufacturer-data", "source": "exact direct-carrier brake dynamic-stop and thermal capability", "status": "required"},
+        {"class": "engineering-calculation", "source": "fault-stop energy and reaction calculation", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "faultStopTorque", "value": null, "unit": "N*m", "status": "tbd"},
+        {"id": "faultStopEnergy", "value": null, "unit": "J", "status": "tbd"},
+        {"id": "faultStopTimeAndTravel", "value": null, "unit": null, "status": "tbd"},
+        {"id": "faultStopFieldExcitation", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not assume static brake holding rating equals dynamic stopping capability", "do not weaken holding solely because abrupt stopping excites the field; evaluate controlled fixed-side ride-through only if justified", "do not size from rigid-body inertia alone"],
+      "verificationMethod": ["controlled physical fault-stop tests", "brake supplier application review", "T4 full-field power-loss validation"]
+    },
+    {
+      "id": "KLC-007",
+      "name": "safe overspeed validation case",
+      "status": "blocked-inputs",
+      "purpose": "Define a controlled overspeed test point and associated detection/stop demand only after risk assessment establishes what is safe and necessary to validate.",
+      "requiredInputs": ["released risk-assessment overspeed scenario", "independent/diverse feedback decision", "safe test limit", "fault-stop capability", "dynamic clearance margin"],
+      "sourceEvidence": [
+        {"class": "engineering-calculation", "source": "released risk assessment and validation plan", "status": "required"},
+        {"class": "prototype-measurement", "source": "controlled staged overspeed simulation", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "overspeedTestPoint", "value": null, "unit": "rpm", "status": "tbd"},
+        {"id": "overspeedDetectionLatency", "value": null, "unit": "s", "status": "tbd"},
+        {"id": "overspeedStopEnvelope", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not invent an overspeed percentage", "do not exceed a physically validated safe test condition", "do not claim one feedback channel is sufficient before risk allocation"],
+      "verificationMethod": ["risk-controlled fault injection", "independent measured speed comparison", "post-test inspection"]
+    },
+    {
+      "id": "KLC-008",
+      "name": "snag and abnormal added-drag detection",
+      "status": "blocked-inputs",
+      "purpose": "Correlate added mechanical resistance with command-versus-actual motion and drive-load signatures so jam detection can act before unsafe escalation.",
+      "requiredInputs": ["normal drive-load baseline", "approved sacrificial snag/drag fixture", "measured speed/position response", "drive current/torque estimate", "risk-assessment action threshold method"],
+      "sourceEvidence": [
+        {"class": "prototype-measurement", "source": "T2 abnormal-drag/snag tests", "status": "required"},
+        {"class": "prototype-measurement", "source": "later full-mechanism fault testing", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "abnormalDragSignature", "value": null, "unit": null, "status": "tbd"},
+        {"id": "jamDetectionTime", "value": null, "unit": "s", "status": "tbd"},
+        {"id": "jamAbortLoadEnvelope", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not set jam threshold from arbitrary percentage of motor current", "do not continue increasing torque indefinitely when brake fails to release or carrier does not move"],
+      "verificationMethod": ["controlled sacrificial drag tests", "sensor/log correlation", "fault-response replay"]
+    },
+    {
+      "id": "KLC-009",
+      "name": "mass imbalance and trim",
+      "status": "blocked-inputs",
+      "purpose": "Quantify static first moments, required trim correction and effect of production/replacement variation without moving cable exits.",
+      "requiredInputs": ["per-element or controlled S/M/L production mass records", "full rotating component mass map", "controlled X/Y coordinates", "available qualified trim locations", "replacement-element variation"],
+      "sourceEvidence": [
+        {"class": "controlled-production-measurement", "source": "Issue #9 mass and production-variation records", "status": "required"},
+        {"class": "engineering-calculation", "source": "Mx/My balance calculation", "status": "required"},
+        {"class": "prototype-measurement", "source": "full-carrier balance/trim verification", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "massMomentX", "value": null, "unit": "kg*m", "status": "tbd"},
+        {"id": "massMomentY", "value": null, "unit": "kg*m", "status": "tbd"},
+        {"id": "requiredTrimMap", "value": null, "unit": null, "status": "tbd"},
+        {"id": "replacementReviewThreshold", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not use nominal catalog/material density instead of production mass records", "do not move controlled suspension coordinates for balance correction", "do not invent trim capacity before variation is known"],
+      "verificationMethod": ["mass-record reconciliation", "physical balance/drive-load measurement", "replacement-element perturbation test"]
+    },
+    {
+      "id": "KLC-010",
+      "name": "transmission-disconnect holding",
+      "status": "blocked-inputs",
+      "purpose": "Prove the required holding/fault path survives loss of the positive drive transmission and does not rely on gearbox or belt/gear continuity.",
+      "requiredInputs": ["approved carrier holding load case", "selected direct-carrier brake architecture", "representative transmission-disconnect test configuration", "brake ring/caliper reaction path", "risk-assessment holding requirement"],
+      "sourceEvidence": [
+        {"class": "engineering-calculation", "source": "direct-carrier brake holding/reaction calculation", "status": "required"},
+        {"class": "prototype-measurement", "source": "KIN-T3-002 transmission-disconnect test", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "independentHoldingTorque", "value": null, "unit": "N*m", "status": "tbd"},
+        {"id": "brakeBracketReaction", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not credit motor/gearbox brake through the failed transmission as the only carrier holding path", "do not call service lock the normal fault brake"],
+      "verificationMethod": ["physical transmission-disconnect test", "reaction-path inspection", "independent calculation check"]
+    },
+    {
+      "id": "KLC-011",
+      "name": "mechanical service-lock proof case",
+      "status": "blocked-inputs",
+      "purpose": "Establish structural proof and mis-engagement requirements for the positive access lock independent of motor/brake torque.",
+      "requiredInputs": ["released service load case", "selected lock/receiver material and geometry", "carrier/fixed-frame structural model", "runout/tolerance stack", "proof methodology"],
+      "sourceEvidence": [
+        {"class": "engineering-calculation", "source": "approved service-lock structural calculation", "status": "required"},
+        {"class": "prototype-measurement", "source": "service-lock proof, partial-engagement and cycle tests", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "serviceLockDesignLoad", "value": null, "unit": "N", "status": "tbd"},
+        {"id": "serviceLockProofLoad", "value": null, "unit": "N", "status": "tbd"},
+        {"id": "lockReceiverStressDeflection", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not derive the lock load from motor stall torque alone", "do not invent proof factor before structural/risk methodology is approved", "do not rely on software index as engagement proof"],
+      "verificationMethod": ["independent structural check", "controlled proof load", "full/partial/misaligned engagement validation"]
+    },
+    {
+      "id": "KLC-012",
+      "name": "primary-support failure and secondary-retention engagement",
+      "status": "blocked-inputs",
+      "purpose": "Establish abnormal catch loads, engagement travel and fixed-frame reactions for explicitly selected primary-support failure modes.",
+      "requiredInputs": ["released failure coverage/FMEA", "controlled rotating mass/CG", "failure-state displacement geometry", "retention contact geometry/material", "fixed-frame structural model", "dynamic engagement method"],
+      "sourceEvidence": [
+        {"class": "engineering-calculation", "source": "released kinetic risk/failure assessment", "status": "required"},
+        {"class": "engineering-calculation", "source": "retention abnormal-load and contact/reaction calculation", "status": "required"},
+        {"class": "prototype-measurement", "source": "controlled representative secondary-retention engagement test", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "retentionEngagementLoad", "value": null, "unit": "N", "status": "tbd"},
+        {"id": "retentionEngagementTravel", "value": null, "unit": "mm", "status": "tbd"},
+        {"id": "retentionFixedFrameReactions", "value": null, "unit": null, "status": "tbd"},
+        {"id": "retentionResidualDeformationInspectionLimits", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not apply a generic drop factor without an approved physical failure model", "do not assume one local capture point represents distributed retention", "do not claim coverage of structural failure modes not actually bypassed by the retention attachments"],
+      "verificationMethod": ["common-cause/FMEA review", "structural/contact calculation", "controlled simulated engagement and post-test inspection"]
+    },
+    {
+      "id": "KLC-013",
+      "name": "manual recovery restrained state",
+      "status": "blocked-inputs",
+      "purpose": "Verify forces and access sequence for recovery from a fault when normal drive or brake release procedures are unavailable, without uncontrolled free motion.",
+      "requiredInputs": ["fault-specific recovery scenario", "verified zero-speed state", "positive service-lock capacity", "manual release tooling/force data if selected", "restoration sequence for normal holding path"],
+      "sourceEvidence": [
+        {"class": "published-manufacturer-data", "source": "selected brake/drive manual-release instructions", "status": "required"},
+        {"class": "engineering-calculation", "source": "service-lock/manual-recovery reaction check", "status": "required"},
+        {"class": "prototype-measurement", "source": "KIN-T3-006 manual-recovery validation", "status": "required"}
+      ],
+      "outputs": [
+        {"id": "manualReleaseForceOrTorque", "value": null, "unit": null, "status": "tbd"},
+        {"id": "restrainedRecoveryReaction", "value": null, "unit": null, "status": "tbd"},
+        {"id": "recoverySequenceValidated", "value": null, "unit": null, "status": "tbd"}
+      ],
+      "prohibitedAssumptions": ["do not permit uncontrolled freewheel", "do not release the brake/drive before positive restraint", "do not improvise force on the carrier when the service index cannot be reached"],
+      "verificationMethod": ["procedure walk-through", "instrumented recovery test", "post-restoration verification before service-lock removal"]
+    }
+  ],
+  "releaseGates": {
+    "massMapControlled": false,
+    "cgControlled": false,
+    "suspendedFieldDynamicsCorrelated": false,
+    "bearingSupplierDataControlled": false,
+    "driveSupplierDataControlled": false,
+    "brakeSupplierDataControlled": false,
+    "structureModelControlled": false,
+    "retentionFailureCaseControlled": false,
+    "serviceLockLoadCaseControlled": false,
+    "calculationsIndependentlyChecked": false
+  }
+}
