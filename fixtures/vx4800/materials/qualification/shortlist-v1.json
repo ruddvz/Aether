@@ -1,0 +1,170 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "qualificationRevision": "1.0.0",
+  "status": "qualification-shortlist-not-approved",
+  "finalMaterialSystemApproved": false,
+  "authority": "research-and-rfq-input",
+  "tiers": [
+    {
+      "tier": "ARC",
+      "candidateId": "plexiglas-gs-clear",
+      "manufacturer": "POLYVANTIS / PLEXIGLAS",
+      "material": "cast PMMA",
+      "status": "reference-candidate",
+      "publishedProperties": {
+        "densityGPerCm3": 1.19,
+        "tensileStrengthMPa": 80,
+        "elasticModulusMPa": 3300,
+        "visibleLightTransmissionPercentUpTo": 92
+      },
+      "sourceScope": "Published typical values for PLEXIGLAS GS clear material; not finished VX4800 part allowables.",
+      "currentAttachmentDirection": "three-point mechanical capture with drilled or otherwise machined attachment features, subject to creep/stress/fatigue testing",
+      "strengths": [
+        "low density relative to glass references",
+        "cast sheet is readily machinable and formable",
+        "high published visible transmission",
+        "good path for repeatable prototype and commercial-tier manufacture"
+      ],
+      "blockers": [
+        "final thickness and 3D forming route are not selected",
+        "finished-part creep and stress concentration at the attachment are untested",
+        "surface scratch/cosmetic standard is not frozen",
+        "production-intent S/M/L masses are not measured",
+        "kinetic fatigue and failure behavior are not qualified"
+      ],
+      "sources": {
+        "product": "https://www.plexiglas.de/en/products/plexiglas/plexiglas-gs-xt",
+        "technicalData": "https://www.plexiglas.de/files/plexiglas-content/pdf/technische-informationen/211-1-PLEXIGLAS-GS-XT-EN.pdf",
+        "lightTransmission": "https://www.plexiglas.de/en/service/product-info/light-transmission"
+      }
+    },
+    {
+      "tier": "LUX",
+      "candidateId": "schott-borofloat-33",
+      "manufacturer": "SCHOTT",
+      "material": "BOROFLOAT 33 borosilicate float glass",
+      "status": "data-reference-candidate",
+      "publishedProperties": {
+        "densityGPerCm3": 2.23,
+        "youngModulusGPa": 64,
+        "poissonRatio": 0.2,
+        "refractiveIndexNd": 1.4714,
+        "abbeNumber": 65.41
+      },
+      "sourceScope": "Published BOROFLOAT 33 base-material reference values. Finished decorative part strength remains process, edge, hole, thickness and mounting dependent.",
+      "currentAttachmentDirection": "prefer mechanically captured edge/cradle concept first; drilled three-point attachment only after specialist edge/hole design and proof testing",
+      "strengths": [
+        "manufacturer publishes strong optical, thermal and mechanical property set",
+        "low glass density is beneficial to suspended mass",
+        "high optical transparency and controlled industrial material platform",
+        "commercial thickness range includes values relevant to current RFQ studies"
+      ],
+      "blockers": [
+        "final sculptural forming/manufacturing route is unresolved",
+        "current 5/6/7 mm RFQ thicknesses are not approved final thicknesses",
+        "SCHOTT states impact behavior depends on mounting, size, thickness, drill holes and their arrangement",
+        "finished attachment contact stresses and failure mode are untested",
+        "production-intent S/M/L masses are not measured"
+      ],
+      "sources": {
+        "technicalDetails": "https://www.schott.com/en-ca/products/borofloat-p1000314/technical-details",
+        "technicalDataPdf": "https://media.schott.com/api/public/content/69b4abd8191246e3869c46c717f07b29?download=true&v=3b812f89"
+      }
+    },
+    {
+      "tier": "LUX-ALT",
+      "candidateId": "corning-gorilla-glass-3",
+      "manufacturer": "Corning",
+      "material": "chemically strengthened aluminosilicate glass",
+      "status": "research-alternate-only",
+      "publishedProperties": {
+        "densityGPerCm3": 2.39,
+        "youngModulusGPa": 70,
+        "poissonRatio": 0.22,
+        "standardThicknessMm": [0.4, 2.0]
+      },
+      "sourceScope": "Published Gorilla Glass 3 sheet properties for its intended cover-glass applications; no VX4800 supply or forming route is implied.",
+      "currentAttachmentDirection": "no attachment concept promoted until supplier/fabricator confirms cutting, edge finishing, strengthening sequence and decorative-shape feasibility",
+      "strengths": [
+        "thin strengthened glass demonstrates a potential low-mass premium-glass direction",
+        "published scratch/damage-resistance positioning"
+      ],
+      "blockers": [
+        "standard published thickness range does not map to current 5/6/7 mm RFQ parameters",
+        "product is primarily specified for device cover applications",
+        "custom sculptural cutting/forming and strengthening workflow is not qualified",
+        "regional decorative-fabrication supply chain is not identified",
+        "no attachment or production mass data exists"
+      ],
+      "sources": {
+        "productSheet": "https://www.corning.com/microsites/csm/gorillaglass/PI_Sheets/2020/Gorilla_Glass_3_ProdSheet.pdf"
+      }
+    },
+    {
+      "tier": "ART",
+      "candidateId": "artisan-glassmaker-tbd",
+      "manufacturer": null,
+      "material": "artisan hand-worked glass / crystal process",
+      "status": "supplier-required",
+      "publishedProperties": null,
+      "sourceScope": "No generic material values are controlled for this tier until the selected glassmaker identifies composition, annealing state and process.",
+      "currentAttachmentDirection": "integral formed attachment feature or mechanically captured cradle developed jointly with the glassmaker",
+      "strengths": [
+        "allows intentional handmade optical variation and premium craft character",
+        "attachment features may potentially be integrated during forming instead of post-drilling"
+      ],
+      "blockers": [
+        "glassmaker not selected",
+        "composition and density unknown",
+        "annealing and dimensional tolerances unknown",
+        "attachment detail unknown",
+        "production mass variation and matched-spare reproducibility unknown"
+      ],
+      "sources": {}
+    }
+  ],
+  "attachmentConcepts": [
+    {
+      "id": "three-point-drilled-mechanical",
+      "status": "prototype-concept",
+      "bestFit": ["ARC", "LUX only with glass-specialist approval"],
+      "risks": ["stress concentration", "edge-distance sensitivity", "hole-quality sensitivity", "local crushing/bearing", "creep for PMMA"],
+      "requiredControls": ["finished hole geometry", "edge distance", "polished/finished edge quality", "compliant isolator", "washer/sleeve geometry", "torque/preload control", "proof load", "fatigue"]
+    },
+    {
+      "id": "edge-clamp-cradle",
+      "status": "prototype-concept",
+      "bestFit": ["LUX", "ART"],
+      "risks": ["contact stress", "slip", "visual bulk", "pad creep/aging", "glass edge damage"],
+      "requiredControls": ["contact area", "compliant pad material", "clamp force", "anti-slip geometry", "edge finish", "proof load", "fatigue"]
+    },
+    {
+      "id": "bonded-metal-pad",
+      "status": "research-only",
+      "bestFit": ["LUX"],
+      "risks": ["adhesive creep", "aging", "surface preparation variability", "thermal mismatch", "hidden degradation"],
+      "requiredControls": ["specific adhesive system", "surface preparation", "cure process", "environmental aging", "proof load", "fatigue", "independent retention"]
+    },
+    {
+      "id": "integral-artisan-loop-or-boss",
+      "status": "glassmaker-development-required",
+      "bestFit": ["ART"],
+      "risks": ["forming variation", "annealing stress", "local section variation", "spare matching"],
+      "requiredControls": ["glassmaker process specification", "annealing record", "dimensional acceptance", "proof load", "mass tolerance", "matched spare process"]
+    }
+  ],
+  "promotionGate": {
+    "exactMaterialGradeSelected": false,
+    "productionProcessSelected": false,
+    "productionIntentSamplesBuilt": false,
+    "assemblyMassesControlled": false,
+    "attachmentDetailFrozen": false,
+    "proofLoadPassed": false,
+    "fatigueTestPassed": false,
+    "failureRetentionResolved": false,
+    "opticalCosmeticStandardFrozen": false,
+    "productionMassToleranceFrozen": false,
+    "supplierQualityReturnsAccepted": false
+  }
+}
