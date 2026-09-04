@@ -21,7 +21,7 @@ permissions:
 jobs:
   build-blend:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
         with:
@@ -75,6 +75,16 @@ jobs:
               raise SystemExit(f"Blender validation did not pass: {report}")
           PY
 
+      - name: Upload validated Blender master
+        uses: actions/upload-artifact@v4
+        with:
+          name: vx4800-validated-master
+          path: |
+            blender/vx4800/VX4800_MASTER.blend
+            build/blender/validation.json
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Refresh generated Blender master on feature branch
         if: github.event_name == 'push'
         shell: bash
@@ -90,50 +100,157 @@ jobs:
             git push
           fi
 
-      - name: Render Cycles visual QA suite
+  render-qa:
+    needs: build-blend
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: product-hero
+            shot: product_hero
+            profile: landscape_preview
+            output: VX4800_PRODUCT_HERO_PREVIEW.png
+            finish: ""
+          - id: full-elevation
+            shot: full_elevation
+            profile: landscape_preview
+            output: VX4800_FULL_ELEVATION_PREVIEW.png
+            finish: ""
+          - id: butterfly-macro
+            shot: butterfly_macro
+            profile: square_preview
+            output: VX4800_BUTTERFLY_MACRO_PREVIEW.png
+            finish: ""
+          - id: residential-wide
+            shot: residential_wide
+            profile: landscape_preview
+            output: VX4800_RESIDENTIAL_WIDE_PREVIEW.png
+            finish: ""
+          - id: residential-medium
+            shot: residential_medium
+            profile: landscape_preview
+            output: VX4800_RESIDENTIAL_MEDIUM_PREVIEW.png
+            finish: ""
+          - id: vertical-marketing
+            shot: vertical_marketing
+            profile: vertical_preview
+            output: VX4800_VERTICAL_MARKETING_PREVIEW.png
+            finish: ""
+          - id: staircase-wide
+            shot: staircase_wide
+            profile: landscape_preview
+            output: VX4800_STAIRCASE_WIDE_PREVIEW.png
+            finish: ""
+          - id: hospitality-wide
+            shot: hospitality_wide
+            profile: landscape_preview
+            output: VX4800_HOSPITALITY_WIDE_PREVIEW.png
+            finish: ""
+          - id: atrium-wide
+            shot: atrium_wide
+            profile: landscape_preview
+            output: VX4800_ATRIUM_WIDE_PREVIEW.png
+            finish: ""
+          - id: finish-black-titanium
+            shot: canopy_detail
+            profile: square_preview
+            output: VX4800_FINISH_BLACK_TITANIUM_PREVIEW.png
+            finish: black_titanium
+          - id: finish-brushed-brass
+            shot: canopy_detail
+            profile: square_preview
+            output: VX4800_FINISH_BRUSHED_BRASS_PREVIEW.png
+            finish: brushed_brass
+          - id: finish-satin-nickel
+            shot: canopy_detail
+            profile: square_preview
+            output: VX4800_FINISH_SATIN_NICKEL_PREVIEW.png
+            finish: satin_nickel
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Cache Blender distribution
+        id: blender-cache
+        uses: actions/cache@v4
+        with:
+          path: .blender-cache
+          key: blender-5.2.1-linux-x64
+
+      - name: Download and verify Blender 5.2.1 LTS
+        if: steps.blender-cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p .blender-cache
+          cd .blender-cache
+          curl -fsSLO https://download.blender.org/release/Blender5.2/blender-5.2.1-linux-x64.tar.xz
+          curl -fsSLO https://download.blender.org/release/Blender5.2/blender-5.2.1.sha256
+          grep 'blender-5.2.1-linux-x64.tar.xz' blender-5.2.1.sha256 | sha256sum -c -
+          tar -xf blender-5.2.1-linux-x64.tar.xz
+          rm blender-5.2.1-linux-x64.tar.xz blender-5.2.1.sha256
+
+      - name: Download validated Blender master
+        uses: actions/download-artifact@v4
+        with:
+          name: vx4800-validated-master
+          path: .validated-master
+
+      - name: Render Cycles QA preview
+        shell: bash
+        env:
+          SHOT: ${{ matrix.shot }}
+          PROFILE: ${{ matrix.profile }}
+          OUTPUT: ${{ matrix.output }}
+          FINISH: ${{ matrix.finish }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/blender
+          cp .validated-master/blender/vx4800/VX4800_MASTER.blend blender/vx4800/VX4800_MASTER.blend
           BLENDER="$GITHUB_WORKSPACE/.blender-cache/blender-5.2.1-linux-x64/blender"
-          render_shot() {
-            local shot="$1"
-            local profile="$2"
-            local output="$3"
-            shift 3
-            "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
-              --python blender/vx4800/render_shot.py -- \
-              --repo-root "$GITHUB_WORKSPACE" \
-              --shot "$shot" \
-              --quality lookdev \
-              --output-profile "$profile" \
-              --output "build/blender/$output" \
-              "$@"
-            test -s "build/blender/$output"
-          }
+          EXTRA=()
+          if [[ -n "$FINISH" ]]; then EXTRA+=(--finish "$FINISH"); fi
+          "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
+            --python blender/vx4800/render_shot.py -- \
+            --repo-root "$GITHUB_WORKSPACE" \
+            --shot "$SHOT" \
+            --quality lookdev \
+            --output-profile "$PROFILE" \
+            --output "build/blender/$OUTPUT" \
+            "${EXTRA[@]}"
+          test -s "build/blender/$OUTPUT"
 
-          # Core framing/optical regressions.
-          render_shot product_hero landscape_preview VX4800_PRODUCT_HERO_PREVIEW.png
-          render_shot full_elevation landscape_preview VX4800_FULL_ELEVATION_PREVIEW.png
-          render_shot butterfly_macro square_preview VX4800_BUTTERFLY_MACRO_PREVIEW.png
+      - name: Upload preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: vx4800-preview-${{ matrix.id }}
+          path: build/blender/${{ matrix.output }}
+          if-no-files-found: error
+          retention-days: 7
 
-          # Installed contexts.
-          render_shot residential_wide landscape_preview VX4800_RESIDENTIAL_WIDE_PREVIEW.png
-          render_shot residential_medium landscape_preview VX4800_RESIDENTIAL_MEDIUM_PREVIEW.png
-          render_shot vertical_marketing vertical_preview VX4800_VERTICAL_MARKETING_PREVIEW.png
-          render_shot staircase_wide landscape_preview VX4800_STAIRCASE_WIDE_PREVIEW.png
-          render_shot hospitality_wide landscape_preview VX4800_HOSPITALITY_WIDE_PREVIEW.png
-          render_shot atrium_wide landscape_preview VX4800_ATRIUM_WIDE_PREVIEW.png
+  collect-qa:
+    needs: [build-blend, render-qa]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download validation report
+        uses: actions/download-artifact@v4
+        with:
+          name: vx4800-validated-master
+          path: build/master
 
-          # Finish-study regressions on the same fixed canopy composition.
-          render_shot canopy_detail square_preview VX4800_FINISH_BLACK_TITANIUM_PREVIEW.png --finish black_titanium
-          render_shot canopy_detail square_preview VX4800_FINISH_BRUSHED_BRASS_PREVIEW.png --finish brushed_brass
-          render_shot canopy_detail square_preview VX4800_FINISH_SATIN_NICKEL_PREVIEW.png --finish satin_nickel
+      - name: Download all QA previews
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vx4800-preview-*
+          path: build/blender
+          merge-multiple: true
 
-      - name: Upload Blender validation outputs
+      - name: Upload combined Blender validation outputs
         uses: actions/upload-artifact@v4
         with:
           name: vx4800-blender-validation
           path: |
             build/blender/VX4800_*_PREVIEW.png
-            build/blender/validation.json
+            build/master/build/blender/validation.json
           if-no-files-found: error
