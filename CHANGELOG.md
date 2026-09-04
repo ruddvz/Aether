@@ -80,3 +80,15 @@ All notable repository and product presentation changes are recorded here.
 - Kept GDTF blocked until exact head/optic and applicable control-personality data are released.
 - Kept lighting-authoritative MVR blocked until the GDTF dependency and controlled final head aiming are released.
 - Added regression tests that reject controlled-count drift and any interchange profile that attempts to claim engineering or release authority.
+
+## 2026-09-04 - VX4800 IFC4 coordination export
+
+- Added a pinned IfcOpenShell 0.8.5 toolchain for IFC generation and independent parsing.
+- Added an IFC4 exporter that creates a single `IfcLightFixture` coordination occurrence under project/site/building/storey spatial context.
+- Added a 2500 × 1650 × 4800 mm coordination-envelope body derived from the canonical physical envelope, mapped from ceiling/drop coordinates to +Z-up IFC coordinates.
+- Added custom AETHERIA property sets carrying controlled identity, 240-element and 66 S / 144 M / 30 L counts, 240 suspension lines, 14 fixed heads, unresolved status and explicit authority boundaries.
+- Kept manufacturing, structural, photometry, kinetic-safety and construction-release authority false inside the IFC itself.
+- Bound the IFC authority property set to the SHA-256 of the canonical fixture used by the companion loss report.
+- Added stable primary IFC GUID generation for repeatable identity across rebuilds without claiming byte-for-byte deterministic IFC serialization.
+- Added a dedicated IFC GitHub Actions workflow that generates, reopens and semantically validates the IFC4 model before uploading it with its companion loss report.
+- Kept the IFC body as coordination proxy geometry rather than fabricating 240 BIM parts or promoting repository geometry to manufacturing authority.
