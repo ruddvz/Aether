@@ -20,6 +20,29 @@ def fail(errors: list[str], message: str) -> None:
     errors.append(message)
 
 
+def validate_environment(
+    errors: list[str],
+    collection_name: str,
+    light_prefix: str,
+    expected_lights: int,
+    minimum_objects: int,
+) -> tuple[int, int]:
+    collection = bpy.data.collections.get(collection_name)
+    objects = list(collection.all_objects) if collection else []
+    if collection is None:
+        fail(errors, f"visualization environment collection is missing: {collection_name}")
+        return 0, 0
+    if len(objects) < minimum_objects:
+        fail(errors, f"environment {collection_name} is unexpectedly sparse: {len(objects)} objects")
+    for obj in objects:
+        if obj.get("aetheria_authority") != "visualization-only":
+            fail(errors, f"environment object lacks visualization-only authority: {obj.name}")
+    lights = [obj for obj in objects if obj.type == "LIGHT" and obj.name.startswith(light_prefix)]
+    if len(lights) != expected_lights:
+        fail(errors, f"expected {expected_lights} photographic lights in {collection_name}, found {len(lights)}")
+    return len(objects), len(lights)
+
+
 def main() -> None:
     args = cli_args()
     errors: list[str] = []
@@ -29,7 +52,7 @@ def main() -> None:
         fail(errors, f"Blender {bpy.app.version_string} is older than the 5.2 pipeline target")
     if scene.get("aetheria_fixture_id") != "vx4800-bf-01": fail(errors, "scene fixture id is missing or incorrect")
     if scene.get("aetheria_design_revision") != "1.3.0": fail(errors, "scene design revision is missing or incorrect")
-    if scene.get("aetheria_visualization_revision") != "0.11.0": fail(errors, "scene visualization revision must be 0.11.0")
+    if scene.get("aetheria_visualization_revision") != "0.12.0": fail(errors, "scene visualization revision must be 0.12.0")
     if scene.get("aetheria_authority") != "visualization-only": fail(errors, "scene authority must remain visualization-only")
 
     instances = [o for o in bpy.data.objects if o.instance_type == "COLLECTION" and o.instance_collection and o.name.startswith("VX-")]
@@ -37,10 +60,10 @@ def main() -> None:
     ids = [o.get("element_id") for o in instances]
     if len(set(ids)) != 240 or any(not x for x in ids): fail(errors, "butterfly element IDs are missing or duplicated")
     counts = {"S": 0, "M": 0, "L": 0}
-    for o in instances:
-        size = o.get("size")
+    for obj in instances:
+        size = obj.get("size")
         if size in counts: counts[size] += 1
-        else: fail(errors, f"invalid butterfly size on {o.name}: {size}")
+        else: fail(errors, f"invalid butterfly size on {obj.name}: {size}")
     if counts != {"S": 66, "M": 144, "L": 30}: fail(errors, f"engineering size allocation mismatch: {counts}")
 
     cables = bpy.data.objects.get("SUSPENSION_MICROCABLES_240")
@@ -61,9 +84,12 @@ def main() -> None:
         "CAM_HERO_FRONT_3Q", "CAM_HERO_LOW", "CAM_FULL_ELEVATION", "CAM_CANOPY_DETAIL",
         "CAM_BUTTERFLY_MACRO", "CAM_TAIL_DETAIL", "CAM_TOP_SET_OUT",
         "CAM_ARCH_RESIDENTIAL_WIDE", "CAM_ARCH_RESIDENTIAL_MEDIUM", "CAM_VERTICAL_MARKETING",
+        "CAM_ARCH_STAIRCASE_WIDE", "CAM_ARCH_HOSPITALITY_WIDE", "CAM_ARCH_ATRIUM_WIDE",
     }
     missing_cameras = sorted(camera_names - set(bpy.data.objects.keys()))
     if missing_cameras: fail(errors, f"missing cameras: {missing_cameras}")
+    actual_cameras = [o for o in bpy.data.objects if o.type == "CAMERA"]
+    if len(actual_cameras) != len(camera_names): fail(errors, f"expected exactly {len(camera_names)} cameras, found {len(actual_cameras)}")
 
     material_names = {
         "MAT_BUTTERFLY_OPTICAL_GLASS", "MAT_PVD_DARK_CHAMPAGNE", "MAT_PVD_BLACK_TITANIUM",
@@ -88,28 +114,36 @@ def main() -> None:
         if spine.get("aetheria_spine_refinement") != "0.11-smaller-sculptural-centre":
             fail(errors, f"{spine.name} is missing 0.11 spine refinement metadata")
 
-    env = bpy.data.collections.get("85_ENV_RESIDENTIAL")
-    env_objects = list(env.all_objects) if env else []
-    if not env: fail(errors, "residential visualization environment collection is missing")
-    elif len(env_objects) < 20: fail(errors, f"residential environment is unexpectedly sparse: {len(env_objects)} objects")
-    for obj in env_objects:
-        if obj.get("aetheria_authority") != "visualization-only":
-            fail(errors, f"residential environment object lacks visualization-only authority: {obj.name}")
-    env_lights = [o for o in env_objects if o.type == "LIGHT" and o.name.startswith("ENV_RES_")]
-    if len(env_lights) != 4: fail(errors, f"expected 4 residential photographic environment lights, found {len(env_lights)}")
+    environment_results = {
+        "residential": validate_environment(errors, "85_ENV_RESIDENTIAL", "ENV_RES_", 4, 20),
+        "staircase": validate_environment(errors, "86_ENV_STAIRCASE", "ENV_STAIR_", 3, 20),
+        "hospitality": validate_environment(errors, "87_ENV_HOSPITALITY", "ENV_HOSP_", 3, 15),
+        "atrium": validate_environment(errors, "88_ENV_ATRIUM", "ENV_ATRIUM_", 3, 15),
+    }
+    if scene.get("aetheria_additional_environment_count") != 3:
+        fail(errors, "scene must record exactly 3 additional architectural environments")
+    if scene.get("aetheria_additional_environment_status") != "visualization-only":
+        fail(errors, "additional environment authority/status is missing")
 
     rotor = bpy.data.objects.get("AETHERIA_ROTATING_FIELD")
     animation_action = rotor.animation_data.action if rotor and rotor.animation_data else None
-    if rotor is None: fail(errors, "rotating field root is missing")
-    elif rotor.get("motion_status") != "conceptual-reference-only": fail(errors, "rotating field motion must remain conceptual-reference-only")
+    if rotor is None:
+        fail(errors, "rotating field root is missing")
+    else:
+        if rotor.get("motion_status") != "conceptual-reference-only": fail(errors, "rotating field motion must remain conceptual-reference-only")
+        if rotor.get("animation_authority") != "visualization-only": fail(errors, "rotating field animation authority must remain visualization-only")
     if not animation_action or animation_action.name != "PHYSICAL_NOMINAL_RPM_REFERENCE":
         fail(errors, "derived nominal-RPM animation reference action is missing")
     if scene.get("aetheria_animation_reference_status") != "visualization-only-constant-speed-reference":
         fail(errors, "animation reference authority/status is missing")
-    if int(scene.get("aetheria_animation_reference_cycle_frames", 0)) <= 0:
-        fail(errors, "animation reference cycle frame count is missing")
+    cycle_frames = int(scene.get("aetheria_animation_reference_cycle_frames", 0))
+    rpm = float(scene.get("aetheria_animation_reference_rpm", 0.0))
+    fps = int(scene.get("aetheria_animation_reference_fps", 0))
+    expected_cycle = int(round((60.0 / rpm) * fps)) if rpm > 0.0 and fps > 0 else 0
+    if cycle_frames <= 0 or cycle_frames != expected_cycle:
+        fail(errors, f"animation cycle must be derived from nominal RPM and FPS: {cycle_frames} vs expected {expected_cycle}")
 
-    source_sha_keys = [k for k in scene.keys() if str(k).startswith("source_sha256_")]
+    source_sha_keys = [key for key in scene.keys() if str(key).startswith("source_sha256_")]
     if len(source_sha_keys) < 5: fail(errors, "source SHA-256 provenance is incomplete")
 
     report = {
@@ -125,14 +159,17 @@ def main() -> None:
         "yokeLeadSplines": len(yokes.data.splines) if yokes and yokes.type == "CURVE" else 0,
         "ledHeads": len(led_heads),
         "renderLights": len(render_lights),
-        "cameras": len([o for o in bpy.data.objects if o.type == "CAMERA"]),
+        "cameras": len(actual_cameras),
         "materials": len(bpy.data.materials),
         "glassAbsorptionDensity": absorption_density,
         "refinedSpines": len(spines),
         "animationAction": animation_action.name if animation_action else None,
-        "animationCycleFrames": scene.get("aetheria_animation_reference_cycle_frames"),
-        "residentialEnvironmentObjects": len(env_objects),
-        "residentialEnvironmentLights": len(env_lights),
+        "animationCycleFrames": cycle_frames,
+        "animationReferenceRpm": rpm,
+        "architecturalEnvironments": {
+            key: {"objects": value[0], "photographicLights": value[1]}
+            for key, value in environment_results.items()
+        },
         "errors": errors,
     }
     if args.report:
