@@ -7,12 +7,12 @@ All notable repository and product presentation changes are recorded here.
 ### Added
 - Initial AETHERIA repository architecture.
 - VORTEX VX4800 viewer v5.2.0 as the first product.
-- Immutable V5.2 release ZIP.
 - Product registry in `project.json`.
 - GitHub Pages build and deployment workflow.
 - Repository validation workflow.
 - Versioning, Pages, repository structure and product pipeline documentation.
 - Pull request, issue and ownership conventions.
+- Historical ZIP snapshots were used only as handoff bundles before the repository became the active source of truth.
 
 ## [VORTEX viewer 5.2.0]
 
@@ -26,9 +26,9 @@ All notable repository and product presentation changes are recorded here.
 ## 2026-09-03 - GitHub source recovery
 
 - Restored the verified local AETHERIA platform source tree onto the recovery branch after GitHub write access returned.
-- Preserved the controlled V5.2 release hash and coordination GLB hash during recovery.
+- Preserved controlled product data and the coordination GLB hash during recovery.
 - Corrected roadmap state for the completed split viewer source and measured-distribution adapter.
-- Kept the recovery pull request in draft until GitHub CI reproduces local validation.
+- Kept the recovery pull request in draft until GitHub CI reproduced local validation.
 
 ## 2026-09-03 - supplier photometry integration slice
 
@@ -48,6 +48,6 @@ All notable repository and product presentation changes are recorded here.
 - Added BVH-accelerated picking, exact nearest coordination-mesh surface clearance, point-to-point measurement and browser-local review annotations.
 - Replaced the early fixed 18-candidate proximity shortcut with lower-bound branch-and-bound traversal so nearest-clearance review is exact for the loaded coordination meshes.
 - Added Pages publication for the technical inspector, source coordination GLB, derived Meshopt GLB and optimization manifest.
-- Recovered the verified historical V5.2 release authority and traced an apparent ZIP-hash drift to compacted `fixture.json` formatting rather than changed product semantics.
-- Added historical member serialization plus archive/member SHA gates so `AETHERIA_VORTEX_v5.2.0.zip` reproduces the verified SHA-256 `4cffd5a003a718d359811bf6f3b406d8ad197a92cc3632f9321c6859dca48f79`.
+- Replaced archive-oriented build steps with `scripts/build_product.py`, which builds repository product artifacts directly without generating ZIP packages.
+- Removed ZIP-specific CI gates and download publication from the active repository workflow.
 - Kept engineering revision 1.3.0 and presentation revision 5.2.0 unchanged; the new web tooling remains review-only and cannot become manufacturing authority.

@@ -4,11 +4,6 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_V52_RELEASE_SHA256 = "4cffd5a003a718d359811bf6f3b406d8ad197a92cc3632f9321c6859dca48f79"
-
-
-def test_historical_v52_release_remains_byte_identical(built_release):
-    assert hashlib.sha256(built_release.read_bytes()).hexdigest() == EXPECTED_V52_RELEASE_SHA256
 
 
 def test_inspector_source_pins_bvh_and_parses():
