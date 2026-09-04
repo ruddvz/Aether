@@ -16,7 +16,7 @@
       "id": "T1",
       "name": "single-suspension dynamics rig",
       "purpose": "Measure pendulum period, damping, yaw/orientation response, cable tension, lag and start/stop sensitivity for individual S/M/L production-intent suspended assemblies.",
-      "geometrySource": "Use the controlled engineering schedule to select actual line lengths and radial/tangential kinematic conditions. Test at minimum the shortest and longest controlled line conditions for each relevant mass family once production-intent assemblies exist.",
+      "geometrySource": "Use fixtures/vx4800/composition/engineering-v1.3.0.csv as the controlled source to select actual line lengths and radial/tangential kinematic conditions. Test at minimum the shortest and longest controlled line conditions for each relevant mass family once production-intent assemblies exist.",
       "mechanicalConcept": [
         "rigid fixed test frame with overhead guarded rotary arm/table or equivalent motion stage",
         "adjustable suspension-exit radial station so tangential acceleration can represent controlled product radii without changing the product schedule",
