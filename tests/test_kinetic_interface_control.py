@@ -70,10 +70,26 @@ def test_interface_control_has_independent_mechanical_functions():
     assert "routine retention rubbing" in retention
 
 
+def test_rotation_axis_direction_does_not_fake_xy_physical_datum():
+    interface = load_json(INTERFACE)
+    datums = {item["id"]: item for item in interface["datumFramework"]}
+    axis = datums["KD-B-ROTATION-AXIS"]
+    assert axis["status"] == "functional-reference"
+    assert "direction only" in axis["rule"].lower()
+    assert "composition origin must not be substituted" in axis["rule"].lower()
+
+    params = {item["id"]: item for item in interface["interfaceParameters"]}
+    axis_xy = params["rotationAxisXYPhysicalDatum"]
+    assert axis_xy["status"] == "tbd"
+    assert axis_xy["value"] is None
+    assert "composition origin is not sufficient evidence" in axis_xy["dependency"].lower()
+
+
 def test_interface_parameters_are_traceable_tbd_not_fake_dimensions():
     interface = load_json(INTERFACE)
     params = {item["id"]: item for item in interface["interfaceParameters"]}
     required = {
+        "rotationAxisXYPhysicalDatum",
         "bearingMountingDiameter",
         "bearingSupportFlatness",
         "bearingBoltCircleAndPreload",
