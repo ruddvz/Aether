@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "status": "research-input",
+  "purpose": "Qualify a serviceable, visually discreet and supplier-rated suspension system for the 240-element VX4800 field without promoting visualization assumptions into construction authority.",
+  "controlledInputs": {
+    "lineCount": 240,
+    "nominalCableDiameterMmCurrentTarget": [0.8, 1.0],
+    "minimumLengthMm": 318.676,
+    "maximumLengthMm": 4705.401,
+    "environment": "indoor",
+    "motionStatus": "kinetic-concept",
+    "actualElementMassStatus": "unknown",
+    "dynamicDesignLoadStatus": "unknown"
+  },
+  "preferredArchitecture": {
+    "upper": "tool-free or controlled-release adjustable cable gripper positively retained to rotating carrier",
+    "mainLine": "matched 7x7 stainless microcable from the selected gripper manufacturer or explicitly certified compatible source",
+    "lower": "custom compact three-point bridle/yoke or equivalent anti-rotation attachment engineered for the butterfly element",
+    "serviceability": "individual element and line replaceable without destructive canopy access",
+    "secondaryRetention": "required at system level; final strategy unresolved"
+  },
+  "materialTargets": {
+    "mainCable": "AISI 316 stainless preferred; exact grade, rope construction and tensile class must be supplier-controlled",
+    "visibleHardware": "stainless, black, dark bronze or approved finish compatible with AETHERIA canopy and optical element",
+    "corrosion": "indoor architectural service; finish and galvanic compatibility to be checked against final butterfly attachment"
+  },
+  "mandatorySupplierReturns": [
+    "manufacturer and exact part numbers for gripper, cable and all terminals",
+    "approved cable diameter and rope construction for the exact gripper",
+    "cable material grade and tensile-strength class",
+    "published working load / safe working load for the exact gripper-cable combination",
+    "stated safety factor or operating coefficient behind the published working load",
+    "installation orientation and any angular-deviation limits",
+    "minimum bend radius and cable routing restrictions",
+    "release-lock or anti-tamper method for occupied-space use",
+    "compatible carrier attachment thread / fork / clevis detail",
+    "terminal or end-stop options and rated capacities",
+    "batch traceability, conformity certificates and test-report availability",
+    "regional availability and lead time for 240 installed lines plus project spares",
+    "sample availability for pull, slip, fatigue and finish testing"
+  ],
+  "engineeringPromotionGates": [
+    "actual mass of each final butterfly size is measured and controlled",
+    "mass of each lower yoke/bridle/terminal assembly is controlled",
+    "dynamic design load is established from the released kinetic architecture and test evidence",
+    "required line design load is calculated with project engineer-approved factors",
+    "selected gripper-cable WLL exceeds required design load in the actual installation orientation",
+    "lower bridle/yoke and butterfly attachment are proof-tested as an assembly",
+    "gripper slip/pull testing is completed with production-equivalent cable and finish",
+    "fatigue and repeated-adjustment behavior are verified for the intended service life",
+    "independent secondary-retention strategy is resolved",
+    "full 240-line factory pre-hang and dynamic-clearance test is completed before construction release"
+  ],
+  "rejectionRules": [
+    "Do not size the cable from visual preference alone.",
+    "Do not use a published static WLL as proof of kinetic suitability.",
+    "Do not mix a gripper rating with a cable construction or diameter not listed by the manufacturer.",
+    "Do not approve the system while butterfly mass or dynamic design load is unknown.",
+    "Do not treat the Blender three-lead yoke as an engineered attachment detail.",
+    "Do not use generic site anchors or false-ceiling support as the structural load path.",
+    "Do not allow a tool-free release mechanism to remain unintentionally accessible without an anti-tamper/locking strategy."
+  ]
+}
