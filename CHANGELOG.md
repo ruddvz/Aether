@@ -52,6 +52,47 @@ All notable repository and product presentation changes are recorded here.
 - Removed ZIP-specific CI gates and download publication from the active repository workflow.
 - Kept engineering revision 1.3.0 and presentation revision 5.2.0 unchanged; the new web tooling remains review-only and cannot become manufacturing authority.
 
+## 2026-09-04 - VX4800 Blender visualization and photoreal pipeline
+
+- Added a Blender 5.2.1 LTS visualization master generated from controlled VX4800 repository data.
+- Preserved all 240 engineering element identities, the controlled 66 S / 144 M / 30 L allocation, 240 main suspension splines, 720 visual yoke/lead splines and 14 fixed head positions.
+- Added Blender-native validation for controlled counts, source provenance, cameras, environments, optical lookdev, motion-reference metadata, repeated-refinement idempotence and sequential finish switching.
+- Added linked faceted S/M/L optical butterfly studies with physically plausible transmission/IOR lookdev, restrained visualization-only absorption and a reduced sculptural centre.
+- Added dark-champagne, black-titanium, brushed-brass and satin-nickel render-time finish studies without promoting any finish to manufacturing authority.
+- Separated the 14 fixture-integrated conceptual light studies from product, macro and architectural photographic rigs.
+- Added dark premium studio product photography plus isolated butterfly macro review.
+- Added four visualization-only installed contexts: double-height residential, staircase void, hospitality lobby and gallery atrium.
+- Added thirteen traceable product/detail/technical/architectural cameras and thirteen validated named shots.
+- Added independent `draft`, `lookdev`, `production` and `hero` quality tiers plus landscape, vertical and square output profiles while retaining legacy preset compatibility.
+- Added a constant-speed rotating-field visualization action whose cycle length is derived from controlled nominal RPM and scene FPS; acceleration, braking, jam response and dynamic safety remain outside Blender authority.
+- Reworked CI into one checksum-pinned authoritative Blender build/validation job, parallel independent Cycles QA renders, and one combined validation/render artifact.
+- Closed the final 0.13 visual QA with approved product hero, full elevation, optical macro, residential wide/medium, vertical marketing, staircase, hospitality, atrium and alternate-finish previews.
+- Corrected headless environment activation for saved `.blend` reloads and made final refinement/finish operations safe for repeated interactive use.
+- Corrected human documentation so local complete-master builds use the same `build_entrypoint.py` path and authority model as GitHub Actions.
+- Kept engineering revision 1.3.0, presentation revision 5.2.0, controlled coordinates, fixed head set-out and all unresolved physical qualification gates unchanged throughout the visualization work.
+
+## 2026-09-04 - VX4800 interchange loss-reporting framework
+
+- Added a machine-readable interchange loss-report schema and VX4800 target policy for IFC, GDTF and MVR.
+- Bound interchange review to canonical fixture SHA-256 plus the controlled 240-element, 66 S / 144 M / 30 L, 240-suspension and 14-head invariants.
+- Added deterministic target reports that classify mappings as preserved, approximated, external-reference or omitted and separate warnings from blocking losses.
+- Allowed IFC only at coordination-only authority while explicitly preserving manufacturing, structural, photometry, kinetic-safety and construction-release boundaries.
+- Kept GDTF blocked until exact head/optic and applicable control-personality data are released.
+- Kept lighting-authoritative MVR blocked until the GDTF dependency and controlled final head aiming are released.
+- Added regression tests that reject controlled-count drift and any interchange profile that attempts to claim engineering or release authority.
+
+## 2026-09-04 - VX4800 IFC4 coordination export
+
+- Added a pinned IfcOpenShell 0.8.5 toolchain for IFC generation and independent parsing.
+- Added an IFC4 exporter that creates a single `IfcLightFixture` coordination occurrence under project/site/building/storey spatial context.
+- Added a 2500 × 1650 × 4800 mm coordination-envelope body derived from the canonical physical envelope, mapped from ceiling/drop coordinates to +Z-up IFC coordinates.
+- Added custom AETHERIA property sets carrying controlled identity, 240-element and 66 S / 144 M / 30 L counts, 240 suspension lines, 14 fixed heads, unresolved status and explicit authority boundaries.
+- Kept manufacturing, structural, photometry, kinetic-safety and construction-release authority false inside the IFC itself.
+- Bound the IFC authority property set to the SHA-256 of the canonical fixture used by the companion loss report.
+- Added stable primary IFC GUID generation for repeatable identity across rebuilds without claiming byte-for-byte deterministic IFC serialization.
+- Added a dedicated IFC GitHub Actions workflow that generates, reopens and semantically validates the IFC4 model before uploading it with its companion loss report.
+- Kept the IFC body as coordination proxy geometry rather than fabricating 240 BIM parts or promoting repository geometry to manufacturing authority.
+
 ## 2026-09-04 - VX4800 rotating-carrier engineering architecture
 
 - Added a machine-readable kinetic architecture for primary load path, bearing/drive studies, braking, positive service locking, independent annular secondary retention, balance/trim, feedback, faults, power loss, dynamic clearance and maintenance.

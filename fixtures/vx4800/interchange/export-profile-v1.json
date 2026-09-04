@@ -1,0 +1,183 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authority": "interchange-policy",
+  "sourceFixture": "fixtures/vx4800/fixture.json",
+  "invariants": {
+    "elementCount": 240,
+    "familyCounts": {"S": 66, "M": 144, "L": 30},
+    "suspensionLineCount": 240,
+    "fixedHeadCount": 14
+  },
+  "targets": {
+    "ifc": {
+      "exportAuthority": "coordination-only",
+      "mappings": [
+        {
+          "sourcePath": "identity",
+          "targetConcept": "IfcLightFixture identity and property set",
+          "disposition": "preserved",
+          "authorityImpact": "none",
+          "note": "Fixture identity and released revision strings can be preserved as coordination metadata."
+        },
+        {
+          "sourcePath": "physical.envelopeMm",
+          "targetConcept": "coordination proxy / bounding geometry",
+          "disposition": "approximated",
+          "authorityImpact": "review-only",
+          "note": "The physical envelope may be represented for coordination, but it is not manufacturing geometry."
+        },
+        {
+          "sourcePath": "composition.elementCount + composition.families",
+          "targetConcept": "AETHERIA property set",
+          "disposition": "preserved",
+          "authorityImpact": "none",
+          "note": "Controlled element and family counts can be exported as explicit properties."
+        },
+        {
+          "sourcePath": "assets[composition-engineering-1.3.0]",
+          "targetConcept": "external controlled schedule reference",
+          "disposition": "external-reference",
+          "authorityImpact": "none",
+          "note": "The baseline IFC adapter should reference, not silently flatten, the authoritative 240-row schedule."
+        },
+        {
+          "sourcePath": "kinematics",
+          "targetConcept": "static coordination metadata",
+          "disposition": "approximated",
+          "authorityImpact": "review-only",
+          "note": "IFC coordination output can identify the product as kinetic but does not validate motion, braking or dynamic safety."
+        },
+        {
+          "sourcePath": "optical",
+          "targetConcept": "descriptive property set",
+          "disposition": "external-reference",
+          "authorityImpact": "review-only",
+          "note": "Photometry remains external until exact approved supplier/lab evidence is controlled."
+        }
+      ],
+      "losses": [
+        {
+          "id": "IFC_NO_MANUFACTURING_GEOMETRY",
+          "severity": "warning",
+          "sourcePath": "manufacturing.repositoryGeometryAuthority",
+          "reason": "Repository geometry is explicitly coordination-only.",
+          "requiredFollowUp": "Use released manufacturing CAD and drawings for fabrication."
+        },
+        {
+          "id": "IFC_NO_DYNAMIC_SAFETY_MODEL",
+          "severity": "warning",
+          "sourcePath": "kinematics",
+          "reason": "Static IFC exchange does not prove bearing, drive, braking, stopping or secondary-retention performance.",
+          "requiredFollowUp": "Use the controlled kinetic engineering and physical validation evidence."
+        }
+      ]
+    },
+    "gdtf": {
+      "exportAuthority": "blocked",
+      "mappings": [
+        {
+          "sourcePath": "identity",
+          "targetConcept": "FixtureType descriptive identity",
+          "disposition": "preserved",
+          "authorityImpact": "none",
+          "note": "Product identity can be carried into a future GDTF package."
+        },
+        {
+          "sourcePath": "optical.emitters[0].quantity",
+          "targetConcept": "geometry/emitter inventory",
+          "disposition": "preserved",
+          "authorityImpact": "review-only",
+          "note": "The controlled fixture contains 14 fixed head positions, but exact head definitions are not yet selected."
+        },
+        {
+          "sourcePath": "optical.emitters[0]",
+          "targetConcept": "GDTF emitter and geometry definitions",
+          "disposition": "omitted",
+          "authorityImpact": "lost",
+          "note": "Exact emitter model, optic, spectral data and approved photometry are not yet controlled."
+        },
+        {
+          "sourcePath": "electrical",
+          "targetConcept": "DMX modes, channels and control functions",
+          "disposition": "omitted",
+          "authorityImpact": "lost",
+          "note": "DALI/phase concepts do not define a released GDTF control personality or DMX footprint."
+        }
+      ],
+      "losses": [
+        {
+          "id": "GDTF_EXACT_HEAD_UNRESOLVED",
+          "severity": "blocking",
+          "sourcePath": "optical.emitters[0]",
+          "reason": "Exact head family/model/optic is not selected and approved.",
+          "requiredFollowUp": "Control the exact head configuration and approved angular/spectral evidence before generating authoritative GDTF geometry/emitter data."
+        },
+        {
+          "id": "GDTF_CONTROL_PERSONALITY_UNRESOLVED",
+          "severity": "blocking",
+          "sourcePath": "electrical",
+          "reason": "No released DMX/GDTF control mode or channel function set exists.",
+          "requiredFollowUp": "Release the actual control architecture and only then define GDTF modes/channels if applicable."
+        }
+      ]
+    },
+    "mvr": {
+      "exportAuthority": "blocked",
+      "mappings": [
+        {
+          "sourcePath": "identity",
+          "targetConcept": "MVR fixture/object metadata",
+          "disposition": "preserved",
+          "authorityImpact": "none",
+          "note": "Product identity can be retained in a future MVR scene exchange."
+        },
+        {
+          "sourcePath": "assets[led-setout-engineering-1.3.0]",
+          "targetConcept": "14 fixed placement records",
+          "disposition": "external-reference",
+          "authorityImpact": "none",
+          "note": "The engineering setout is controlled and may feed a future MVR adapter without using Blender camera/light poses."
+        },
+        {
+          "sourcePath": "interchange.gdtf",
+          "targetConcept": "referenced GDTF fixture type",
+          "disposition": "omitted",
+          "authorityImpact": "lost",
+          "note": "A usable MVR lighting exchange depends on released fixture-type data that is not yet available."
+        },
+        {
+          "sourcePath": "composition",
+          "targetConcept": "scene geometry / scenic object references",
+          "disposition": "external-reference",
+          "authorityImpact": "review-only",
+          "note": "Controlled coordination geometry may be referenced, but MVR must not promote it to manufacturing geometry."
+        }
+      ],
+      "losses": [
+        {
+          "id": "MVR_GDTF_DEPENDENCY_UNRESOLVED",
+          "severity": "blocking",
+          "sourcePath": "interchange.gdtf",
+          "reason": "No released GDTF fixture definition exists for the selected lighting heads.",
+          "requiredFollowUp": "Release the exact applicable GDTF fixture definitions before producing a lighting-authoritative MVR package."
+        },
+        {
+          "id": "MVR_AIMING_NOT_RELEASED",
+          "severity": "blocking",
+          "sourcePath": "photometry",
+          "reason": "Controlled final per-head aiming/target definitions are not released for application validation.",
+          "requiredFollowUp": "Use released engineering aiming definitions from the full 14-head system-validation stage."
+        }
+      ]
+    }
+  },
+  "authorityBoundary": {
+    "manufacturingAuthority": false,
+    "structuralAuthority": false,
+    "photometryAuthority": false,
+    "kineticSafetyAuthority": false,
+    "constructionReleaseAuthority": false
+  }
+}

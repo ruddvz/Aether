@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-radiance-validation-report.schema.json",
+  "title": "AETHERIA Radiance Photometry Validation Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "fixtureId", "status", "authority", "source", "radiance", "method", "results", "summary", "commands", "generatedAt", "warnings"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"type": "string", "const": "vx4800-bf-01"},
+    "status": {"type": "string", "enum": ["validation-pass", "validation-fail"]},
+    "authority": {"type": "string", "const": "derived-cross-check"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["filename", "sha256", "byteLength", "provenanceStatus", "syntheticTest", "configurationId", "configurationControlled"],
+      "properties": {
+        "filename": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "byteLength": {"type": "integer", "minimum": 1},
+        "provenanceStatus": {"type": "string", "enum": ["supplier", "laboratory", "unknown", "synthetic-test"]},
+        "syntheticTest": {"type": "boolean"},
+        "configurationId": {"type": ["string", "null"]},
+        "configurationControlled": {"type": "boolean"}
+      }
+    },
+    "radiance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["expectedRelease", "expectedTag", "runtimeVersion", "executables"],
+      "properties": {
+        "expectedRelease": {"type": "string"},
+        "expectedTag": {"type": "string"},
+        "runtimeVersion": {"type": "string"},
+        "executables": {
+          "type": "object", "additionalProperties": false,
+          "required": ["ies2rad", "oconv", "rtrace"],
+          "properties": {"ies2rad": {"type": "string"}, "oconv": {"type": "string"}, "rtrace": {"type": "string"}}
+        }
+      }
+    },
+    "method": {
+      "type": "object", "additionalProperties": false,
+      "required": ["samplingDistanceM", "anglesDeg", "relativeTolerance", "expectedRatioFormula", "horizontalPlaneDeg"],
+      "properties": {
+        "samplingDistanceM": {"type": "number", "exclusiveMinimum": 0},
+        "anglesDeg": {"type": "array", "minItems": 2, "items": {"type": "number", "minimum": 0, "maximum": 90}},
+        "relativeTolerance": {"type": "number", "minimum": 0, "maximum": 1},
+        "expectedRatioFormula": {"type": "string", "minLength": 1},
+        "horizontalPlaneDeg": {"type": "number"}
+      }
+    },
+    "results": {
+      "type": "array", "minItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["angleDeg", "pointM", "normal", "iesCandela", "expectedRelativeIrradiance", "radianceRgbIrradiance", "radianceScalar", "observedRelativeIrradiance", "relativeError", "withinTolerance"],
+        "properties": {
+          "angleDeg": {"type": "number"},
+          "pointM": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+          "normal": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+          "iesCandela": {"type": "number", "minimum": 0},
+          "expectedRelativeIrradiance": {"type": "number", "minimum": 0},
+          "radianceRgbIrradiance": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number", "minimum": 0}},
+          "radianceScalar": {"type": "number", "minimum": 0},
+          "observedRelativeIrradiance": {"type": "number", "minimum": 0},
+          "relativeError": {"type": "number", "minimum": 0},
+          "withinTolerance": {"type": "boolean"}
+        }
+      }
+    },
+    "summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["pipelinePass", "numericalCrossCheckPass", "maxRelativeError", "productPhotometryEligibleForFurtherReview", "productPhotometryApproved"],
+      "properties": {
+        "pipelinePass": {"type": "boolean"},
+        "numericalCrossCheckPass": {"type": "boolean"},
+        "maxRelativeError": {"type": "number", "minimum": 0},
+        "productPhotometryEligibleForFurtherReview": {"type": "boolean"},
+        "productPhotometryApproved": {"type": "boolean", "const": false}
+      }
+    },
+    "commands": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ies2rad", "oconv", "rtrace"],
+      "properties": {
+        "ies2rad": {"$ref": "#/$defs/commandRecord"},
+        "oconv": {"$ref": "#/$defs/commandRecord"},
+        "rtrace": {"$ref": "#/$defs/commandRecord"}
+      }
+    },
+    "generatedAt": {"type": "string", "format": "date-time"},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "commandRecord": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"stdout": {"type": "string"}, "stderr": {"type": "string"}}
+    }
+  }
+}

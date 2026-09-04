@@ -1,0 +1,236 @@
+{
+  "$schema": "../../../schemas/aether-manufacturing-quality-plan.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authority": "qualification-plan",
+  "status": "open",
+  "purpose": "Define manufacturing configuration control, traceability, inspection, nonconformance, factory test, packaging and release gates for VX4800 without treating prototype/RFQ data as a released production process.",
+  "configurationControl": {
+    "releasedBomStatus": "not-released",
+    "releasedManufacturingPackageStatus": "not-released",
+    "buildConfigurationIdRequired": true,
+    "serializedFixtureRequired": true,
+    "revisionTraceabilityRequired": true,
+    "approvedSupplierPartIdentityRequiredForSafetyCriticalItems": true,
+    "purchasingSubstitutionPermittedWithoutEngineeringReview": false,
+    "commercialEquivalentIsEngineeringEquivalent": false,
+    "deviationMustIdentifyAffectedEvidence": true,
+    "safetyCriticalChangeRequiresEvidenceImpactReview": true
+  },
+  "controlledProductionIdentity": [
+    "fixture serial/build number",
+    "released product configuration/revision",
+    "released manufacturing drawing/BREP manifest",
+    "released 240-element schedule revision/hash",
+    "released 14-head setout revision/hash",
+    "material tier and exact supplier/process revision",
+    "suspension system configuration revision",
+    "kinetic mechanism configuration revision",
+    "electrical/control configuration revision",
+    "structural canopy/interface configuration revision",
+    "finish/process specification revision",
+    "software/firmware/configuration revision where applicable"
+  ],
+  "traceabilityGroups": [
+    {
+      "id": "BUTTERFLY-ASSEMBLIES",
+      "criticality": "safety-quality-critical",
+      "recordsRequired": ["size family S/M/L", "material tier", "exact material/supplier", "batch/lot or artisan batch", "forming/machining/finishing process revision", "attachment revision", "inspection disposition"]
+    },
+    {
+      "id": "SUSPENSION-SYSTEM",
+      "criticality": "safety-critical",
+      "recordsRequired": ["cable manufacturer/SKU/lot", "gripper manufacturer/SKU/lot", "terminal/crimp/end-stop identity", "lower bridle/yoke revision", "assembly process/tooling revision", "inspection/test disposition"]
+    },
+    {
+      "id": "KINETIC-SYSTEM",
+      "criticality": "safety-critical",
+      "recordsRequired": ["bearing identity/serial or lot", "drive/motor/gearbox/belt/pinion identity as released", "brake identity", "service-lock revision", "secondary-retention revision/components", "feedback/sensor identity", "safety-related settings/configuration where applicable"]
+    },
+    {
+      "id": "STRUCTURAL-CANOPY",
+      "criticality": "safety-critical",
+      "recordsRequired": ["structural frame revision", "material grade/lot where required by released specification", "safety-critical fastener identity", "weld/fabrication process records where required", "interface hardware identity", "inspection disposition"]
+    },
+    {
+      "id": "LIGHTING-ELECTRICAL",
+      "criticality": "safety-quality-critical",
+      "recordsRequired": ["14 head model/optic/CCT identity", "PSU/control gear identity", "control component identity", "wire/cable/connector identity where controlled", "protection/bonding component identity", "configuration/addressing record where applicable"]
+    },
+    {
+      "id": "FINISHES",
+      "criticality": "quality-critical",
+      "recordsRequired": ["approved finish sample/reference", "supplier/process", "batch/lot where applicable", "substrate/preparation revision", "inspection disposition"]
+    }
+  ],
+  "manufacturingStages": [
+    {"id": "INCOMING", "releaseStatus": "not-released", "purpose": "verify identity, condition, documentation and required supplier evidence before use"},
+    {"id": "FABRICATION", "releaseStatus": "not-released", "purpose": "control product-specific fabrication processes, dimensions and in-process inspections"},
+    {"id": "SUBASSEMBLY", "releaseStatus": "not-released", "purpose": "assemble and inspect structural, suspension, butterfly, lighting and kinetic subassemblies to controlled work instructions"},
+    {"id": "FINAL-ASSEMBLY", "releaseStatus": "not-released", "purpose": "build exact production configuration with complete traveler/traceability record"},
+    {"id": "FULL-PREHANG", "releaseStatus": "not-released", "purpose": "assemble and dynamically validate the complete 240-element production-intent field as required by release framework"},
+    {"id": "FACTORY-ACCEPTANCE", "releaseStatus": "not-released", "purpose": "complete released visual, mechanical, electrical, kinetic, service and documentation checks"},
+    {"id": "PACK-AND-SHIP", "releaseStatus": "not-released", "purpose": "protect released configuration and preserve identification, line organization and installation sequence through transport"}
+  ],
+  "criticalToQuality": [
+    {
+      "id": "CTQ-COMPOSITION",
+      "characteristic": "exact 240-element engineering identity and S66/M144/L30 allocation",
+      "acceptanceBasis": "controlled engineering schedule",
+      "currentAcceptanceStatus": "defined"
+    },
+    {
+      "id": "CTQ-CABLE-SET",
+      "characteristic": "line identity, specified line length and correct upper/lower termination for every element",
+      "acceptanceBasis": "released manufacturing schedule/work instruction",
+      "currentAcceptanceStatus": "not-released"
+    },
+    {
+      "id": "CTQ-HEAD-SET",
+      "characteristic": "exact 14 fixed head identities, positions and selected optical configurations",
+      "acceptanceBasis": "controlled setout plus released head/optic schedule",
+      "currentAcceptanceStatus": "partially-defined"
+    },
+    {
+      "id": "CTQ-SAFETY-FASTENERS",
+      "characteristic": "correct safety-critical fastener identity, installation condition, tightening/locking method and inspection",
+      "acceptanceBasis": "released engineering drawing/work instruction",
+      "currentAcceptanceStatus": "not-released"
+    },
+    {
+      "id": "CTQ-SUSPENSION-TERMINATIONS",
+      "characteristic": "correct cable/gripper/terminal/yoke configuration with no unapproved damage, slip or process deviation",
+      "acceptanceBasis": "released qualified suspension process",
+      "currentAcceptanceStatus": "not-released"
+    },
+    {
+      "id": "CTQ-KINETIC-SAFETY",
+      "characteristic": "bearing/drive/brake/service-lock/secondary-retention/feedback configuration matches released kinetic architecture",
+      "acceptanceBasis": "released kinetic configuration and FAT procedure",
+      "currentAcceptanceStatus": "not-released"
+    },
+    {
+      "id": "CTQ-ELECTRICAL-SAFETY",
+      "characteristic": "wiring, terminations, protection, bonding/earthing and component configuration match released electrical architecture",
+      "acceptanceBasis": "released electrical drawings/work instructions and applicable conformity plan",
+      "currentAcceptanceStatus": "not-released"
+    },
+    {
+      "id": "CTQ-FINISH",
+      "characteristic": "visible finish, color/texture, scratches/defects and cross-component match satisfy approved production sample/acceptance standard",
+      "acceptanceBasis": "approved finish/cosmetic standard",
+      "currentAcceptanceStatus": "not-released"
+    }
+  ],
+  "inspectionControl": {
+    "inspectionPlanRequired": true,
+    "measurementEquipmentIdentificationRequired": true,
+    "calibrationOrVerificationStatusRequiredWhereMeasurementAffectsAcceptance": true,
+    "sampleSizeAndFrequencyMustBeReleased": true,
+    "acceptanceCriteriaMustReferenceControlledRequirement": true,
+    "visualAcceptanceSamplesMustBeControlledWhereUsed": true,
+    "inspectionResultTraceableToBuildRequired": true,
+    "uncontrolledPassFailJudgmentPermitted": false
+  },
+  "nonconformanceControl": {
+    "ncrRequiredForAcceptanceFailure": true,
+    "allowedDispositionTypes": ["rework", "repair", "use-as-is-by-approved-deviation", "return-to-supplier", "scrap"],
+    "useAsIsRequiresEngineeringApprovalWhenRequirementIsEngineeringControlled": true,
+    "repairRequiresApprovedProcedureWhenSafetyOrQualifiedPerformanceMayBeAffected": true,
+    "affectedQualificationEvidenceMustBeReviewed": true,
+    "retestRequiredWhenDispositionCanAffectVerifiedRequirement": true,
+    "ncrClosureMustNotRewriteOriginalFailure": true
+  },
+  "changeAndSubstitutionControl": {
+    "impactReviewRequiredGroups": [
+      "butterfly material/process/thickness/attachment",
+      "suspension cable/gripper/terminal/yoke",
+      "bearing/drive/motor/gearbox/belt/pinion/brake",
+      "service lock or secondary retention",
+      "structural canopy frame/interface hardware",
+      "safety-critical fasteners/locking methods",
+      "head/optic/CCT/PSU/control gear",
+      "wiring/protection/bonding/connectors",
+      "control/safety-related software or configuration",
+      "finish process where function or approved appearance may be affected",
+      "packaging/transport restraint where product damage or alignment may be affected"
+    ],
+    "requiredImpactReviewQuestions": [
+      "Does the change alter mass, centre of gravity or balance?",
+      "Does the change alter structural reactions or interface design?",
+      "Does the change alter suspension load, fatigue or retention evidence?",
+      "Does the change alter kinetic torque, braking, safety or dynamic clearance?",
+      "Does the change alter electrical/thermal/conformity evidence?",
+      "Does the change alter exact photometry or optical intent?",
+      "Does the change invalidate a first-article, lab, factory or project approval record?",
+      "Which documents/tests must be repeated or superseded?"
+    ]
+  },
+  "factoryAcceptanceDomains": [
+    {"id": "CONFIGURATION", "status": "not-released", "required": true},
+    {"id": "DIMENSIONAL", "status": "not-released", "required": true},
+    {"id": "VISUAL-FINISH", "status": "not-released", "required": true},
+    {"id": "SUSPENSION", "status": "not-released", "required": true},
+    {"id": "KINETIC", "status": "not-released", "required": true},
+    {"id": "ELECTRICAL-LIGHTING", "status": "not-released", "required": true},
+    {"id": "SERVICEABILITY", "status": "not-released", "required": true},
+    {"id": "FULL-PREHANG", "status": "not-released", "required": true},
+    {"id": "DOCUMENTATION-MARKING", "status": "not-released", "required": true},
+    {"id": "PACKAGING", "status": "not-released", "required": true}
+  ],
+  "packagingAndTransport": {
+    "packPlanRequired": true,
+    "componentAndElementIdentityPreservedThroughPackaging": true,
+    "installationSequencePreservedWhereRequired": true,
+    "suspensionLinesProtectedAgainstKinkAbrasionAndUncontrolledTangling": true,
+    "butterfliesProtectedAgainstContactDamage": true,
+    "kineticAndBearingTransportRestraintRequiredIfReleasedEngineeringRequiresIt": true,
+    "transportOrientationAndHandlingInstructionsRequired": true,
+    "transportValidationRequirementStatus": "not-defined",
+    "siteReceiptInspectionRequired": true
+  },
+  "productionRecord": {
+    "buildTravelerRequired": true,
+    "minimumRecordGroups": [
+      "configuration/BOM revision",
+      "supplier/lot/serial traceability for controlled groups",
+      "in-process inspection results",
+      "nonconformance/deviation records",
+      "final inspection results",
+      "FAT/pre-hang record identity",
+      "software/configuration identity where applicable",
+      "packaging/dispatch record",
+      "released-by identity/date"
+    ],
+    "retentionPeriod": {"status": "not-defined"}
+  },
+  "promotionGate": {
+    "releasedBomControlled": false,
+    "manufacturingPackageReleased": false,
+    "approvedSupplierPartListReleased": false,
+    "incomingInspectionPlanReleased": false,
+    "fabricationWorkInstructionsReleased": false,
+    "assemblyWorkInstructionsReleased": false,
+    "criticalToQualityAcceptanceCriteriaReleased": false,
+    "safetyCriticalTorqueLockingRequirementsReleased": false,
+    "nonconformanceDeviationWorkflowReleased": false,
+    "factoryAcceptanceProcedureReleased": false,
+    "fullPreHangProductionProcedureReleased": false,
+    "packagingTransportPlanReleased": false,
+    "siteReceiptInspectionReleased": false,
+    "productionTravelerTraceabilityReleased": false,
+    "routineProductionTestPlanReleased": false,
+    "firstArticleProductionProcessValidated": false,
+    "productionReleaseApproved": false
+  },
+  "dependencies": [
+    "Issue #7 suspension qualification evidence",
+    "Issue #9 material/attachment qualification and measured mass evidence",
+    "rotating-carrier engineering track",
+    "Issue #11 electrical/service evidence",
+    "Issue #13 first-article/conformity release framework",
+    "Issue #15 project structural/site-interface evidence",
+    "exact released photometry/head configuration"
+  ]
+}

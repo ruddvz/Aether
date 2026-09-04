@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-manufacturing-quality-plan.schema.json",
+  "title": "AETHERIA Manufacturing Quality Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "fixtureId", "designRevision", "authority", "status", "purpose", "configurationControl", "controlledProductionIdentity", "traceabilityGroups", "manufacturingStages", "criticalToQuality", "inspectionControl", "nonconformanceControl", "changeAndSubstitutionControl", "factoryAcceptanceDomains", "packagingAndTransport", "productionRecord", "promotionGate", "dependencies"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"type": "string", "minLength": 1},
+    "designRevision": {"type": "string", "minLength": 1},
+    "authority": {"type": "string", "enum": ["qualification-plan", "controlled"]},
+    "status": {"type": "string", "enum": ["open", "approved"]},
+    "purpose": {"type": "string", "minLength": 1},
+    "configurationControl": {
+      "type": "object", "additionalProperties": false,
+      "required": ["releasedBomStatus", "releasedManufacturingPackageStatus", "buildConfigurationIdRequired", "serializedFixtureRequired", "revisionTraceabilityRequired", "approvedSupplierPartIdentityRequiredForSafetyCriticalItems", "purchasingSubstitutionPermittedWithoutEngineeringReview", "commercialEquivalentIsEngineeringEquivalent", "deviationMustIdentifyAffectedEvidence", "safetyCriticalChangeRequiresEvidenceImpactReview"],
+      "properties": {
+        "releasedBomStatus": {"type": "string", "enum": ["not-released", "released"]},
+        "releasedManufacturingPackageStatus": {"type": "string", "enum": ["not-released", "released"]},
+        "buildConfigurationIdRequired": {"type": "boolean"},
+        "serializedFixtureRequired": {"type": "boolean"},
+        "revisionTraceabilityRequired": {"type": "boolean"},
+        "approvedSupplierPartIdentityRequiredForSafetyCriticalItems": {"type": "boolean"},
+        "purchasingSubstitutionPermittedWithoutEngineeringReview": {"type": "boolean"},
+        "commercialEquivalentIsEngineeringEquivalent": {"type": "boolean"},
+        "deviationMustIdentifyAffectedEvidence": {"type": "boolean"},
+        "safetyCriticalChangeRequiresEvidenceImpactReview": {"type": "boolean"}
+      }
+    },
+    "controlledProductionIdentity": {"$ref": "#/$defs/stringArray"},
+    "traceabilityGroups": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "criticality", "recordsRequired"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Z0-9-]+$"},
+          "criticality": {"type": "string", "enum": ["safety-critical", "safety-quality-critical", "quality-critical"]},
+          "recordsRequired": {"$ref": "#/$defs/stringArray"}
+        }
+      }
+    },
+    "manufacturingStages": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "releaseStatus", "purpose"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Z0-9-]+$"},
+          "releaseStatus": {"type": "string", "enum": ["not-released", "released"]},
+          "purpose": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "criticalToQuality": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "characteristic", "acceptanceBasis", "currentAcceptanceStatus"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^CTQ-[A-Z0-9-]+$"},
+          "characteristic": {"type": "string", "minLength": 1},
+          "acceptanceBasis": {"type": "string", "minLength": 1},
+          "currentAcceptanceStatus": {"type": "string", "enum": ["not-released", "partially-defined", "defined"]}
+        }
+      }
+    },
+    "inspectionControl": {"$ref": "#/$defs/inspectionControl"},
+    "nonconformanceControl": {"$ref": "#/$defs/nonconformanceControl"},
+    "changeAndSubstitutionControl": {
+      "type": "object", "additionalProperties": false,
+      "required": ["impactReviewRequiredGroups", "requiredImpactReviewQuestions"],
+      "properties": {
+        "impactReviewRequiredGroups": {"$ref": "#/$defs/stringArray"},
+        "requiredImpactReviewQuestions": {"$ref": "#/$defs/stringArray"}
+      }
+    },
+    "factoryAcceptanceDomains": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "status", "required"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Z0-9-]+$"},
+          "status": {"type": "string", "enum": ["not-released", "released", "passed"]},
+          "required": {"type": "boolean"}
+        }
+      }
+    },
+    "packagingAndTransport": {
+      "type": "object", "additionalProperties": false,
+      "required": ["packPlanRequired", "componentAndElementIdentityPreservedThroughPackaging", "installationSequencePreservedWhereRequired", "suspensionLinesProtectedAgainstKinkAbrasionAndUncontrolledTangling", "butterfliesProtectedAgainstContactDamage", "kineticAndBearingTransportRestraintRequiredIfReleasedEngineeringRequiresIt", "transportOrientationAndHandlingInstructionsRequired", "transportValidationRequirementStatus", "siteReceiptInspectionRequired"],
+      "properties": {
+        "packPlanRequired": {"type": "boolean"},
+        "componentAndElementIdentityPreservedThroughPackaging": {"type": "boolean"},
+        "installationSequencePreservedWhereRequired": {"type": "boolean"},
+        "suspensionLinesProtectedAgainstKinkAbrasionAndUncontrolledTangling": {"type": "boolean"},
+        "butterfliesProtectedAgainstContactDamage": {"type": "boolean"},
+        "kineticAndBearingTransportRestraintRequiredIfReleasedEngineeringRequiresIt": {"type": "boolean"},
+        "transportOrientationAndHandlingInstructionsRequired": {"type": "boolean"},
+        "transportValidationRequirementStatus": {"type": "string", "enum": ["not-defined", "defined", "validated"]},
+        "siteReceiptInspectionRequired": {"type": "boolean"}
+      }
+    },
+    "productionRecord": {
+      "type": "object", "additionalProperties": false,
+      "required": ["buildTravelerRequired", "minimumRecordGroups", "retentionPeriod"],
+      "properties": {
+        "buildTravelerRequired": {"type": "boolean"},
+        "minimumRecordGroups": {"$ref": "#/$defs/stringArray"},
+        "retentionPeriod": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status"],
+          "properties": {
+            "status": {"type": "string", "enum": ["not-defined", "defined"]},
+            "value": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "promotionGate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["releasedBomControlled", "manufacturingPackageReleased", "approvedSupplierPartListReleased", "incomingInspectionPlanReleased", "fabricationWorkInstructionsReleased", "assemblyWorkInstructionsReleased", "criticalToQualityAcceptanceCriteriaReleased", "safetyCriticalTorqueLockingRequirementsReleased", "nonconformanceDeviationWorkflowReleased", "factoryAcceptanceProcedureReleased", "fullPreHangProductionProcedureReleased", "packagingTransportPlanReleased", "siteReceiptInspectionReleased", "productionTravelerTraceabilityReleased", "routineProductionTestPlanReleased", "firstArticleProductionProcessValidated", "productionReleaseApproved"],
+      "properties": {
+        "releasedBomControlled": {"type": "boolean"},
+        "manufacturingPackageReleased": {"type": "boolean"},
+        "approvedSupplierPartListReleased": {"type": "boolean"},
+        "incomingInspectionPlanReleased": {"type": "boolean"},
+        "fabricationWorkInstructionsReleased": {"type": "boolean"},
+        "assemblyWorkInstructionsReleased": {"type": "boolean"},
+        "criticalToQualityAcceptanceCriteriaReleased": {"type": "boolean"},
+        "safetyCriticalTorqueLockingRequirementsReleased": {"type": "boolean"},
+        "nonconformanceDeviationWorkflowReleased": {"type": "boolean"},
+        "factoryAcceptanceProcedureReleased": {"type": "boolean"},
+        "fullPreHangProductionProcedureReleased": {"type": "boolean"},
+        "packagingTransportPlanReleased": {"type": "boolean"},
+        "siteReceiptInspectionReleased": {"type": "boolean"},
+        "productionTravelerTraceabilityReleased": {"type": "boolean"},
+        "routineProductionTestPlanReleased": {"type": "boolean"},
+        "firstArticleProductionProcessValidated": {"type": "boolean"},
+        "productionReleaseApproved": {"type": "boolean"}
+      }
+    },
+    "dependencies": {"$ref": "#/$defs/stringArray"}
+  },
+  "$defs": {
+    "stringArray": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "inspectionControl": {
+      "type": "object", "additionalProperties": false,
+      "required": ["inspectionPlanRequired", "measurementEquipmentIdentificationRequired", "calibrationOrVerificationStatusRequiredWhereMeasurementAffectsAcceptance", "sampleSizeAndFrequencyMustBeReleased", "acceptanceCriteriaMustReferenceControlledRequirement", "visualAcceptanceSamplesMustBeControlledWhereUsed", "inspectionResultTraceableToBuildRequired", "uncontrolledPassFailJudgmentPermitted"],
+      "properties": {
+        "inspectionPlanRequired": {"type": "boolean"},
+        "measurementEquipmentIdentificationRequired": {"type": "boolean"},
+        "calibrationOrVerificationStatusRequiredWhereMeasurementAffectsAcceptance": {"type": "boolean"},
+        "sampleSizeAndFrequencyMustBeReleased": {"type": "boolean"},
+        "acceptanceCriteriaMustReferenceControlledRequirement": {"type": "boolean"},
+        "visualAcceptanceSamplesMustBeControlledWhereUsed": {"type": "boolean"},
+        "inspectionResultTraceableToBuildRequired": {"type": "boolean"},
+        "uncontrolledPassFailJudgmentPermitted": {"type": "boolean"}
+      }
+    },
+    "nonconformanceControl": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ncrRequiredForAcceptanceFailure", "allowedDispositionTypes", "useAsIsRequiresEngineeringApprovalWhenRequirementIsEngineeringControlled", "repairRequiresApprovedProcedureWhenSafetyOrQualifiedPerformanceMayBeAffected", "affectedQualificationEvidenceMustBeReviewed", "retestRequiredWhenDispositionCanAffectVerifiedRequirement", "ncrClosureMustNotRewriteOriginalFailure"],
+      "properties": {
+        "ncrRequiredForAcceptanceFailure": {"type": "boolean"},
+        "allowedDispositionTypes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "enum": ["rework", "repair", "use-as-is-by-approved-deviation", "return-to-supplier", "scrap"]}},
+        "useAsIsRequiresEngineeringApprovalWhenRequirementIsEngineeringControlled": {"type": "boolean"},
+        "repairRequiresApprovedProcedureWhenSafetyOrQualifiedPerformanceMayBeAffected": {"type": "boolean"},
+        "affectedQualificationEvidenceMustBeReviewed": {"type": "boolean"},
+        "retestRequiredWhenDispositionCanAffectVerifiedRequirement": {"type": "boolean"},
+        "ncrClosureMustNotRewriteOriginalFailure": {"type": "boolean"}
+      }
+    }
+  }
+}

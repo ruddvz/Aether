@@ -6,4 +6,7 @@ __pycache__/
 .DS_Store
 .env
 .venv/
+*.blend1
+*.blend2
+renders/
 fixtures/vx4800/presentation/v5.2.0/assets/architectural-background.webp

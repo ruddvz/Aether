@@ -1,0 +1,186 @@
+{
+  "$schema": "../../../schemas/aether-structural-site-interface.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authority": "qualification-plan",
+  "status": "open",
+  "purpose": "Define the controlled structural/site-interface inputs, load cases, reaction outputs and promotion gates required before VX4800 can receive project-specific structural approval without inventing loads before physical and kinetic inputs are controlled.",
+  "controlledBaseline": {
+    "canopyEnvelopeMm": [2400, 1500, 150],
+    "interfaceZoneCount": 8,
+    "primarySupport": "site structure via engineered interface zones",
+    "siteStructuralDesignRequired": true,
+    "repositoryGeometryAuthority": "coordination-only",
+    "manufacturingGeometryAuthority": "external controlled VX4800 Product Release / released manufacturing package",
+    "productLifecycle": "prototype"
+  },
+  "supportBoundary": {
+    "validPrimarySupport": "verified building structure or purpose-designed structural support system approved for the project loads",
+    "falseCeilingStructuralSupportPermitted": false,
+    "decorativeCanopySkinStructuralSupportPermitted": false,
+    "servicesAsStructuralSupportPermitted": false,
+    "siteStructureMustBeIdentifiedBeforeAnchorSelection": true,
+    "anchorSelectionIsProjectSpecific": true,
+    "secondaryRetentionMustTerminateToValidFixedStructure": true
+  },
+  "interfaceZones": [
+    {"id": "SITE-IF-01", "positionStatus": "manufacturing-interface-geometry-required", "reactionStatus": "not-calculated"},
+    {"id": "SITE-IF-02", "positionStatus": "manufacturing-interface-geometry-required", "reactionStatus": "not-calculated"},
+    {"id": "SITE-IF-03", "positionStatus": "manufacturing-interface-geometry-required", "reactionStatus": "not-calculated"},
+    {"id": "SITE-IF-04", "positionStatus": "manufacturing-interface-geometry-required", "reactionStatus": "not-calculated"},
+    {"id": "SITE-IF-05", "positionStatus": "manufacturing-interface-geometry-required", "reactionStatus": "not-calculated"},
+    {"id": "SITE-IF-06", "positionStatus": "manufacturing-interface-geometry-required", "reactionStatus": "not-calculated"},
+    {"id": "SITE-IF-07", "positionStatus": "manufacturing-interface-geometry-required", "reactionStatus": "not-calculated"},
+    {"id": "SITE-IF-08", "positionStatus": "manufacturing-interface-geometry-required", "reactionStatus": "not-calculated"}
+  ],
+  "requiredProductInputs": [
+    {
+      "id": "TOTAL-INSTALLED-MASS",
+      "quantity": "complete installed fixture mass",
+      "status": "unknown",
+      "requiredEvidenceClass": "PHYSICAL",
+      "sourceDependency": "first-article / controlled mass measurement"
+    },
+    {
+      "id": "ROTATING-MASS",
+      "quantity": "complete rotating assembly mass including carrier, rotating hardware and 240 suspended assemblies",
+      "status": "unknown",
+      "requiredEvidenceClass": "PHYSICAL",
+      "sourceDependency": "kinetic first article / controlled mass measurement"
+    },
+    {
+      "id": "CENTER-OF-GRAVITY",
+      "quantity": "complete fixture and rotating-assembly centre of gravity required by structural and kinetic calculations",
+      "status": "unknown",
+      "requiredEvidenceClass": "PHYSICAL",
+      "sourceDependency": "measured or engineer-approved mass-property record"
+    },
+    {
+      "id": "NORMAL-MOTION-REACTIONS",
+      "quantity": "normal acceleration, steady rotation and controlled deceleration reactions transferred from kinetic assembly into fixed canopy",
+      "status": "unknown",
+      "requiredEvidenceClass": "ENGINEERING",
+      "sourceDependency": "released kinetic-mechanical load cases"
+    },
+    {
+      "id": "FAULT-STOP-REACTIONS",
+      "quantity": "fault-stop / abnormal-motion reactions transferred into fixed canopy",
+      "status": "unknown",
+      "requiredEvidenceClass": "ENGINEERING",
+      "sourceDependency": "released kinetic-mechanical fault load cases"
+    },
+    {
+      "id": "IMBALANCE-REACTIONS",
+      "quantity": "approved residual imbalance and production/replacement mass-variation reactions",
+      "status": "unknown",
+      "requiredEvidenceClass": "ENGINEERING",
+      "sourceDependency": "released balance/trim and kinetic load analysis"
+    },
+    {
+      "id": "SECONDARY-RETENTION-ENGAGEMENT",
+      "quantity": "load case for engagement of independent secondary carrier retention and any other structural secondary retention",
+      "status": "unknown",
+      "requiredEvidenceClass": "ENGINEERING",
+      "sourceDependency": "released kinetic/secondary-retention architecture"
+    },
+    {
+      "id": "SERVICE-INSTALLATION-LOADS",
+      "quantity": "temporary loads and restraint conditions created by installation, service, locking or maintenance procedures",
+      "status": "unknown",
+      "requiredEvidenceClass": "ENGINEERING",
+      "sourceDependency": "released installation and service method"
+    }
+  ],
+  "requiredSiteInputs": [
+    {"id": "PROJECT-LOCATION", "status": "unknown", "purpose": "determine jurisdiction, design basis and environmental/site actions"},
+    {"id": "STRUCTURAL-SUBSTRATE", "status": "unknown", "purpose": "identify actual building structure and material supporting the interface"},
+    {"id": "STRUCTURAL-DRAWINGS", "status": "unknown", "purpose": "verify member sizes, geometry, reinforcement and allowable interface zones"},
+    {"id": "MATERIAL-STRENGTH", "status": "unknown", "purpose": "support project-specific member/anchor verification"},
+    {"id": "EXISTING-CONDITION-SURVEY", "status": "unknown", "purpose": "confirm built condition, obstructions, tolerances and access"},
+    {"id": "CEILING-VOID-AND-FINISH-ZONE", "status": "unknown", "purpose": "separate decorative ceiling coordination from structural support"},
+    {"id": "ANCHOR-EDGE-SPACING-AND-REINFORCEMENT", "status": "unknown", "purpose": "support exact anchor/support design after substrate is known"},
+    {"id": "PROJECT-DESIGN-CRITERIA", "status": "unknown", "purpose": "confirm governing code, load combinations, importance/reliability and project requirements"}
+  ],
+  "requiredLoadCases": [
+    {"id": "LC-DEAD", "description": "complete installed dead load using controlled measured mass", "status": "not-calculated"},
+    {"id": "LC-NORMAL-MOTION", "description": "released normal kinetic operating reactions combined with gravity", "status": "not-calculated"},
+    {"id": "LC-NORMAL-STOP", "description": "released controlled stopping reaction case", "status": "not-calculated"},
+    {"id": "LC-FAULT-STOP", "description": "released fault/abnormal stop reaction case where structurally relevant", "status": "not-calculated"},
+    {"id": "LC-IMBALANCE", "description": "approved residual imbalance / production mass-variation case", "status": "not-calculated"},
+    {"id": "LC-SECONDARY-RETENTION", "description": "credible secondary-retention engagement/failure scenario transferred to fixed structure", "status": "not-calculated"},
+    {"id": "LC-SERVICE", "description": "released maintenance/service-lock/temporary support condition", "status": "not-calculated"},
+    {"id": "LC-INSTALLATION", "description": "installation/hoisting/temporary restraint loads applicable to released method", "status": "not-calculated"}
+  ],
+  "reactionOutputs": {
+    "coordinateSystemStatus": "project-interface-coordinate-system-not-released",
+    "perZoneRequired": ["Fx", "Fy", "Fz", "Mx", "My", "Mz"],
+    "units": {"force": "N", "moment": "N-m"},
+    "currentStatus": "no-numeric-reactions-approved",
+    "rule": "No interface reaction value may be released until controlled product inputs, kinetic load cases, site geometry and the engineer-approved structural model are available."
+  },
+  "analysisRequirements": [
+    "Use the released manufacturing structural interfaces, not coordination geometry, for final connection analysis.",
+    "Check fixed canopy structural frame strength, stiffness and local connection behavior under approved load combinations.",
+    "Check global and local deflection against alignment, bearing, drive, service-panel and architectural tolerances established by released engineering requirements.",
+    "Check interface-zone load distribution without assuming equal 1/8 sharing unless demonstrated by structural stiffness/modeling.",
+    "Check torsional and eccentric reactions produced by actual centre of gravity and kinetic load cases.",
+    "Check secondary-retention load path independently from the primary load path where required by its architecture.",
+    "Check site structural member capacity and local effects using the actual project structure.",
+    "Design anchors/bolts/welds/support steel only after substrate, geometry, material properties, edge distances and reinforcement/member details are verified.",
+    "Document installation tolerances and any leveling/alignment provisions that affect load distribution.",
+    "Perform an evidence-impact review when product mass, kinetic architecture, interface geometry, site structure or anchor/support design changes."
+  ],
+  "forbiddenAssumptions": [
+    "Do not calculate total load from decorative material density or Blender/coordination geometry in place of controlled physical mass.",
+    "Do not assume the eight interface zones share reactions equally.",
+    "Do not select anchors from a catalog before actual substrate and project reaction/load combination are known.",
+    "Do not use false-ceiling framing, decorative canopy skin, MEP supports or electrical services as primary structural support unless separately engineered and explicitly released for that purpose.",
+    "Do not treat repository package validation as structural approval.",
+    "Do not use nominal operating rpm alone to invent dynamic amplification or stopping loads.",
+    "Do not inherit a structural release across a changed site, material tier, kinetic mechanism, total mass or interface configuration without impact review."
+  ],
+  "deliverablesRequiredForStructuralRelease": [
+    "controlled product input sheet with measured masses and centre of gravity",
+    "released kinetic reaction/load-case input record",
+    "site structural survey and structural drawing references",
+    "project design criteria / governing structural basis",
+    "structural model/calculation report",
+    "per-interface reaction schedule for governing load combinations",
+    "fixed canopy frame/interface verification",
+    "site member/local support verification",
+    "anchor/bolt/weld/support-steel calculation and exact specification",
+    "secondary-retention structural verification",
+    "deflection/alignment/tolerance verification",
+    "installation/support/leveling detail",
+    "approved deviations and re-analysis records",
+    "engineer approval for named project/configuration"
+  ],
+  "promotionGate": {
+    "actualInstalledMassControlled": false,
+    "rotatingMassControlled": false,
+    "centerOfGravityControlled": false,
+    "kineticLoadCasesControlled": false,
+    "secondaryRetentionLoadCaseControlled": false,
+    "siteStructureIdentified": false,
+    "siteConditionsVerified": false,
+    "projectDesignCriteriaConfirmed": false,
+    "manufacturingInterfaceGeometryReleased": false,
+    "structuralModelApproved": false,
+    "interfaceReactionsApproved": false,
+    "fixedCanopyStructureApproved": false,
+    "siteStructureCapacityApproved": false,
+    "anchorSupportSystemApproved": false,
+    "secondaryRetentionLoadPathApproved": false,
+    "deflectionAlignmentApproved": false,
+    "installationMethodStructurallyApproved": false,
+    "projectStructuralReleaseApproved": false
+  },
+  "dependencies": [
+    "Issue #7 suspension and dynamic-load inputs",
+    "Issue #9 production-intent butterfly/attachment mass evidence",
+    "rotating-carrier engineering track for released kinetic reactions",
+    "Issue #13 first-article/construction-release evidence framework",
+    "named project structural/site information"
+  ]
+}

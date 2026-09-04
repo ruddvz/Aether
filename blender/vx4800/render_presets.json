@@ -1,0 +1,7 @@
+{
+  "schemaVersion": "1.0.0",
+  "preview": {"engine": "CYCLES", "resolution": [1280, 720], "percentage": 100, "samples": 64, "adaptiveThreshold": 0.03, "transparent": false, "fileFormat": "PNG", "colorDepth": "8", "fixtureLights": false},
+  "hero": {"engine": "CYCLES", "resolution": [3840, 2160], "percentage": 100, "samples": 512, "adaptiveThreshold": 0.01, "transparent": false, "fileFormat": "PNG", "colorDepth": "16", "fixtureLights": false},
+  "social_vertical": {"engine": "CYCLES", "resolution": [2160, 3840], "percentage": 100, "samples": 384, "adaptiveThreshold": 0.012, "transparent": false, "fileFormat": "PNG", "colorDepth": "16", "fixtureLights": false},
+  "detail_square": {"engine": "CYCLES", "resolution": [4096, 4096], "percentage": 100, "samples": 512, "adaptiveThreshold": 0.008, "transparent": false, "fileFormat": "PNG", "colorDepth": "16", "fixtureLights": false}
+}

@@ -27,7 +27,7 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [ ] Acquire exact supplier/lab IES files
 - [ ] Independent parser/viewer cross-check
 - [x] Browser measured-distribution adapter
-- [ ] Radiance validation workflow
+- [x] Radiance validation workflow
 - [ ] SPD ingestion and Colour-based CRI/TM-30 report
 
 ## VORTEX product engineering
@@ -103,6 +103,34 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [ ] Resolve kinetic electrical safety and lockout architecture
   - [ ] Pass first-article electrical/service tests
 - [ ] Complete luminaire certification/test plan
+  - [x] Separate repository validation from physical/certification evidence
+  - [x] Define IEC / India / North America standards target and applicability-review matrix
+  - [x] Define first-article, construction-release and production-release evidence gates
+  - [x] Define full 240-element pre-hang, serviceability and deviation/re-test framework
+  - [ ] Confirm exact standards/applicability with selected certification body/laboratory
+  - [ ] Freeze exact first-article configuration/BOM
+  - [ ] Complete first-article inspection and physical qualification
+  - [ ] Complete applicable third-party luminaire safety/conformity tests
+  - [ ] Compile controlled technical construction/release evidence file
+  - [ ] Approve project-specific construction release
+  - [ ] Approve repeatable production release and factory routine controls
+
+## Blender visualization and rendering
+- [x] Pin Blender 5.2.1 LTS visualization baseline
+- [x] Deterministic complete-master generator from controlled repository data
+- [x] Preserve 240 traceable butterfly instances and 66 S / 144 M / 30 L allocation
+- [x] Preserve 240 main suspension splines, 720 visual yoke/lead splines and 14 fixed head positions
+- [x] Linked S/M/L optical visualization prototypes and isolated macro QA
+- [x] Four reversible visualization finish studies: dark champagne, black titanium, brushed brass and satin nickel
+- [x] Thirteen cameras and thirteen validated named shots
+- [x] Dark premium studio plus residential, staircase, hospitality and atrium installed contexts
+- [x] Independent draft/lookdev/production/hero quality tiers and landscape/vertical/square output profiles
+- [x] Blender-native authority/count/environment/lookdev validation
+- [x] Repeated-refinement idempotence and sequential finish-switch validation
+- [x] Parallel Cycles visual-QA workflow from one validated master
+- [x] Constant-speed nominal-RPM visualization reference derived from RPM and scene FPS
+- [ ] Add measured supplier IES/LDT render mode after exact approved supplier/lab files are controlled
+- [ ] Add physically authoritative dynamic animation only after kinetic engineering defines acceleration, braking, abnormal-state and cable-dynamics requirements
 
 ## Viewer and review tooling
 - [x] Refactor single-file development source into reusable Three.js modules
@@ -115,15 +143,16 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [ ] Open Graph/share artwork
 
 ## Interchange
-- [ ] IfcOpenShell IFC export
+- [x] IfcOpenShell IFC coordination export
 - [ ] pyGDTF export for controllable products
 - [ ] pyMVR scene export
-- [ ] Loss-reporting adapter framework
+- [x] Loss-reporting adapter framework
 
 ## Multi-product platform
 - [x] Registry-driven AETHERIA catalog root
 - [ ] Shared viewer UI package
 - [ ] Shared material library
 - [ ] Shared photometry library
+- [ ] Shared Blender material/render library
 - [ ] Fixture editor driven by JSON Schema
 - [ ] Collection navigation for FLIGHT, OCEAN, BOTANICA, CELESTIAL and ABSTRACT MOTION

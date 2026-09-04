@@ -1,0 +1,286 @@
+{
+  "$schema": "../../../schemas/aether-product-release-gate.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authority": "qualification-plan",
+  "status": "open",
+  "purpose": "Define the evidence required to progress VX4800 from repository-valid prototype design to first article, construction release and production release without confusing software/package checks with physical product qualification or certification.",
+  "validationBoundary": {
+    "existingPackageValidation": "fixtures/vx4800/documents/final-validation-v1.3.0.md",
+    "existingPackageValidationMeaning": "Repository/package consistency and design-intent geometry only.",
+    "existingPackageValidationIsCertification": false,
+    "githubCiIsPhysicalTestEvidence": false,
+    "githubCiIsCertificationEvidence": false,
+    "physicalQualificationRequired": true,
+    "thirdPartyOrCertificationBodyEvidenceRequiredWhereApplicable": true
+  },
+  "evidenceClasses": [
+    {
+      "id": "REPOSITORY",
+      "description": "Versioned source, schema validation, deterministic builds, geometry QA and controlled digital schedules.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "SUPPLIER",
+      "description": "Exact manufacturer datasheets, declarations, certificates, photometry, component ratings and production traceability for the selected configuration.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "ENGINEERING",
+      "description": "Signed or controlled calculations, load cases, risk analysis, wiring calculations, thermal assessment and other engineering records based on controlled inputs.",
+      "canClosePhysicalTest": false
+    },
+    {
+      "id": "PHYSICAL",
+      "description": "Production-intent sample, subsystem, first-article or full-pre-hang measurements and tests with traceable setup, equipment, acceptance criteria and results.",
+      "canClosePhysicalTest": true
+    },
+    {
+      "id": "THIRD_PARTY",
+      "description": "Accredited laboratory, certification body, inspection body or authority evidence where the applicable market route requires it.",
+      "canClosePhysicalTest": true
+    }
+  ],
+  "standardsTargets": [
+    {
+      "id": "IEC-LUMINAIRE",
+      "market": "IEC-oriented markets",
+      "status": "target-applicability-review",
+      "documents": [
+        {
+          "standard": "IEC 60598-1:2024",
+          "title": "Luminaires - Part 1: General requirements and tests",
+          "edition": "10.0",
+          "publicationDate": "2024-11-06",
+          "basis": "IEC official publication"
+        },
+        {
+          "standard": "IEC 60598-2-1:2025",
+          "title": "Luminaires - Part 2-1: Particular requirements - Fixed general purpose luminaires",
+          "edition": "3.0",
+          "publicationDate": "2025-12-02",
+          "basis": "IEC official publication"
+        }
+      ],
+      "testReportFramework": "IECEE TRF 60598-2-1L:2026 applies IEC 60598-2-1:2025 with IEC 60598-1:2024.",
+      "applicabilityNote": "Final conformity route and any additional standards for the kinetic mechanism must be confirmed with the selected certification body and project jurisdiction."
+    },
+    {
+      "id": "INDIA-FGPL",
+      "market": "India",
+      "status": "target-applicability-review",
+      "documents": [
+        {
+          "standard": "IS 10322 (Part 1):2026",
+          "title": "Luminaires Part 1 General Requirements and Tests",
+          "basis": "BIS laboratory scope listing"
+        },
+        {
+          "standard": "IS 10322 (Part 5/Sec 1):2026",
+          "title": "Luminaires Part 5: Particular requirements Section 1: Fixed general purpose luminaires",
+          "basis": "BIS CRS standard list and laboratory scope listings"
+        }
+      ],
+      "regulatoryNote": "BIS currently lists IS 10322 (Part 5/Sec 1):2026 for Fixed General Purpose LED Luminaires. Exact product classification, registration route, factory scope and any additional kinetic requirements must be confirmed before release."
+    },
+    {
+      "id": "NORTH-AMERICA-LUMINAIRE",
+      "market": "United States / Canada",
+      "status": "target-applicability-review",
+      "documents": [
+        {
+          "standard": "UL 1598",
+          "title": "Luminaires",
+          "edition": "5th edition",
+          "basis": "UL Solutions current lighting safety resources"
+        },
+        {
+          "standard": "CSA C22.2 No. 250.0-21",
+          "title": "Luminaires",
+          "edition": "5th CSA edition / harmonized trinational standard",
+          "basis": "Published harmonized standard metadata"
+        }
+      ],
+      "applicabilityNote": "Final NRTL/SCC certification path, component standards, installation code interfaces and treatment of the kinetic mechanism require certification-body review."
+    }
+  ],
+  "releaseStages": [
+    {
+      "id": "DESIGN_REVIEW",
+      "meaning": "Digital design package is internally consistent enough to support controlled supplier/prototype work.",
+      "currentStatus": "partially-satisfied"
+    },
+    {
+      "id": "PROTOTYPE_TEST",
+      "meaning": "Representative physical subsystems are available for destructive/non-destructive engineering tests and motion trials.",
+      "currentStatus": "not-released"
+    },
+    {
+      "id": "FIRST_ARTICLE",
+      "meaning": "A production-intent complete fixture is built and tested against the controlled evidence matrix.",
+      "currentStatus": "not-released"
+    },
+    {
+      "id": "CONSTRUCTION_RELEASE",
+      "meaning": "Project-specific structure, site interface, product safety evidence and approved configuration are sufficient for manufacture/installation on the named project.",
+      "currentStatus": "not-released"
+    },
+    {
+      "id": "PRODUCTION_RELEASE",
+      "meaning": "Controlled BOM/process/test requirements and conformity evidence support repeatable production of the approved variant.",
+      "currentStatus": "not-released"
+    }
+  ],
+  "evidenceMatrix": [
+    {
+      "id": "CFG-001",
+      "domain": "configuration",
+      "requirement": "Freeze exact first-article BOM, drawings, software/firmware where applicable, material tier, suspension configuration, accent-head configuration and kinetic configuration.",
+      "requiredEvidence": ["REPOSITORY", "SUPPLIER"],
+      "requiredFor": ["FIRST_ARTICLE", "CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "MASS-001",
+      "domain": "mechanical",
+      "requirement": "Control actual complete installed mass, rotating mass, S/M/L suspended-assembly masses and center of gravity using traceable physical measurements.",
+      "requiredEvidence": ["PHYSICAL", "ENGINEERING"],
+      "requiredFor": ["FIRST_ARTICLE", "CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "STR-001",
+      "domain": "structure",
+      "requirement": "Approve primary load path, site reactions, interface/anchor design, local stresses, deflection and design load cases using controlled masses and kinetic loads.",
+      "requiredEvidence": ["ENGINEERING"],
+      "requiredFor": ["CONSTRUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "SUS-001",
+      "domain": "suspension",
+      "requirement": "Select exact cable/gripper/terminal/lower-yoke system and pass production-equivalent pull, slip and fatigue qualification with resolved secondary retention.",
+      "requiredEvidence": ["SUPPLIER", "ENGINEERING", "PHYSICAL"],
+      "requiredFor": ["FIRST_ARTICLE", "CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "MAT-001",
+      "domain": "butterfly-material",
+      "requirement": "Select exact ARC/LUX/ART production path and pass attachment proof/fatigue plus failure/fragment-retention requirements for the released tier.",
+      "requiredEvidence": ["SUPPLIER", "ENGINEERING", "PHYSICAL"],
+      "requiredFor": ["FIRST_ARTICLE", "CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "KIN-001",
+      "domain": "kinetic-mechanical",
+      "requirement": "Qualify bearing, drive, braking, service lock, secondary retention, balance, feedback, abnormal-torque handling, power-loss behavior and safe restart.",
+      "requiredEvidence": ["SUPPLIER", "ENGINEERING", "PHYSICAL"],
+      "requiredFor": ["FIRST_ARTICLE", "CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "CLR-001",
+      "domain": "dynamic-clearance",
+      "requirement": "Demonstrate acceptable dynamic clearances and suspended-field behavior through representative and full-field testing, not visualization alone.",
+      "requiredEvidence": ["ENGINEERING", "PHYSICAL"],
+      "requiredFor": ["FIRST_ARTICLE", "CONSTRUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "ELEC-001",
+      "domain": "electrical",
+      "requirement": "Freeze exact head/control gear, supply variant, wiring, protection, earthing/bonding, isolation, kinetic electrical safety and service architecture.",
+      "requiredEvidence": ["SUPPLIER", "ENGINEERING"],
+      "requiredFor": ["FIRST_ARTICLE", "CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "ELEC-TEST-001",
+      "domain": "electrical-test",
+      "requirement": "Complete applicable construction, earthing, terminal/wiring, electric-shock, insulation/electric-strength and related luminaire safety tests on the released configuration.",
+      "requiredEvidence": ["PHYSICAL", "THIRD_PARTY"],
+      "requiredFor": ["CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "THERM-001",
+      "domain": "thermal-endurance",
+      "requirement": "Complete applicable endurance/thermal tests and confirm component/wiring temperatures remain within selected-component and product limits under worst released operating conditions.",
+      "requiredEvidence": ["SUPPLIER", "PHYSICAL", "THIRD_PARTY"],
+      "requiredFor": ["CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "PHOTO-001",
+      "domain": "photometry",
+      "requirement": "Control exact supplier/lab photometry for the selected head/optic configuration and validate intended optical performance independently before construction release.",
+      "requiredEvidence": ["SUPPLIER", "ENGINEERING"],
+      "requiredFor": ["CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "SERVICE-001",
+      "domain": "serviceability",
+      "requirement": "Demonstrate representative replacement of heads, control gear, kinetic service items, suspension items and butterflies without destructive canopy access or unsafe motion exposure.",
+      "requiredEvidence": ["PHYSICAL"],
+      "requiredFor": ["FIRST_ARTICLE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "PREHANG-001",
+      "domain": "factory-prehang",
+      "requirement": "Complete full 240-element factory pre-hang and dynamic test on the production-intent first article, recording balance, motion, clearances, noise, vibration, line behavior and fault-stop performance.",
+      "requiredEvidence": ["PHYSICAL"],
+      "requiredFor": ["FIRST_ARTICLE", "CONSTRUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "MARK-001",
+      "domain": "marking-documentation",
+      "requirement": "Release correct rating/identification markings, installation instructions, service instructions, warnings, inspection requirements, commissioning record and approved configuration identifiers.",
+      "requiredEvidence": ["REPOSITORY", "ENGINEERING", "THIRD_PARTY"],
+      "requiredFor": ["CONSTRUCTION_RELEASE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    },
+    {
+      "id": "FAI-001",
+      "domain": "first-article-inspection",
+      "requirement": "Complete documented first-article inspection against controlled drawings/BOM including dimensions, finishes, hardware, IDs, service access and deviations/dispositions.",
+      "requiredEvidence": ["PHYSICAL", "REPOSITORY"],
+      "requiredFor": ["FIRST_ARTICLE", "PRODUCTION_RELEASE"],
+      "status": "open"
+    }
+  ],
+  "promotionGate": {
+    "standardsApplicabilityConfirmed": false,
+    "exactReleasedConfigurationControlled": false,
+    "actualInstalledMassControlled": false,
+    "rotatingMassAndCenterOfGravityControlled": false,
+    "structuralCalculationApproved": false,
+    "suspensionSystemQualified": false,
+    "butterflyMaterialAttachmentQualified": false,
+    "kineticMechanismQualified": false,
+    "dynamicClearanceValidated": false,
+    "electricalArchitectureControlled": false,
+    "electricalSafetyTestsPassed": false,
+    "thermalEnduranceTestsPassed": false,
+    "exactPhotometryControlled": false,
+    "fullFactoryPreHangPassed": false,
+    "serviceabilityValidated": false,
+    "firstArticleInspectionPassed": false,
+    "technicalConstructionFileComplete": false,
+    "constructionReleaseApproved": false,
+    "productionReleaseApproved": false
+  },
+  "rules": [
+    "A passing GitHub Actions workflow cannot close a PHYSICAL or THIRD_PARTY evidence requirement.",
+    "Presentation, Blender, coordination GLB and repository-generated STEP/DXF are not manufacturing or certification evidence.",
+    "Supplier component certification does not certify the complete VX4800 fixture.",
+    "Construction release is project/configuration specific and cannot be inherited automatically by a changed material, head, driver, suspension, kinetic or structural configuration.",
+    "Any failed first-article test or unapproved deviation keeps the dependent promotion gate false until disposition and re-test are complete.",
+    "No standard is claimed applicable or satisfied solely because it appears in standardsTargets."
+  ]
+}
