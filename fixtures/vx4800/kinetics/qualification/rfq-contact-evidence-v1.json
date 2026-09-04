@@ -1,0 +1,60 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-rfq-contact-evidence.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "evidenceRevision": "1.0.0",
+  "status": "public-contact-evidence-not-dispatch-proof",
+  "records": [
+    {
+      "id": "KRC-BRG-KAYDON-01",
+      "rfqPackageIds": ["RFQ-KIN-BRG-01"],
+      "organization": "Kaydon Bearings",
+      "sourceUrl": "https://www.kaydonbearings.com/contact",
+      "accessedDate": "2026-09-04",
+      "channelType": "engineering-support",
+      "publicContactReference": "Official Kaydon engineering-support route: engineering option via 231-755-3741 (press 2), toll-free 800-514-3066, with specifications-data-sheet enquiry path for custom bearing applications.",
+      "qualificationStatus": "contact-qualified-not-issued"
+    },
+    {
+      "id": "KRC-BELT-GATES-01",
+      "rfqPackageIds": ["RFQ-KIN-BELT-01"],
+      "organization": "Gates Corporation",
+      "sourceUrl": "https://www.gates.com/us/en/customer-support/contact-us.html",
+      "accessedDate": "2026-09-04",
+      "channelType": "technical-support",
+      "publicContactReference": "Official Gates Industrial Technical & Engineering Support route for Industrial Belt Drives: +1 303-744-5800, with Industrial Power Transmission sales-representative routing on the same contact page.",
+      "qualificationStatus": "contact-qualified-not-issued"
+    },
+    {
+      "id": "KRC-BRK-RINGSPANN-01",
+      "rfqPackageIds": ["RFQ-KIN-BRK-01"],
+      "organization": "RINGSPANN Corporation / RINGSPANN GmbH",
+      "sourceUrl": "https://www.ringspann.com/en/contact/north-and-south-america/usa-canada-mexico",
+      "accessedDate": "2026-09-04",
+      "channelType": "regional-sales-service",
+      "publicContactReference": "Official RINGSPANN USA/Canada/Mexico contact page provides North American engineering/regional-sales routes and the German headquarters general contact channel for product enquiries.",
+      "qualificationStatus": "contact-qualified-not-issued"
+    },
+    {
+      "id": "KRC-FBK-HEIDENHAIN-01",
+      "rfqPackageIds": ["RFQ-KIN-FBK-01"],
+      "organization": "HEIDENHAIN",
+      "sourceUrl": "https://www.heidenhain.com/products/encoders/angle-encoders/modules",
+      "accessedDate": "2026-09-04",
+      "channelType": "sales-application-engineering",
+      "publicContactReference": "Official HEIDENHAIN angle-encoder page lists International Sales at +49 8669 31-3142 and internationalsales@heidenhain.de, with representative routing for application advice.",
+      "qualificationStatus": "contact-qualified-not-issued"
+    },
+    {
+      "id": "KRC-DRV-SEW-01",
+      "rfqPackageIds": ["RFQ-KIN-DRV-01"],
+      "organization": "SEW-EURODRIVE Company of Canada Ltd.",
+      "sourceUrl": "https://www.sew-eurodrive.ca/en_us/online_support/index.html",
+      "accessedDate": "2026-09-04",
+      "channelType": "online-support",
+      "publicContactReference": "Official SEW-EURODRIVE Canada Online Support lists Canadian support phone routes and online-support@sew-eurodrive.ca for technical/product support; Canadian locations are also published on the official site.",
+      "qualificationStatus": "contact-qualified-not-issued"
+    }
+  ],
+  "qualificationRule": "A verified public supplier contact route may move a dispatch target to contact-qualified, but it is not evidence that an RFQ was sent. Actual issue still requires an issue date and external thread/channel reference in the dispatch register."
+}
