@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 from __future__ import annotations
 
-import math
-
 import bpy
 
 from aether_blender_lib import (
@@ -14,7 +12,7 @@ from aether_blender_lib import (
     set_socket,
 )
 
-VISUALIZATION_REVISION = "0.7.0"
+VISUALIZATION_REVISION = "0.8.0"
 ENVIRONMENT_ID = "residential-double-height"
 ENV_COLLECTION = "85_ENV_RESIDENTIAL"
 ENV_LIGHT_PREFIX = "ENV_RES_"
@@ -35,51 +33,51 @@ def _mark_material(material: bpy.types.Material, role: str) -> bpy.types.Materia
 
 def _environment_materials() -> dict[str, bpy.types.Material]:
     plaster = _mark_material(
-        principled_material("MAT_ENV_RES_PLASTER", "#D9D3C8", 0.0, 0.78),
+        principled_material("MAT_ENV_RES_PLASTER", "#B8B2AA", 0.0, 0.80),
         "warm-mineral-plaster",
     )
     limestone = _mark_material(
-        principled_material("MAT_ENV_RES_LIMESTONE", "#A8A29A", 0.0, 0.38),
+        principled_material("MAT_ENV_RES_LIMESTONE", "#6D6863", 0.0, 0.42),
         "honed-limestone-floor",
     )
+    feature_stone = _mark_material(
+        principled_material("MAT_ENV_RES_FEATURE_STONE", "#514D49", 0.0, 0.56),
+        "warm-stone-feature-wall",
+    )
     walnut = _mark_material(
-        principled_material("MAT_ENV_RES_WALNUT", "#4A3023", 0.0, 0.30, coat=0.05),
+        principled_material("MAT_ENV_RES_WALNUT", "#2F211A", 0.0, 0.32, coat=0.04),
         "walnut-furniture",
     )
     textile = _mark_material(
-        principled_material("MAT_ENV_RES_TEXTILE", "#514C48", 0.0, 0.72),
+        principled_material("MAT_ENV_RES_TEXTILE", "#373532", 0.0, 0.76),
         "upholstery-textile",
     )
     rug = _mark_material(
-        principled_material("MAT_ENV_RES_RUG", "#8D8780", 0.0, 0.86),
+        principled_material("MAT_ENV_RES_RUG", "#5A5652", 0.0, 0.88),
         "woven-rug",
-    )
-    art = _mark_material(
-        principled_material("MAT_ENV_RES_ART", "#2A2927", 0.0, 0.62),
-        "quiet-wall-art",
     )
     glass = _mark_material(
         principled_material(
             "MAT_ENV_RES_WINDOW_GLASS",
-            "#EAF2F4",
+            "#DDE9EE",
             0.0,
-            0.08,
+            0.12,
             transmission=1.0,
             ior=1.45,
         ),
         "architectural-glazing-visual-study",
     )
     sky = _mark_material(
-        make_emission_material("MAT_ENV_RES_SKY_CARD", "#AFC8DF", 0.75),
+        make_emission_material("MAT_ENV_RES_SKY_CARD", "#8FAEC8", 0.45),
         "daylight-view-card",
     )
     return {
         "plaster": plaster,
         "limestone": limestone,
+        "feature_stone": feature_stone,
         "walnut": walnut,
         "textile": textile,
         "rug": rug,
-        "art": art,
         "glass": glass,
         "sky": sky,
     }
@@ -124,9 +122,9 @@ def _build_room_shell(collection: bpy.types.Collection, mats: dict[str, bpy.type
     _cube("ENV_RES_FLOOR", collection, (11.4, 18.0, 0.16), (0.0, 0.2, -6.08), mats["limestone"], "floor", 0.012)
     _cube("ENV_RES_CEILING", collection, (11.4, 12.6, 0.22), (0.0, 0.1, 0.26), mats["plaster"], "flat-mounting-ceiling", 0.010)
     _cube("ENV_RES_BACK_WALL", collection, (11.4, 0.20, 6.15), (0.0, 5.8, -2.925), mats["plaster"], "back-wall", 0.012)
+    _cube("ENV_RES_FEATURE_WALL", collection, (8.0, 0.07, 5.45), (0.35, 5.67, -3.05), mats["feature_stone"], "warm-stone-feature-wall", 0.010)
     _cube("ENV_RES_RIGHT_WALL", collection, (0.20, 4.6, 6.15), (5.6, 3.5, -2.925), mats["plaster"], "partial-side-wall", 0.012)
 
-    # Large left-side glazing with plaster piers and a flat head band.
     _cube("ENV_RES_LEFT_FRONT_PIER", collection, (0.22, 1.45, 6.15), (-5.6, -4.75, -2.925), mats["plaster"], "window-pier", 0.010)
     _cube("ENV_RES_LEFT_REAR_PIER", collection, (0.22, 1.45, 6.15), (-5.6, 5.05, -2.925), mats["plaster"], "window-pier", 0.010)
     _cube("ENV_RES_LEFT_HEAD", collection, (0.22, 8.4, 0.52), (-5.6, 0.15, -0.11), mats["plaster"], "window-head", 0.010)
@@ -169,17 +167,16 @@ def _build_furniture(collection: bpy.types.Collection, mats: dict[str, bpy.types
             0.018,
         )
 
-    _cube("ENV_RES_ART_PANEL", collection, (2.45, 0.055, 1.35), (2.45, 5.66, -2.70), mats["art"], "wall-art", 0.020)
-    _cube("ENV_RES_CONSOLE", collection, (2.35, 0.50, 0.10), (2.45, 5.20, -5.22), mats["walnut"], "console-top", 0.020)
+    _cube("ENV_RES_CONSOLE", collection, (2.35, 0.50, 0.10), (2.65, 5.20, -5.22), mats["walnut"], "console-top", 0.020)
 
 
 def _build_environment_lights(collection: bpy.types.Collection) -> None:
     specs = (
-        ("ENV_RES_WINDOW_LIGHT", (-5.05, 0.10, -2.95), (0.0, 0.0, -2.65), 1180.0, 4.6, (0.72, 0.84, 1.0), "RECTANGLE", 5.0),
-        ("ENV_RES_WARM_FILL", (4.2, -1.4, -1.20), (0.0, 0.4, -2.8), 430.0, 3.2, (1.0, 0.82, 0.65), "DISK", None),
-        ("ENV_RES_BACK_RIM", (2.6, 5.1, -1.40), (0.0, 0.0, -2.7), 520.0, 2.5, (1.0, 0.88, 0.72), "DISK", None),
+        ("ENV_RES_WINDOW_LIGHT", (-5.05, 0.10, -2.95), (0.0, 0.0, -2.65), 780.0, 4.6, (0.72, 0.84, 1.0), "RECTANGLE", 5.0, 0.65),
+        ("ENV_RES_WARM_FILL", (4.4, -2.6, -1.90), (0.0, 0.4, -2.8), 230.0, 3.0, (1.0, 0.82, 0.65), "RECTANGLE", 1.2, 0.24),
+        ("ENV_RES_BACK_RIM", (2.8, 5.0, -1.20), (0.0, 0.0, -2.7), 360.0, 2.4, (1.0, 0.88, 0.72), "RECTANGLE", 0.8, 0.38),
     )
-    for name, location, target, energy, size, color, shape, size_y in specs:
+    for name, location, target, energy, size, color, shape, size_y, specular_factor in specs:
         light = create_area_light(
             name,
             location,
@@ -190,8 +187,10 @@ def _build_environment_lights(collection: bpy.types.Collection) -> None:
             collection,
             shape=shape,
             size_y=size_y,
-            spread_deg=115 if name == "ENV_RES_WINDOW_LIGHT" else 105,
+            spread_deg=115 if name == "ENV_RES_WINDOW_LIGHT" else 100,
         )
+        if hasattr(light.data, "specular_factor"):
+            light.data.specular_factor = specular_factor
         light.hide_render = True
         light["aetheria_light_class"] = "architectural-environment-photographic"
         light["aetheria_environment_id"] = ENVIRONMENT_ID
@@ -254,8 +253,8 @@ def _show_residential(scene: bpy.types.Scene) -> None:
             obj.hide_render = True
         if obj.type == "LIGHT" and obj.name.startswith("MACRO_RIG_"):
             obj.hide_render = True
-    scene.view_settings.exposure = -0.18
-    _set_world(scene, (0.10, 0.14, 0.20, 1.0), 0.22)
+    scene.view_settings.exposure = -0.48
+    _set_world(scene, (0.055, 0.070, 0.10, 1.0), 0.14)
     scene["aetheria_active_environment"] = ENVIRONMENT_ID
 
 
