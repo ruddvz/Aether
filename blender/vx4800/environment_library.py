@@ -12,7 +12,7 @@ from aether_blender_lib import (
     set_socket,
 )
 
-VISUALIZATION_REVISION = "0.9.0"
+VISUALIZATION_REVISION = "0.10.0"
 ENVIRONMENT_ID = "residential-double-height"
 ENV_COLLECTION = "85_ENV_RESIDENTIAL"
 ENV_LIGHT_PREFIX = "ENV_RES_"
@@ -31,17 +31,66 @@ def _mark_material(material: bpy.types.Material, role: str) -> bpy.types.Materia
     return material
 
 
+def _add_surface_variation(
+    material: bpy.types.Material,
+    *,
+    scale: float,
+    rough_low: float,
+    rough_high: float,
+    detail: float = 2.0,
+    bump_strength: float = 0.0,
+    bump_distance: float = 0.001,
+) -> None:
+    """Add deterministic visualization-only microtexture without image assets."""
+    if not material.use_nodes or not material.node_tree:
+        return
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    bsdf = nodes.get("Principled BSDF")
+    if bsdf is None:
+        return
+
+    texcoord = nodes.new("ShaderNodeTexCoord")
+    texcoord.name = "AETHERIA_ENV_TEXCOORD"
+    noise = nodes.new("ShaderNodeTexNoise")
+    noise.name = "AETHERIA_ENV_SURFACE_NOISE"
+    noise.noise_dimensions = "3D"
+    noise.inputs["Scale"].default_value = scale
+    noise.inputs["Detail"].default_value = detail
+    noise.inputs["Roughness"].default_value = 0.48
+    ramp = nodes.new("ShaderNodeValToRGB")
+    ramp.name = "AETHERIA_ENV_ROUGHNESS_RANGE"
+    ramp.color_ramp.elements[0].color = (rough_low, rough_low, rough_low, 1.0)
+    ramp.color_ramp.elements[1].color = (rough_high, rough_high, rough_high, 1.0)
+    links.new(texcoord.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    roughness = bsdf.inputs.get("Roughness")
+    if roughness is not None:
+        links.new(ramp.outputs["Color"], roughness)
+
+    normal = bsdf.inputs.get("Normal")
+    if bump_strength > 0.0 and normal is not None:
+        bump = nodes.new("ShaderNodeBump")
+        bump.name = "AETHERIA_ENV_MICRO_BUMP"
+        bump.inputs["Strength"].default_value = bump_strength
+        bump.inputs["Distance"].default_value = bump_distance
+        links.new(noise.outputs["Fac"], bump.inputs["Height"])
+        links.new(bump.outputs["Normal"], normal)
+
+    material["aetheria_surface_variation_status"] = "visualization-only-procedural-lookdev"
+
+
 def _environment_materials() -> dict[str, bpy.types.Material]:
     plaster = _mark_material(
-        principled_material("MAT_ENV_RES_PLASTER", "#A79E93", 0.0, 0.82),
+        principled_material("MAT_ENV_RES_PLASTER", "#A79E93", 0.0, 0.80),
         "warm-mineral-plaster",
     )
     limestone = _mark_material(
-        principled_material("MAT_ENV_RES_LIMESTONE", "#4C4945", 0.0, 0.38),
+        principled_material("MAT_ENV_RES_LIMESTONE", "#494641", 0.0, 0.40),
         "honed-dark-limestone-floor",
     )
     feature_stone = _mark_material(
-        principled_material("MAT_ENV_RES_FEATURE_STONE", "#302D2B", 0.0, 0.50),
+        principled_material("MAT_ENV_RES_FEATURE_STONE", "#2D2A28", 0.0, 0.54),
         "charcoal-warm-stone-feature-wall",
     )
     walnut = _mark_material(
@@ -61,16 +110,23 @@ def _environment_materials() -> dict[str, bpy.types.Material]:
             "MAT_ENV_RES_WINDOW_GLASS",
             "#DDE9EE",
             0.0,
-            0.10,
+            0.20,
             transmission=1.0,
             ior=1.45,
         ),
         "architectural-glazing-visual-study",
     )
     sky = _mark_material(
-        make_emission_material("MAT_ENV_RES_SKY_CARD", "#7898B3", 0.28),
+        make_emission_material("MAT_ENV_RES_SKY_CARD", "#7898B3", 0.24),
         "daylight-view-card",
     )
+
+    _add_surface_variation(limestone, scale=11.0, rough_low=0.34, rough_high=0.50, detail=3.2, bump_strength=0.10, bump_distance=0.003)
+    _add_surface_variation(feature_stone, scale=7.5, rough_low=0.46, rough_high=0.64, detail=4.0, bump_strength=0.16, bump_distance=0.005)
+    _add_surface_variation(walnut, scale=32.0, rough_low=0.25, rough_high=0.37, detail=2.0)
+    _add_surface_variation(textile, scale=185.0, rough_low=0.72, rough_high=0.88, detail=2.5, bump_strength=0.12, bump_distance=0.0012)
+    _add_surface_variation(rug, scale=145.0, rough_low=0.82, rough_high=0.96, detail=2.0, bump_strength=0.18, bump_distance=0.0018)
+
     return {
         "plaster": plaster,
         "limestone": limestone,
@@ -123,10 +179,10 @@ def _build_room_shell(collection: bpy.types.Collection, mats: dict[str, bpy.type
     _cube("ENV_RES_CEILING", collection, (11.4, 12.6, 0.22), (0.0, 0.1, 0.26), mats["plaster"], "flat-mounting-ceiling", 0.010)
     _cube("ENV_RES_BACK_WALL", collection, (11.4, 0.20, 6.15), (0.0, 5.8, -2.925), mats["plaster"], "back-wall", 0.012)
 
-    # The darker central stone zone is positioned behind the controlled vortex so
-    # transparent edges remain legible without changing any fixture coordinates.
-    _cube("ENV_RES_FEATURE_WALL", collection, (4.85, 0.075, 5.35), (0.15, 5.67, -3.02), mats["feature_stone"], "vortex-contrast-stone-zone", 0.010)
-    for index, x in enumerate((3.05, 3.38, 3.71, 4.04, 4.37, 4.70, 5.03), start=1):
+    # From the positive-X architectural camera, the contrast field is intentionally
+    # shifted left on the back wall so its projection sits behind the unchanged vortex.
+    _cube("ENV_RES_FEATURE_WALL", collection, (5.70, 0.075, 5.35), (-1.20, 5.67, -3.02), mats["feature_stone"], "vortex-contrast-stone-zone", 0.010)
+    for index, x in enumerate((1.85, 2.18, 2.51, 2.84, 3.17, 3.50, 3.83), start=1):
         _cube(
             f"ENV_RES_WALNUT_SLAT_{index:02d}",
             collection,
@@ -199,18 +255,15 @@ def _build_furniture(collection: bpy.types.Collection, mats: dict[str, bpy.types
             0.018,
         )
 
-    _cube("ENV_RES_CONSOLE", collection, (2.15, 0.42, 0.095), (3.55, 5.18, -5.23), mats["walnut"], "floating-console", 0.025)
+    _cube("ENV_RES_CONSOLE", collection, (2.15, 0.42, 0.095), (3.25, 5.18, -5.23), mats["walnut"], "floating-console", 0.025)
 
 
 def _build_environment_lights(collection: bpy.types.Collection) -> None:
     specs = (
-        # Broad daylight establishes room exposure but contributes no visible rectangular specular hotspot.
-        ("ENV_RES_WINDOW_LIGHT", (-5.20, 0.10, -2.90), (0.0, 0.0, -2.65), 520.0, 4.8, (0.70, 0.82, 1.0), "RECTANGLE", 5.3, 0.0),
-        # Warm front key provides gentle metal response without flattening the transparent field.
-        ("ENV_RES_WARM_KEY", (4.5, -3.0, -1.80), (0.0, 0.15, -2.75), 320.0, 3.2, (1.0, 0.82, 0.64), "RECTANGLE", 1.0, 0.18),
-        # Narrower rear sources create the glass edge structure visible in the studio baseline.
-        ("ENV_RES_BACK_RIM", (2.6, 5.05, -1.35), (0.0, 0.0, -2.75), 450.0, 2.6, (1.0, 0.87, 0.70), "RECTANGLE", 0.65, 0.28),
-        ("ENV_RES_EDGE_LEFT", (-2.8, 4.8, -2.05), (0.0, 0.0, -2.85), 260.0, 3.6, (0.72, 0.84, 1.0), "RECTANGLE", 0.38, 0.22),
+        ("ENV_RES_WINDOW_LIGHT", (-5.20, 0.10, -2.90), (0.0, 0.0, -2.65), 500.0, 4.8, (0.70, 0.82, 1.0), "RECTANGLE", 5.3, 0.0),
+        ("ENV_RES_WARM_KEY", (4.5, -3.0, -1.80), (0.0, 0.15, -2.75), 300.0, 3.2, (1.0, 0.82, 0.64), "RECTANGLE", 1.0, 0.12),
+        ("ENV_RES_BACK_RIM", (2.6, 5.05, -1.35), (0.0, 0.0, -2.75), 430.0, 2.6, (1.0, 0.87, 0.70), "RECTANGLE", 0.65, 0.20),
+        ("ENV_RES_EDGE_LEFT", (-2.8, 4.8, -2.05), (0.0, 0.0, -2.85), 245.0, 3.6, (0.72, 0.84, 1.0), "RECTANGLE", 0.38, 0.16),
     )
     for name, location, target, energy, size, color, shape, size_y, specular_factor in specs:
         light = create_area_light(
@@ -252,7 +305,7 @@ def build_environment_library() -> None:
     scene["aetheria_residential_environment_id"] = ENVIRONMENT_ID
     scene["aetheria_residential_floor_top_z_m"] = -6.0
     scene["aetheria_residential_ceiling_underside_z_m"] = 0.15
-    scene["aetheria_residential_lookdev_status"] = "premium-contrast-study-visualization-only"
+    scene["aetheria_residential_lookdev_status"] = "premium-material-hierarchy-study-visualization-only"
 
 
 def _set_world(scene: bpy.types.Scene, color: tuple[float, float, float, float], strength: float) -> None:
@@ -290,8 +343,8 @@ def _show_residential(scene: bpy.types.Scene) -> None:
             obj.hide_render = True
         if obj.type == "LIGHT" and obj.name.startswith("MACRO_RIG_"):
             obj.hide_render = True
-    scene.view_settings.exposure = -0.72
-    _set_world(scene, (0.035, 0.045, 0.065, 1.0), 0.085)
+    scene.view_settings.exposure = -0.68
+    _set_world(scene, (0.035, 0.045, 0.065, 1.0), 0.080)
     scene["aetheria_active_environment"] = ENVIRONMENT_ID
 
 
