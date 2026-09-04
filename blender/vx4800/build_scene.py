@@ -15,7 +15,7 @@ from aether_blender_lib import (
     read_json, sha256,
 )
 
-VISUALIZATION_REVISION = "0.3.0"
+VISUALIZATION_REVISION = "0.4.0"
 BLENDER_TARGET = "5.2.1 LTS"
 
 
@@ -133,7 +133,7 @@ def build_scene(repo_root: Path, output: Path, render_preview: Path | None = Non
         "SUSPENSION_MICROCABLES_240",
         collections["30_SUSPENSION"],
         mats["cable"],
-        bevel_depth=0.00018,
+        bevel_depth=0.00012,
     )
     cables.parent = rotor_root
     cables["aetheria_authority"] = "visualization-derived-from-controlled-schedule"
@@ -143,7 +143,7 @@ def build_scene(repo_root: Path, output: Path, render_preview: Path | None = Non
         "SUSPENSION_YOKES_240",
         collections["30_SUSPENSION"],
         mats["body"],
-        bevel_depth=0.00028,
+        bevel_depth=0.00020,
     )
     yokes.parent = rotor_root
     yokes["aetheria_authority"] = "visualization-yoke-detail"
@@ -224,6 +224,9 @@ def build_scene(repo_root: Path, output: Path, render_preview: Path | None = Non
         cameras[name] = create_camera(
             name, spec["location"], spec["target"], spec["lensMm"], collections["60_CAMERAS"]
         )
+    if "CAM_BUTTERFLY_MACRO" in cameras:
+        cameras["CAM_BUTTERFLY_MACRO"]["aetheria_target_element_id"] = "VX-001"
+        cameras["CAM_BUTTERFLY_MACRO"]["aetheria_target_status"] = "visualization-camera-targets-controlled-instance"
     scene.camera = cameras["CAM_HERO_FRONT_3Q"]
 
     build_stage(mats, collections["80_RENDER_STAGE"])

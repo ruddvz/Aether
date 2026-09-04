@@ -148,6 +148,7 @@ def make_glass_material() -> bpy.types.Material:
     m.diffuse_color = rgba("#FAFDFF")
     m["aetheria_authority"] = "visualization-only"
     m["aetheria_material_status"] = "optical-glass-visualization-study-not-commercially-locked"
+    m["aetheria_absorption_status"] = "visualization-lookdev-value-not-material-specification"
     nodes = m.node_tree.nodes
     links = m.node_tree.links
     bsdf = nodes.get("Principled BSDF")
@@ -170,8 +171,8 @@ def make_glass_material() -> bpy.types.Material:
     output = nodes.get("Material Output")
     absorption = nodes.new("ShaderNodeVolumeAbsorption")
     absorption.name = "AETHERIA_EDGE_ABSORPTION"
-    absorption.inputs["Color"].default_value = rgba("#E8F3F5")
-    absorption.inputs["Density"].default_value = 0.035
+    absorption.inputs["Color"].default_value = rgba("#D5EAEE")
+    absorption.inputs["Density"].default_value = 12.0
     links.new(absorption.outputs["Volume"], output.inputs["Volume"])
     return m
 
@@ -197,7 +198,7 @@ def build_materials() -> dict[str, bpy.types.Material]:
     black_titanium = mark_visual_finish(principled_material("MAT_PVD_BLACK_TITANIUM", "#151515", 0.92, 0.20, coat=0.18, anisotropic=0.10))
     brass = mark_visual_finish(principled_material("MAT_BRUSHED_BRASS", "#A87D45", 0.94, 0.22, coat=0.16, anisotropic=0.30))
     nickel = mark_visual_finish(principled_material("MAT_SATIN_NICKEL", "#969894", 0.92, 0.29, coat=0.10, anisotropic=0.18))
-    cable = mark_visual_finish(principled_material("MAT_CABLE_STAINLESS", "#474D52", 0.92, 0.38), "visualization-cable-appearance")
+    cable = mark_visual_finish(principled_material("MAT_CABLE_STAINLESS", "#282D31", 0.88, 0.52), "visualization-cable-appearance")
     body = mark_visual_finish(principled_material("MAT_BUTTERFLY_BODY_CHAMPAGNE", "#8F6E4D", 0.92, 0.20, coat=0.20), "visualization-butterfly-spine-finish")
     led_head = mark_visual_finish(principled_material("MAT_LED_HEAD_TITANIUM", "#151513", 0.92, 0.19, coat=0.18), "visualization-head-finish")
     stage = principled_material("MAT_STAGE_IVORY", "#D9D3C8", 0.0, 0.68)
@@ -207,7 +208,7 @@ def build_materials() -> dict[str, bpy.types.Material]:
         (black_titanium, 0.16, 0.25, 210.0),
         (brass, 0.18, 0.28, 150.0),
         (nickel, 0.24, 0.34, 190.0),
-        (cable, 0.32, 0.46, 260.0),
+        (cable, 0.46, 0.62, 260.0),
         (body, 0.16, 0.25, 220.0),
         (led_head, 0.15, 0.24, 220.0),
     ):

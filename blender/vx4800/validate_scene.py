@@ -57,7 +57,7 @@ def main() -> None:
     for light in render_lights:
         if light.get("aetheria_photometry_status") != "conceptual-render-only": fail(errors, f"{light.name} is missing conceptual photometry status")
 
-    camera_names = {"CAM_HERO_FRONT_3Q", "CAM_HERO_LOW", "CAM_FULL_ELEVATION", "CAM_CANOPY_DETAIL", "CAM_TAIL_DETAIL", "CAM_TOP_SET_OUT"}
+    camera_names = {"CAM_HERO_FRONT_3Q", "CAM_HERO_LOW", "CAM_FULL_ELEVATION", "CAM_CANOPY_DETAIL", "CAM_BUTTERFLY_MACRO", "CAM_TAIL_DETAIL", "CAM_TOP_SET_OUT"}
     missing_cameras = sorted(camera_names - set(bpy.data.objects.keys()))
     if missing_cameras: fail(errors, f"missing cameras: {missing_cameras}")
 

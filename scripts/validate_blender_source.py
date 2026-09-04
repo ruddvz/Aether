@@ -42,7 +42,7 @@ def main() -> None:
     if len(led_rows) != 14: fail(f"Blender pipeline expected 14 fixed LED positions, got {len(led_rows)}")
     required_presets = {"preview", "hero", "social_vertical", "detail_square"}
     if set(presets) - {"schemaVersion"} != required_presets: fail("Blender render preset set changed unexpectedly")
-    required_cameras = {"CAM_HERO_FRONT_3Q", "CAM_HERO_LOW", "CAM_FULL_ELEVATION", "CAM_CANOPY_DETAIL", "CAM_TAIL_DETAIL", "CAM_TOP_SET_OUT"}
+    required_cameras = {"CAM_HERO_FRONT_3Q", "CAM_HERO_LOW", "CAM_FULL_ELEVATION", "CAM_CANOPY_DETAIL", "CAM_BUTTERFLY_MACRO", "CAM_TAIL_DETAIL", "CAM_TOP_SET_OUT"}
     if set(manifest.get("cameraShots", {})) != required_cameras: fail("Blender camera-shot manifest is incomplete")
     print("Blender source QA: PASS")
     print(f"- controlled butterflies: {len(rows)} ({counts})")

@@ -42,15 +42,31 @@ Remaining defects:
 5. The hero viewpoint is too high and reveals the canopy top surface, weakening the installed architectural-lighting reading.
 6. Background illumination is still too bright and uneven for a clean optical-product baseline.
 
-## Visualization revision 0.3.0 goals
+## Visualization revision 0.3.0 review
 
-- Keep all controlled transforms, IDs, 66/144/30 allocation and 14 fixed head positions unchanged.
-- Reduce only the visualization display diameter and specular prominence of suspension lines, explicitly without making a rated hardware claim.
-- Replace radial fan facets with broad perimeter facets and a large central optical face, all within the controlled nominal wing thickness envelope.
-- Use a single matte dark product backdrop without a floor seam in the clean studio hero.
-- Turn the 14 conceptual fixture beams off in clean product presets while retaining the 14 objects, their controlled positions and an explicit renderer override for later lighting studies.
-- Lower the hero and canopy-detail viewpoints so the canopy is primarily read from below.
-- Retain restrained key/fill/rim/top photographic lighting for edge definition rather than fixture-beam effects.
+The 0.3.0 Cycles preview was produced by workflow run 33898655806 from source commit `d4c99ab1c8323123bca268d3a56fdbff37908eeb`.
+
+Improvements visible in the render:
+
+- the floor and diagonal studio seam are gone;
+- the conceptual 14-head beams are suppressed in the clean preview instead of blowing out the lower stage;
+- the hero viewpoint now reads the canopy from below;
+- the dark background gives the complete controlled fixture silhouette strong separation;
+- broad optical wing faces reduce the earlier glitter/fan-facet effect.
+
+Remaining defects:
+
+1. Suspension is still brighter than intended and remains visually competitive with the butterfly field.
+2. At full-fixture distance, transparent wings naturally collapse into specular edge highlights, so the hero render alone cannot prove whether the optical material is believable.
+3. A close optical view is needed before changing glass parameters further; otherwise lookdev risks tuning the material to compensate for a camera-scale problem.
+
+## Visualization revision 0.4.0 goals
+
+- Further quiet the suspension appearance using only visualization display diameter and roughness changes, with no rated-hardware claim.
+- Add a single butterfly macro camera aimed at the controlled `VX-001` L instance without moving or altering the instance.
+- Render both hero and macro previews in CI so every lookdev revision is judged at fixture scale and optical-detail scale.
+- Introduce a subtle blue-green edge absorption study in the glass while explicitly labelling the absorption density as a visualization lookdev value rather than a commercial material property.
+- Keep thin-film interference disabled. Blender 5.2 supports it, but rainbow interference would be inappropriate without a specified optical coating and would push the material toward fantasy glass.
 
 ## Blender 5.2 rendering basis
 
