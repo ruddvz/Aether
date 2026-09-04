@@ -26,6 +26,10 @@ jobs:
           cache-dependency-path: |
             requirements-dev.txt
             requirements-geometry.txt
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
       - name: Install dependencies
         run: pip install -r requirements-dev.txt -r requirements-geometry.txt
       - name: Validate
@@ -34,6 +38,8 @@ jobs:
         run: python scripts/qa_geometry.py
       - name: Web geometry QA
         run: python scripts/qa_web_geometry.py
+      - name: Optimized web geometry QA
+        run: python scripts/qa_optimized_web_geometry.py
       - name: Test
         run: pytest -q
       - name: Build site
