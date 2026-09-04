@@ -3,19 +3,7 @@
   "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-calculation-register.schema.json",
   "title": "AETHERIA VX4800 kinetic calculation and load-case register",
   "type": "object",
-  "required": [
-    "schemaVersion",
-    "fixtureId",
-    "registerRevision",
-    "status",
-    "authority",
-    "finalCalculationPackageReleased",
-    "controlledBaseline",
-    "evidenceClasses",
-    "calculationRules",
-    "loadCases",
-    "releaseGates"
-  ],
+  "required": ["schemaVersion", "fixtureId", "registerRevision", "status", "authority", "finalCalculationPackageReleased", "controlledBaseline", "evidenceClasses", "calculationRules", "loadCases", "releaseGates"],
   "properties": {
     "$schema": {"type": "string"},
     "schemaVersion": {"type": "string"},
@@ -42,16 +30,7 @@
       "type": "array",
       "minItems": 6,
       "uniqueItems": true,
-      "items": {
-        "enum": [
-          "published-manufacturer-data",
-          "engineering-calculation",
-          "prototype-measurement",
-          "controlled-production-measurement",
-          "assumption",
-          "design-target"
-        ]
-      }
+      "items": {"enum": ["published-manufacturer-data", "engineering-calculation", "prototype-measurement", "controlled-production-measurement", "assumption", "design-target"]}
     },
     "calculationRules": {"type": "array", "minItems": 5, "items": {"type": "string"}},
     "loadCases": {
@@ -100,18 +79,7 @@
     "releaseGates": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "massMapControlled",
-        "cgControlled",
-        "suspendedFieldDynamicsCorrelated",
-        "bearingSupplierDataControlled",
-        "driveSupplierDataControlled",
-        "brakeSupplierDataControlled",
-        "structureModelControlled",
-        "retentionFailureCaseControlled",
-        "serviceLockLoadCaseControlled",
-        "calculationsIndependentlyChecked"
-      ],
+      "required": ["massMapControlled", "cgControlled", "suspendedFieldDynamicsCorrelated", "bearingSupplierDataControlled", "driveSupplierDataControlled", "brakeSupplierDataControlled", "structureModelControlled", "retentionFailureCaseControlled", "serviceLockLoadCaseControlled", "calculationsIndependentlyChecked"],
       "properties": {
         "massMapControlled": {"type": "boolean"},
         "cgControlled": {"type": "boolean"},
@@ -134,7 +102,19 @@
           "authority": {"const": "controlled"},
           "status": {"const": "released"},
           "loadCases": {
-            "not": {"contains": {"properties": {"status": {"const": "blocked-inputs"}}, "required": ["status"]}}
+            "items": {
+              "properties": {
+                "status": {"const": "verified"},
+                "outputs": {
+                  "items": {
+                    "properties": {
+                      "status": {"const": "verified"},
+                      "value": {"type": ["number", "string"]}
+                    }
+                  }
+                }
+              }
+            }
           },
           "releaseGates": {
             "properties": {
