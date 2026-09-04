@@ -3,14 +3,20 @@ from __future__ import annotations
 import ast
 import csv
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BLENDER = ROOT / "blender/vx4800"
+SPDX_GPL_RE = re.compile(r"^\s*#\s*SPDX-License-Identifier:\s*GPL-3\.0-or-later\s*$")
 
 
 def fail(message: str) -> None:
     raise SystemExit(message)
+
+
+def has_gpl_spdx_header(source: str) -> bool:
+    return any(SPDX_GPL_RE.match(line) for line in source.splitlines()[:3])
 
 
 def main() -> None:
@@ -24,7 +30,7 @@ def main() -> None:
         if not (ROOT / rel).is_file(): fail(f"Blender source {key} does not exist: {rel}")
     for path in BLENDER.glob("*.py"):
         source = path.read_text(); ast.parse(source, filename=str(path))
-        if "SPDX-License-Identifier: GPL-3.0-or-later" not in source.splitlines()[:3]: fail(f"Blender API script lacks GPL-compatible SPDX header: {path}")
+        if not has_gpl_spdx_header(source): fail(f"Blender API script lacks GPL-compatible SPDX header: {path}")
     with (ROOT / manifest["sources"]["composition"]).open(newline="") as f: rows = list(csv.DictReader(f))
     if len(rows) != 240: fail(f"Blender pipeline expected 240 controlled composition rows, got {len(rows)}")
     counts = {"S": 0, "M": 0, "L": 0}
