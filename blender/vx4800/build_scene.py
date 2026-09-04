@@ -15,7 +15,7 @@ from aether_blender_lib import (
     read_json, sha256,
 )
 
-VISUALIZATION_REVISION = "0.1.0"
+VISUALIZATION_REVISION = "0.2.0"
 BLENDER_TARGET = "5.2.1 LTS"
 
 
@@ -57,6 +57,9 @@ def build_scene(repo_root: Path, output: Path, render_preview: Path | None = Non
     scene["aetheria_visualization_revision"] = VISUALIZATION_REVISION
     scene["aetheria_blender_target"] = BLENDER_TARGET
     scene["aetheria_authority"] = "visualization-only"
+    scene["aetheria_optical_material_status"] = "visualization-study-not-commercially-locked"
+    scene["aetheria_fixture_photometry_status"] = "conceptual-render-only-until-controlled-supplier-photometry"
+    scene["aetheria_stage_lighting_status"] = "photographic-visualization-only"
     for key, path in source_paths.items():
         scene[f"source_sha256_{key}"] = sha256(path)
 
@@ -130,19 +133,21 @@ def build_scene(repo_root: Path, output: Path, render_preview: Path | None = Non
         "SUSPENSION_MICROCABLES_240",
         collections["30_SUSPENSION"],
         mats["cable"],
-        bevel_depth=0.00045,
+        bevel_depth=0.00032,
     )
     cables.parent = rotor_root
     cables["aetheria_authority"] = "visualization-derived-from-controlled-schedule"
+    cables["aetheria_curve_diameter_status"] = "visualization-only-not-rated-suspension-diameter"
 
     yokes = create_curve_object(
         "SUSPENSION_YOKES_240",
         collections["30_SUSPENSION"],
         mats["body"],
-        bevel_depth=0.00055,
+        bevel_depth=0.00042,
     )
     yokes.parent = rotor_root
     yokes["aetheria_authority"] = "visualization-yoke-detail"
+    yokes["aetheria_curve_diameter_status"] = "visualization-only-not-rated-hardware-diameter"
 
     size_counts = {"S": 0, "M": 0, "L": 0}
     for row in schedule:
@@ -222,9 +227,27 @@ def build_scene(repo_root: Path, output: Path, render_preview: Path | None = Non
     scene.camera = cameras["CAM_HERO_FRONT_3Q"]
 
     build_stage(mats, collections["80_RENDER_STAGE"])
-    create_area_light("RIG_KEY", (4.2, -3.6, 3.7), (0.0, 0.0, -2.0), 1250, 3.0, (1.0, 0.82, 0.66), collections["70_LIGHT_RIGS"])
-    create_area_light("RIG_FILL", (-4.6, -1.8, 1.2), (0.0, 0.0, -2.3), 850, 4.0, (0.74, 0.84, 1.0), collections["70_LIGHT_RIGS"])
-    create_area_light("RIG_RIM", (0.8, 4.2, 2.3), (0.0, 0.0, -2.0), 1000, 2.6, (1.0, 0.67, 0.42), collections["70_LIGHT_RIGS"])
+    target = (0.0, 0.0, -2.45)
+    create_area_light(
+        "RIG_KEY", (4.8, -5.8, 2.4), target, 1450, 3.8, (1.0, 0.90, 0.79),
+        collections["70_LIGHT_RIGS"], shape="DISK", spread_deg=115,
+    )
+    create_area_light(
+        "RIG_FILL", (-5.5, -3.2, -0.8), target, 430, 4.8, (0.78, 0.86, 1.0),
+        collections["70_LIGHT_RIGS"], shape="DISK", spread_deg=125,
+    )
+    create_area_light(
+        "RIG_RIM_RIGHT", (5.1, 3.2, -0.4), target, 1750, 2.8, (1.0, 0.78, 0.58),
+        collections["70_LIGHT_RIGS"], shape="RECTANGLE", size_y=0.55, spread_deg=90,
+    )
+    create_area_light(
+        "RIG_RIM_LEFT", (-5.0, 3.0, -2.5), target, 1350, 2.6, (0.72, 0.82, 1.0),
+        collections["70_LIGHT_RIGS"], shape="RECTANGLE", size_y=0.48, spread_deg=90,
+    )
+    create_area_light(
+        "RIG_TOP", (0.0, -0.8, 5.0), (0.0, 0.0, -1.25), 720, 4.2, (1.0, 0.94, 0.86),
+        collections["70_LIGHT_RIGS"], shape="DISK", spread_deg=105,
+    )
 
     for proto in prototypes.values():
         proto["aetheria_role"] = "linked_butterfly_prototype"

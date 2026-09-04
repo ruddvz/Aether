@@ -100,28 +100,77 @@ def principled_material(
     set_socket(bsdf, ("Transmission Weight", "Transmission"), transmission)
     set_socket(bsdf, ("IOR",), ior)
     set_socket(bsdf, ("Coat Weight", "Coat"), coat)
+    set_socket(bsdf, ("Coat Roughness",), 0.08)
     set_socket(bsdf, ("Anisotropic IOR Level", "Anisotropic"), anisotropic)
     return m
+
+
+def add_micro_roughness(material: bpy.types.Material, low: float, high: float, scale: float) -> None:
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    bsdf = nodes.get("Principled BSDF")
+    if not bsdf or not bsdf.inputs.get("Roughness"):
+        return
+    tex = nodes.new("ShaderNodeTexCoord")
+    tex.name = "AETHERIA_MICRO_TEXCOORD"
+    noise = nodes.new("ShaderNodeTexNoise")
+    noise.name = "AETHERIA_MICRO_ROUGHNESS"
+    noise.noise_dimensions = "3D"
+    noise.inputs["Scale"].default_value = scale
+    noise.inputs["Detail"].default_value = 2.0
+    noise.inputs["Roughness"].default_value = 0.45
+    ramp = nodes.new("ShaderNodeValToRGB")
+    ramp.name = "AETHERIA_ROUGHNESS_RANGE"
+    ramp.color_ramp.elements[0].color = (low, low, low, 1.0)
+    ramp.color_ramp.elements[1].color = (high, high, high, 1.0)
+    links.new(tex.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bsdf.inputs["Roughness"])
+
+
+def mark_visual_finish(material: bpy.types.Material, status: str = "visualization-finish-study") -> bpy.types.Material:
+    material["aetheria_authority"] = "visualization-only"
+    material["aetheria_finish_status"] = status
+    return material
 
 
 def make_glass_material() -> bpy.types.Material:
     m = principled_material(
         "MAT_BUTTERFLY_OPTICAL_GLASS",
-        "#EEF8FA",
+        "#F7FCFF",
         metallic=0.0,
-        roughness=0.035,
+        roughness=0.018,
         transmission=1.0,
         ior=1.50,
-        coat=0.12,
+        coat=0.08,
     )
-    m.diffuse_color = rgba("#EEF8FA")
+    m.diffuse_color = rgba("#F7FCFF")
+    m["aetheria_authority"] = "visualization-only"
+    m["aetheria_material_status"] = "optical-glass-visualization-study-not-commercially-locked"
     nodes = m.node_tree.nodes
     links = m.node_tree.links
+    bsdf = nodes.get("Principled BSDF")
+    if bsdf and bsdf.inputs.get("Roughness"):
+        tex = nodes.new("ShaderNodeTexCoord")
+        tex.name = "AETHERIA_GLASS_TEXCOORD"
+        noise = nodes.new("ShaderNodeTexNoise")
+        noise.name = "AETHERIA_GLASS_MICRO_ROUGHNESS"
+        noise.noise_dimensions = "3D"
+        noise.inputs["Scale"].default_value = 480.0
+        noise.inputs["Detail"].default_value = 1.5
+        noise.inputs["Roughness"].default_value = 0.35
+        ramp = nodes.new("ShaderNodeValToRGB")
+        ramp.name = "AETHERIA_GLASS_ROUGHNESS_RANGE"
+        ramp.color_ramp.elements[0].color = (0.010, 0.010, 0.010, 1.0)
+        ramp.color_ramp.elements[1].color = (0.030, 0.030, 0.030, 1.0)
+        links.new(tex.outputs["Generated"], noise.inputs["Vector"])
+        links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+        links.new(ramp.outputs["Color"], bsdf.inputs["Roughness"])
     output = nodes.get("Material Output")
     absorption = nodes.new("ShaderNodeVolumeAbsorption")
     absorption.name = "AETHERIA_EDGE_ABSORPTION"
-    absorption.inputs["Color"].default_value = rgba("#DCEFF2")
-    absorption.inputs["Density"].default_value = 0.12
+    absorption.inputs["Color"].default_value = rgba("#E5F1F4")
+    absorption.inputs["Density"].default_value = 0.06
     links.new(absorption.outputs["Volume"], output.inputs["Volume"])
     return m
 
@@ -138,22 +187,42 @@ def make_emission_material(name: str, color: str, strength: float) -> bpy.types.
     emission.inputs["Color"].default_value = rgba(color)
     emission.inputs["Strength"].default_value = strength
     links.new(emission.outputs["Emission"], output.inputs["Surface"])
+    m["aetheria_authority"] = "visualization-only"
     return m
 
 
 def build_materials() -> dict[str, bpy.types.Material]:
+    champagne = mark_visual_finish(principled_material("MAT_PVD_DARK_CHAMPAGNE", "#544231", 0.94, 0.17, coat=0.24, anisotropic=0.20))
+    black_titanium = mark_visual_finish(principled_material("MAT_PVD_BLACK_TITANIUM", "#151515", 0.92, 0.20, coat=0.18, anisotropic=0.10))
+    brass = mark_visual_finish(principled_material("MAT_BRUSHED_BRASS", "#A87D45", 0.94, 0.22, coat=0.16, anisotropic=0.30))
+    nickel = mark_visual_finish(principled_material("MAT_SATIN_NICKEL", "#969894", 0.92, 0.29, coat=0.10, anisotropic=0.18))
+    cable = mark_visual_finish(principled_material("MAT_CABLE_STAINLESS", "#747C82", 0.95, 0.24), "visualization-cable-appearance")
+    body = mark_visual_finish(principled_material("MAT_BUTTERFLY_BODY_CHAMPAGNE", "#9B7650", 0.92, 0.18, coat=0.22), "visualization-butterfly-spine-finish")
+    led_head = mark_visual_finish(principled_material("MAT_LED_HEAD_TITANIUM", "#151513", 0.92, 0.19, coat=0.18), "visualization-head-finish")
+    stage = principled_material("MAT_STAGE_IVORY", "#D9D3C8", 0.0, 0.68)
+    dark_stage = principled_material("MAT_STAGE_DARK", "#171614", 0.0, 0.46)
+    for material, low, high, scale in (
+        (champagne, 0.13, 0.22, 180.0),
+        (black_titanium, 0.16, 0.25, 210.0),
+        (brass, 0.18, 0.28, 150.0),
+        (nickel, 0.24, 0.34, 190.0),
+        (cable, 0.20, 0.30, 260.0),
+        (body, 0.14, 0.23, 220.0),
+        (led_head, 0.15, 0.24, 220.0),
+    ):
+        add_micro_roughness(material, low, high, scale)
     return {
         "glass": make_glass_material(),
-        "champagne": principled_material("MAT_PVD_DARK_CHAMPAGNE", "#5D4936", 0.92, 0.17, coat=0.30, anisotropic=0.18),
-        "black_titanium": principled_material("MAT_PVD_BLACK_TITANIUM", "#171717", 0.88, 0.20, coat=0.22),
-        "brass": principled_material("MAT_BRUSHED_BRASS", "#B98A4A", 0.92, 0.23, coat=0.20, anisotropic=0.28),
-        "nickel": principled_material("MAT_SATIN_NICKEL", "#A7A7A0", 0.90, 0.30, coat=0.10, anisotropic=0.15),
-        "cable": principled_material("MAT_CABLE_STAINLESS", "#596169", 0.88, 0.28),
-        "body": principled_material("MAT_BUTTERFLY_BODY_CHAMPAGNE", "#C89B61", 0.90, 0.15, coat=0.35),
-        "led_head": principled_material("MAT_LED_HEAD_TITANIUM", "#181715", 0.90, 0.18, coat=0.22),
-        "led_lens": make_emission_material("MAT_LED_LENS_3000K", "#FFD0A0", 2.3),
-        "stage": principled_material("MAT_STAGE_IVORY", "#EEEAE2", 0.0, 0.72),
-        "dark_stage": principled_material("MAT_STAGE_DARK", "#12100E", 0.0, 0.78),
+        "champagne": champagne,
+        "black_titanium": black_titanium,
+        "brass": brass,
+        "nickel": nickel,
+        "cable": cable,
+        "body": body,
+        "led_head": led_head,
+        "led_lens": make_emission_material("MAT_LED_LENS_3000K", "#FFD0A0", 2.0),
+        "stage": stage,
+        "dark_stage": dark_stage,
     }
 
 
@@ -191,12 +260,12 @@ def add_beveled_rounded_box(name, collection, width, depth, height, radius, mate
     obj.data.materials.append(material)
     bevel = obj.modifiers.new("AETHERIA_EDGE_SOFTEN", "BEVEL")
     bevel.width = edge_bevel
-    bevel.segments = 3
+    bevel.segments = 4
     bevel.limit_method = "ANGLE"
     return obj
 
 
-def bezier_segment(p0, p1, p2, p3, steps: int = 14):
+def bezier_segment(p0, p1, p2, p3, steps: int = 12):
     out = []
     for i in range(steps):
         t = i / steps
@@ -229,80 +298,104 @@ def wing_outline(kind: str, span: float, length: float, side: int):
     return [(side * x, y) for x, y in points]
 
 
-def extruded_polygon_mesh(name: str, points, thickness: float):
+def polygon_signed_area(points) -> float:
+    return 0.5 * sum(
+        points[i][0] * points[(i + 1) % len(points)][1] - points[(i + 1) % len(points)][0] * points[i][1]
+        for i in range(len(points))
+    )
+
+
+def polygon_centroid(points) -> tuple[float, float]:
+    area2 = 2.0 * polygon_signed_area(points)
+    if abs(area2) < 1e-12:
+        return (
+            sum(p[0] for p in points) / len(points),
+            sum(p[1] for p in points) / len(points),
+        )
+    cx = 0.0
+    cy = 0.0
+    for i in range(len(points)):
+        x0, y0 = points[i]
+        x1, y1 = points[(i + 1) % len(points)]
+        cross = x0 * y1 - x1 * y0
+        cx += (x0 + x1) * cross
+        cy += (y0 + y1) * cross
+    return cx / (3.0 * area2), cy / (3.0 * area2)
+
+
+def faceted_wing_mesh(name: str, points, thickness: float) -> bpy.types.Mesh:
+    points = list(points)
+    if polygon_signed_area(points) < 0.0:
+        points.reverse()
     n = len(points)
-    z0, z1 = -thickness / 2.0, thickness / 2.0
-    verts = [(x, y, z0) for x, y in points] + [(x, y, z1) for x, y in points]
-    faces = [tuple(reversed(range(n))), tuple(range(n, 2 * n))]
+    edge_z = thickness * 0.30
+    cx, cy = polygon_centroid(points)
+    top_ring = [(x, y, edge_z) for x, y in points]
+    bottom_ring = [(x, y, -edge_z) for x, y in points]
+    top_hub = (cx, cy, thickness * 0.50)
+    bottom_hub = (cx, cy, -thickness * 0.50)
+    verts = top_ring + bottom_ring + [top_hub, bottom_hub]
+    top_idx = 2 * n
+    bottom_idx = top_idx + 1
+    faces = []
     for i in range(n):
         j = (i + 1) % n
-        faces.append((i, j, n + j, n + i))
+        faces.append((top_idx, i, j))
+        faces.append((bottom_idx, n + j, n + i))
+        faces.append((i, n + i, n + j, j))
     mesh = bpy.data.meshes.new(name)
     mesh.from_pydata(verts, [], faces)
     mesh.update()
     return mesh
 
 
-def add_proto_mesh(collection, name, mesh, material, rotation_y=0.0):
+def add_proto_mesh(collection, name, mesh, material, rotation_y=0.0, edge_bevel=0.00055):
     obj = bpy.data.objects.new(name, mesh)
     collection.objects.link(obj)
     obj.data.materials.append(material)
     obj.rotation_euler.y = rotation_y
     bevel = obj.modifiers.new("AETHERIA_CRYSTAL_EDGE", "BEVEL")
-    bevel.width = 0.00055
-    bevel.segments = 2
+    bevel.width = edge_bevel
+    bevel.segments = 3
     bevel.limit_method = "ANGLE"
+    obj["aetheria_geometry_status"] = "visualization-optical-sculpting-within-controlled-envelope"
     return obj
 
 
-def add_body(collection, span: float, length: float, mat) -> None:
-    bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, radius=max(0.004, span * 0.033))
-    thorax = bpy.context.object
-    thorax.name = "THORAX"
-    link_object(thorax, collection)
-    thorax.scale = (0.72, 1.08, 0.72)
-    thorax.location.y = length * 0.08
-    thorax.data.materials.append(mat)
-    bpy.ops.mesh.primitive_uv_sphere_add(segments=20, ring_count=10, radius=max(0.0035, span * 0.025))
-    head = bpy.context.object
-    head.name = "HEAD"
-    link_object(head, collection)
-    head.location.y = length * 0.22
-    head.data.materials.append(mat)
-    for i in range(6):
-        t = i / 5.0
-        r = max(0.0024, span * (0.021 - 0.009 * t))
-        bpy.ops.mesh.primitive_uv_sphere_add(segments=18, ring_count=8, radius=r)
-        seg = bpy.context.object
-        seg.name = f"ABDOMEN_{i+1:02d}"
-        link_object(seg, collection)
-        seg.scale = (0.72, 1.15, 0.72)
-        seg.location.y = -length * (0.02 + i * 0.075)
-        seg.data.materials.append(mat)
-    for side in (-1, 1):
-        curve = bpy.data.curves.new(f"ANTENNA_{side:+d}_CURVE", "CURVE")
-        curve.dimensions = "3D"
-        curve.bevel_depth = 0.0005
-        curve.bevel_resolution = 3
-        spline = curve.splines.new("BEZIER")
-        spline.bezier_points.add(2)
-        pts = [(side * 0.0025, length * 0.24, 0.002), (side * 0.010, length * 0.33, 0.008), (side * 0.025, length * 0.40, 0.004)]
-        for bp, co in zip(spline.bezier_points, pts):
-            bp.co = co
-            bp.handle_left_type = "AUTO"
-            bp.handle_right_type = "AUTO"
-        obj = bpy.data.objects.new(f"ANTENNA_{side:+d}", curve)
-        collection.objects.link(obj)
-        obj.data.materials.append(mat)
+def add_sculptural_spine(collection, span: float, length: float, thickness: float, mat) -> None:
+    bpy.ops.mesh.primitive_uv_sphere_add(segments=32, ring_count=16, radius=1.0)
+    spine = bpy.context.object
+    spine.name = "CENTRAL_SPINE"
+    link_object(spine, collection)
+    spine.scale = (
+        max(span * 0.026, 0.0028),
+        max(length * 0.43, 0.024),
+        max(thickness * 0.42, 0.0020),
+    )
+    spine.location.y = -length * 0.035
+    spine.data.materials.append(mat)
+    bevel = spine.modifiers.new("AETHERIA_SPINE_SOFTEN", "BEVEL")
+    bevel.width = min(0.0006, thickness * 0.08)
+    bevel.segments = 3
+    spine["aetheria_geometry_status"] = "visualization-sculptural-abstraction"
 
 
 def make_butterfly_prototype(size, span, length, thickness, fold_deg, mats):
     c = bpy.data.collections.new(f"PROTO_BUTTERFLY_{size}")
+    edge_bevel = min(0.00072, max(0.00042, thickness * 0.095))
     for side, label in ((1, "L"), (-1, "R")):
-        for kind, suffix, trim in (("fore", "FORE", 0.0), ("hind", "HIND", -2.5)):
-            mesh = extruded_polygon_mesh(f"PROTO_{size}_{label}_{suffix}_MESH", wing_outline(kind, span, length, side), thickness)
-            add_proto_mesh(c, f"PROTO_{size}_{label}_{suffix}", mesh, mats["glass"], math.radians(side * (fold_deg + trim)))
-    add_body(c, span, length, mats["body"])
+        for kind, suffix, trim in (("fore", "FORE", 0.0), ("hind", "HIND", -3.0)):
+            outline = wing_outline(kind, span, length, side)
+            mesh = faceted_wing_mesh(f"PROTO_{size}_{label}_{suffix}_MESH", outline, thickness)
+            add_proto_mesh(
+                c,
+                f"PROTO_{size}_{label}_{suffix}",
+                mesh,
+                mats["glass"],
+                math.radians(side * (fold_deg + trim)),
+                edge_bevel=edge_bevel,
+            )
+    add_sculptural_spine(c, span, length, thickness, mats["body"])
     return c
 
 
@@ -329,6 +422,8 @@ def create_camera(name, location, target, lens_mm, collection):
     data = bpy.data.cameras.new(name + "_DATA")
     data.lens = lens_mm
     data.sensor_width = 36.0
+    data.clip_start = 0.05
+    data.clip_end = 200.0
     obj = bpy.data.objects.new(name, data)
     collection.objects.link(obj)
     obj.location = location
@@ -337,16 +432,33 @@ def create_camera(name, location, target, lens_mm, collection):
     return obj
 
 
-def create_area_light(name, location, target, energy, size, color, collection):
+def create_area_light(
+    name,
+    location,
+    target,
+    energy,
+    size,
+    color,
+    collection,
+    shape="DISK",
+    size_y=None,
+    spread_deg=None,
+):
     data = bpy.data.lights.new(name + "_DATA", "AREA")
     data.energy = energy
-    data.shape = "DISK"
+    data.shape = shape
     data.size = size
+    if size_y is not None and hasattr(data, "size_y"):
+        data.size_y = size_y
+    if spread_deg is not None and hasattr(data, "spread"):
+        data.spread = math.radians(spread_deg)
     data.color = color
     obj = bpy.data.objects.new(name, data)
     collection.objects.link(obj)
     obj.location = location
     obj.rotation_euler = (Vector(target) - obj.location).to_track_quat("-Z", "Y").to_euler()
+    obj["aetheria_light_class"] = "photographic-render-stage"
+    obj["aetheria_authority"] = "visualization-only"
     return obj
 
 
@@ -362,16 +474,20 @@ def create_spot_light(name, position, target, beam_deg, energy, collection):
     obj.location = position
     obj.rotation_euler = (Vector(target) - obj.location).to_track_quat("-Z", "Y").to_euler()
     obj["aetheria_photometry_status"] = "conceptual-render-only"
+    obj["aetheria_light_class"] = "fixture-integrated-visual-study"
     return obj
 
 
 def create_led_head(name, x, y, mat_body, mat_lens, collection):
-    bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius=0.0225, depth=0.060, location=(x, y, -0.035))
+    bpy.ops.mesh.primitive_cylinder_add(vertices=40, radius=0.0225, depth=0.060, location=(x, y, -0.035))
     body = bpy.context.object
     body.name = name
     link_object(body, collection)
     body.data.materials.append(mat_body)
-    bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius=0.0175, depth=0.0015, location=(x, y, -0.066))
+    bevel = body.modifiers.new("AETHERIA_HEAD_EDGE", "BEVEL")
+    bevel.width = 0.0012
+    bevel.segments = 3
+    bpy.ops.mesh.primitive_cylinder_add(vertices=40, radius=0.0175, depth=0.0015, location=(x, y, -0.066))
     lens = bpy.context.object
     lens.name = name + "_LENS"
     link_object(lens, collection)
@@ -380,16 +496,18 @@ def create_led_head(name, x, y, mat_body, mat_lens, collection):
 
 
 def build_stage(mats, collection) -> None:
-    bpy.ops.mesh.primitive_plane_add(size=16.0, location=(0, 0, -5.15))
+    bpy.ops.mesh.primitive_plane_add(size=30.0, location=(0, 0, -5.35))
     floor = bpy.context.object
     floor.name = "STAGE_FLOOR"
     link_object(floor, collection)
-    floor.data.materials.append(mats["stage"])
-    bpy.ops.mesh.primitive_plane_add(size=16.0, location=(0, 4.8, -0.9), rotation=(math.radians(90), 0, 0))
+    floor.data.materials.append(mats["dark_stage"])
+    floor["aetheria_stage_role"] = "dark-premium-studio-floor"
+    bpy.ops.mesh.primitive_plane_add(size=30.0, location=(0, 7.0, -1.25), rotation=(math.radians(90), 0, 0))
     wall = bpy.context.object
     wall.name = "STAGE_BACKDROP"
     link_object(wall, collection)
-    wall.data.materials.append(mats["stage"])
+    wall.data.materials.append(mats["dark_stage"])
+    wall["aetheria_stage_role"] = "dark-premium-studio-backdrop"
 
 
 def configure_scene(scene) -> None:
@@ -408,7 +526,17 @@ def configure_scene(scene) -> None:
         scene.view_settings.look = "AgX - Medium High Contrast"
     except Exception:
         pass
-    scene.world.color = (0.018, 0.015, 0.012)
+    scene.view_settings.exposure = -0.35
+    world = scene.world
+    if world is None:
+        world = bpy.data.worlds.new("AETHERIA_WORLD")
+        scene.world = world
+    world.use_nodes = True
+    background = world.node_tree.nodes.get("Background")
+    if background:
+        background.inputs["Color"].default_value = (0.010, 0.009, 0.008, 1.0)
+        background.inputs["Strength"].default_value = 0.16
+    world.color = (0.010, 0.009, 0.008)
     scene.frame_start = 1
     scene.frame_end = 4001
     scene.render.fps = 24
