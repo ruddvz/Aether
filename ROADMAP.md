@@ -63,7 +63,15 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [x] Define commissioning/service mechanical state model separating held, locked and safe-to-access states
   - [x] Define executable T1-T4 dynamic test plan and physical test-record schema
   - [x] Define kinetic hazard register without inventing PL/SIL/category values
+  - [x] Define pre-prototype fixed/rotating interface-zone package for bearing, drive, direct brake, service lock, secondary retention, feedback, trim and service access
+  - [x] Define six supplier RFQ packages with assumption disclosure and exact-variant evidence requirements
+  - [x] Record current manufacturer evidence for bearing mounting, belt reactions, power-off brake families and fixed-readhead/passive-scale feedback without selecting components
+  - [x] Define schedule-derived T1 single-suspension and T2 mixed-cluster test-rig architecture with instrumentation, data and build gates
+  - [ ] Issue kinetic RFQs and archive supplier application-engineering responses/CAD
+  - [ ] Create P0 mechanical interface-zone coordination CAD without changing controlled setout
   - [ ] Control rotating mass, center of gravity, production variation and dynamic load cases
+  - [ ] Release T1 rig structural/instrument design from controlled mass envelope and execute T1
+  - [ ] Release schedule-derived T2 cluster rig and execute T2 after T1 findings are dispositioned
   - [ ] Select bearing and approve combined-load/mounting calculation
   - [ ] Resolve direct-carrier holding/fault-brake architecture and transmission-failure containment
   - [ ] Select drive and approve torque/stopping calculations
