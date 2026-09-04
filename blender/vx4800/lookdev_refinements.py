@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import bpy
 
-VISUALIZATION_REVISION = "0.12.0"
+VISUALIZATION_REVISION = "0.13.0"
+SPINE_REFINEMENT_TAG = "smaller-sculptural-centre-v1"
 
 FINISH_MATERIALS = {
     "dark_champagne": "MAT_PVD_DARK_CHAMPAGNE",
@@ -12,8 +13,7 @@ FINISH_MATERIALS = {
     "satin_nickel": "MAT_SATIN_NICKEL",
 }
 
-_FINISH_SOURCE_MATERIALS = {
-    "MAT_PVD_DARK_CHAMPAGNE",
+_FINISH_REPLACEABLE_MATERIALS = set(FINISH_MATERIALS.values()) | {
     "MAT_BUTTERFLY_BODY_CHAMPAGNE",
     "MAT_LED_HEAD_TITANIUM",
 }
@@ -43,9 +43,10 @@ def apply_finish_variant(name: str) -> int:
         if not getattr(obj, "data", None) or not hasattr(obj.data, "materials"):
             continue
         for index, material in enumerate(obj.data.materials):
-            if material and material.name in _FINISH_SOURCE_MATERIALS:
-                obj.data.materials[index] = target
-                replaced += 1
+            if material and material.name in _FINISH_REPLACEABLE_MATERIALS:
+                if material != target:
+                    obj.data.materials[index] = target
+                    replaced += 1
         obj["aetheria_finish_override"] = name
         obj["aetheria_finish_override_authority"] = "visualization-only-not-manufacturing-finish"
 
@@ -70,10 +71,11 @@ def apply_master_refinements() -> None:
     for obj in bpy.data.objects:
         if not obj.name.startswith("CENTRAL_SPINE"):
             continue
-        obj.scale.x *= 0.54
-        obj.scale.y *= 0.62
-        obj.scale.z *= 0.67
-        obj["aetheria_spine_refinement"] = "0.11-smaller-sculptural-centre"
+        if obj.get("aetheria_spine_refinement") != SPINE_REFINEMENT_TAG:
+            obj.scale.x *= 0.54
+            obj.scale.y *= 0.62
+            obj.scale.z *= 0.67
+            obj["aetheria_spine_refinement"] = SPINE_REFINEMENT_TAG
         obj["aetheria_geometry_status"] = "visualization-sculptural-abstraction"
         refined_spines += 1
 
@@ -81,3 +83,4 @@ def apply_master_refinements() -> None:
     scene["aetheria_default_finish_variant"] = "dark_champagne"
     scene["aetheria_optical_absorption_status"] = "visualization-only"
     scene["aetheria_refined_spine_count"] = refined_spines
+    scene["aetheria_refinement_idempotence"] = "guarded"
