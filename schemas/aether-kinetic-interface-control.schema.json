@@ -3,22 +3,7 @@
   "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-interface-control.schema.json",
   "title": "AETHERIA VX4800 kinetic mechanical interface control",
   "type": "object",
-  "required": [
-    "schemaVersion",
-    "fixtureId",
-    "interfaceRevision",
-    "status",
-    "authority",
-    "finalInterfaceControlReleased",
-    "controlledBaseline",
-    "datumFramework",
-    "mechanicalInterfaces",
-    "interfaceParameters",
-    "toleranceClosures",
-    "failureStateModels",
-    "serviceabilityRules",
-    "releaseGates"
-  ],
+  "required": ["schemaVersion", "fixtureId", "interfaceRevision", "status", "authority", "finalInterfaceControlReleased", "controlledBaseline", "datumFramework", "mechanicalInterfaces", "interfaceParameters", "toleranceClosures", "failureStateModels", "serviceabilityRules", "releaseGates"],
   "properties": {
     "$schema": {"type": "string"},
     "schemaVersion": {"type": "string"},
@@ -96,6 +81,7 @@
         "type": "object",
         "required": ["id", "status", "contributors", "acceptanceSource"],
         "properties": {
+          "id": {"type": "string", "minLength": 1},
           "status": {"enum": ["tbd", "controlled", "released"]},
           "contributors": {"type": "array", "minItems": 2, "items": {"type": "string"}},
           "acceptanceSource": {"type": "string", "minLength": 1}
@@ -120,18 +106,7 @@
     "releaseGates": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "datumsLinkedToControlledDrawing",
-        "selectedBearingMatingDataControlled",
-        "selectedDriveMatingDataControlled",
-        "selectedBrakeMatingDataControlled",
-        "serviceLockGeometryVerified",
-        "secondaryRetentionGeometryVerified",
-        "feedbackAirGapRunoutVerified",
-        "toleranceStackApproved",
-        "serviceExtractionStudyApproved",
-        "failureStateGeometryReviewed"
-      ],
+      "required": ["datumsLinkedToControlledDrawing", "selectedBearingMatingDataControlled", "selectedDriveMatingDataControlled", "selectedBrakeMatingDataControlled", "serviceLockGeometryVerified", "secondaryRetentionGeometryVerified", "feedbackAirGapRunoutVerified", "toleranceStackApproved", "serviceExtractionStudyApproved", "failureStateGeometryReviewed"],
       "properties": {
         "datumsLinkedToControlledDrawing": {"type": "boolean"},
         "selectedBearingMatingDataControlled": {"type": "boolean"},
@@ -153,12 +128,16 @@
         "properties": {
           "authority": {"const": "controlled"},
           "status": {"const": "released"},
+          "datumFramework": {"items": {"properties": {"status": {"const": "released"}}}},
           "interfaceParameters": {
-            "not": {"contains": {"properties": {"status": {"const": "tbd"}}, "required": ["status"]}}
+            "items": {
+              "properties": {
+                "status": {"const": "released"},
+                "value": {"type": ["number", "string"]}
+              }
+            }
           },
-          "toleranceClosures": {
-            "not": {"contains": {"properties": {"status": {"const": "tbd"}}, "required": ["status"]}}
-          },
+          "toleranceClosures": {"items": {"properties": {"status": {"const": "released"}}}},
           "releaseGates": {
             "properties": {
               "datumsLinkedToControlledDrawing": {"const": true},
