@@ -1,0 +1,18 @@
+{
+  "$schema":"../../../../schemas/aether-photometry-candidate.schema.json",
+  "schemaVersion":"1.0.0",
+  "fixtureId":"vx4800-bf-01",
+  "candidateId":"formalighting-zero40-lv",
+  "status":"shortlisted",
+  "manufacturer":"formalighting",
+  "family":"Zero 40 - Low Voltage",
+  "regionAvailability":["India: formalighting local sales presence","Asia: Hong Kong and Shanghai coverage"],
+  "finishOptions":["Black RAL 9004","White RAL 9003","Embossed matt white RAL 9016","Embossed matt black RAL 9017"],
+  "configurations":[
+    {"role":"deep-tail narrow","exactModelCode":null,"opticCode":"07","cctK":3000,"cri":90,"beamAngleDegPublished":7,"powerW":4.7,"lumens":300,"dimensionsMm":[42,42,73],"driverModel":null,"dimming":["DALI"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Official 2026 datasheet documents BR21 3000K/CRI90/7 degree at 4.7 W system and 300 delivered lm for item 9614, but the exact DA (DALI) generated article code and matching IES are not yet isolated. Do not transfer the documented D0 configuration code to DALI."},
+    {"role":"mid-field spot","exactModelCode":null,"opticCode":"16","cctK":3000,"cri":90,"beamAngleDegPublished":16,"powerW":6.1,"lumens":null,"dimensionsMm":[42,42,73],"driverModel":null,"dimming":["DALI"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"BC31 supports 3000K and 16 degrees at 6.1 W system; delivered lumen depends on exact beam/configuration. Exact DA article code and matching IES required."},
+    {"role":"upper-field flood","exactModelCode":null,"opticCode":"32","cctK":3000,"cri":null,"beamAngleDegPublished":32,"powerW":null,"lumens":null,"dimensionsMm":[42,42,73],"driverModel":null,"dimming":["DALI"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"The generic product configurator lists 32 degrees and 3000K options, but the 2026 generic datasheet associates 32 degrees with a tuneable-white BU11 engine. A fixed 3000K exact engine/configuration must therefore be confirmed rather than inferred."}
+  ],
+  "sources":{"productPage":"https://www.formalighting.com/products/evo-48v-track-system/zero---low-voltage/zero-40---low-voltage","datasheet":"https://www.formalighting.com/products/datasheet/9614.pdf","photometryDownload":"https://www.formalighting.com/products/evo-48v-track-system/zero---low-voltage/zero-40---low-voltage","manufacturerContact":"https://www.formalighting.com/contact-us"},
+  "review":{"exactConfigurationConfirmed":false,"officialPhotometryAvailable":false,"meetsPhysicalTarget":true,"meetsOpticalTarget":true,"meetsControlTarget":true,"notes":"Very strong size/beam fit but lower power. Exact generated DALI articles and configuration-specific IES/LDT are still required, especially for the 32 degree role."}
+}

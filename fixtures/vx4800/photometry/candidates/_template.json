@@ -1,0 +1,30 @@
+{
+  "$schema": "../../../../schemas/aether-photometry-candidate.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "candidateId": "manufacturer-family",
+  "status": "research-only",
+  "manufacturer": "REPLACE",
+  "family": "REPLACE",
+  "regionAvailability": [],
+  "finishOptions": [],
+  "configurations": [{
+    "role": "deep-tail narrow",
+    "exactModelCode": null,
+    "opticCode": null,
+    "cctK": null,
+    "cri": null,
+    "beamAngleDegPublished": null,
+    "powerW": null,
+    "lumens": null,
+    "dimensionsMm": null,
+    "driverModel": null,
+    "dimming": [],
+    "photometryStatus": "missing",
+    "iesPath": null,
+    "iesSha256": null,
+    "notes": null
+  }],
+  "sources": {"productPage": "https://example.invalid/replace", "datasheet": null, "photometryDownload": null, "manufacturerContact": null},
+  "review": {"exactConfigurationConfirmed": false, "officialPhotometryAvailable": false, "meetsPhysicalTarget": null, "meetsOpticalTarget": null, "meetsControlTarget": null, "notes": "Template only. Do not treat as a real candidate."}
+}

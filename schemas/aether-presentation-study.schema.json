@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-presentation-study.schema.json",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "designRevision",
+    "presentationRevision",
+    "authority",
+    "expectedViewerDataSha256",
+    "sizeAllocation",
+    "declaredDivergences"
+  ],
+  "properties": {
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"type": "string"},
+    "designRevision": {"type": "string"},
+    "presentationRevision": {"type": "string"},
+    "authority": {"const": "presentation-only"},
+    "expectedViewerDataSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sizeAllocation": {
+      "type": "object",
+      "required": ["S", "M", "L"],
+      "properties": {"S": {"type": "integer"}, "M": {"type": "integer"}, "L": {"type": "integer"}}
+    },
+    "sizeDimensionsMm": {"type": "object"},
+    "poseModel": {"type": "object"},
+    "kineticVisualization": {"type": "object"},
+    "backgroundAsset": {"type": "string"},
+    "runtimeDependencies": {"type": "array"},
+    "declaredDivergences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "requiresEngineeringReleaseBeforeManufacture"],
+        "properties": {
+          "field": {"type": "string"},
+          "engineering": {},
+          "presentation": {},
+          "requiresEngineeringReleaseBeforeManufacture": {"const": true}
+        }
+      }
+    }
+  }
+}

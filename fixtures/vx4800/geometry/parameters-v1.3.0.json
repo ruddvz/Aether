@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "canopy": {
+    "widthMm": 2400,
+    "depthMm": 1500,
+    "heightMm": 150,
+    "cornerRadiusMm": 260
+  },
+  "rotatingCarrier": {
+    "widthMm": 2260,
+    "depthMm": 1330,
+    "thicknessMm": 24,
+    "cornerRadiusMm": 220
+  },
+  "butterflies": {
+    "S": {
+      "spanMm": 108,
+      "lengthMm": 60,
+      "thicknessMm": 5
+    },
+    "M": {
+      "spanMm": 146,
+      "lengthMm": 82,
+      "thicknessMm": 6
+    },
+    "L": {
+      "spanMm": 186,
+      "lengthMm": 108,
+      "thicknessMm": 7
+    }
+  },
+  "setout": {
+    "schedule": "../composition/engineering-v1.3.0.csv",
+    "ledSchedule": "../photometry/led-setout-engineering-v1.3.0.csv"
+  }
+}

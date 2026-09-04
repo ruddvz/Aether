@@ -1,0 +1,18 @@
+{
+  "$schema":"../../../../schemas/aether-photometry-candidate.schema.json",
+  "schemaVersion":"1.0.0",
+  "fixtureId":"vx4800-bf-01",
+  "candidateId":"precision-evo16",
+  "status":"shortlisted",
+  "manufacturer":"Precision Lighting by Luminii",
+  "family":"Evo 16",
+  "regionAvailability":["India: Luminii agent network","Asia-Pacific: Luminii regional coverage"],
+  "finishOptions":["Brushed Aluminium","Brushed Brass","Matt Black Anodised","Polished Brass","Rubbed Bronze","White"],
+  "configurations":[
+    {"role":"deep-tail narrow","exactModelCode":"EVO16-MJ-SN-IO-30K-UN-RBZ","opticCode":"UN","cctK":3000,"cri":92,"beamAngleDegPublished":6,"powerW":9,"lumens":650,"dimensionsMm":[66,66,112],"driverModel":"PSCV-100-24-D-EL","dimming":["DALI","DALI-2"],"photometryStatus":"linked","iesPath":"https://s3.us-central-1.wasabisys.com/luminiiwpmediafolder/wp-media-folder-luminii/wp-content/uploads/documents_2025/G2490.334.314-06.ies","iesSha256":null,"notes":"Order code assembled from the current manufacturer ordering matrix. Factory orderability and exact CCT identity of the linked IES must still be confirmed."},
+    {"role":"mid-field spot","exactModelCode":"EVO16-MJ-SN-IO-30K-ME-RBZ","opticCode":"ME","cctK":3000,"cri":92,"beamAngleDegPublished":16,"powerW":9,"lumens":623,"dimensionsMm":[66,66,112],"driverModel":"PSCV-100-24-D-EL","dimming":["DALI","DALI-2"],"photometryStatus":"linked","iesPath":"https://s3.us-central-1.wasabisys.com/luminiiwpmediafolder/wp-media-folder-luminii/wp-content/uploads/documents_2025/G2490.334.314-15.ies","iesSha256":null,"notes":"Current spec calls the optic 16 degrees while the official IES filename ends -15. Treat as unresolved until manufacturer confirms the mapping and raw file is ingested."},
+    {"role":"upper-field flood","exactModelCode":"EVO16-MJ-SN-IO-30K-FL-RBZ","opticCode":"FL","cctK":3000,"cri":92,"beamAngleDegPublished":30,"powerW":9,"lumens":637,"dimensionsMm":[66,66,112],"driverModel":"PSCV-100-24-D-EL","dimming":["DALI","DALI-2"],"photometryStatus":"linked","iesPath":"https://s3.us-central-1.wasabisys.com/luminiiwpmediafolder/wp-media-folder-luminii/wp-content/uploads/documents_2025/G2490.334.314-30.ies","iesSha256":null,"notes":"Order code assembled from the current manufacturer ordering matrix. Exact IES/CCT configuration must be confirmed before controlled ingestion."}
+  ],
+  "sources":{"productPage":"https://www.luminii.com/product/evo-16/","datasheet":"https://s3.us-central-1.wasabisys.com/luminiiwpmediafolder/wp-media-folder-luminii/wp-content/uploads/documents_2025/Evo-16.pdf","photometryDownload":"https://www.luminii.com/product/evo-16/","manufacturerContact":"https://www.luminii.com/contact/"},
+  "review":{"exactConfigurationConfirmed":false,"officialPhotometryAvailable":true,"meetsPhysicalTarget":false,"meetsOpticalTarget":true,"meetsControlTarget":true,"notes":"Strongest public photometry baseline. 66 mm aperture misses the preferred 45 mm target. Raw IES bytes are not yet controlled in-repo, and the 15/16 degree medium-file naming discrepancy remains unresolved."}
+}

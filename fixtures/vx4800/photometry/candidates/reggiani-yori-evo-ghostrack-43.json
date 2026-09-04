@@ -1,0 +1,18 @@
+{
+  "$schema":"../../../../schemas/aether-photometry-candidate.schema.json",
+  "schemaVersion":"1.0.0",
+  "fixtureId":"vx4800-bf-01",
+  "candidateId":"reggiani-yori-evo-ghostrack-43",
+  "status":"shortlisted",
+  "manufacturer":"Reggiani Illuminazione",
+  "family":"Yori Evo Ghostrack 1X - 43mm",
+  "regionAvailability":["India: official Reggiani sales coverage","China/Asia: Reggiani regional operations"],
+  "finishOptions":["Embossed matte white","Embossed matte black","Chrome on request","Royal matte black on request","Royal matte white on request","Brushed aluminium on request","Brushed gold on request","Brushed brass on request","Brushed copper on request","Antiqued brushed bronze on request"],
+  "configurations":[
+    {"role":"deep-tail narrow","exactModelCode":null,"opticCode":null,"cctK":3000,"cri":null,"beamAngleDegPublished":null,"powerW":null,"lumens":null,"dimensionsMm":[43,43,141],"driverModel":null,"dimming":["DALI"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Current family page proves the 43 mm subfamily, 3000K availability and DALI, but does not expose an exact current 3-7 degree article/configuration in the public result. Historical brochures are not promoted to current configuration evidence."},
+    {"role":"mid-field spot","exactModelCode":null,"opticCode":null,"cctK":3000,"cri":null,"beamAngleDegPublished":null,"powerW":null,"lumens":null,"dimensionsMm":[43,43,141],"driverModel":null,"dimming":["DALI"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Exact current 43 mm article, CRI, wattage, optic and photometry file required."},
+    {"role":"upper-field flood","exactModelCode":null,"opticCode":null,"cctK":3000,"cri":null,"beamAngleDegPublished":null,"powerW":null,"lumens":null,"dimensionsMm":[43,43,141],"driverModel":null,"dimming":["DALI"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Exact current 43 mm article, CRI, wattage, optic and photometry file required."}
+  ],
+  "sources":{"productPage":"https://www.reggiani.net/en/family/?cat=yori-evo-ghostrack-system&famiglia=yori-evo-ghostrack&lang=en","datasheet":null,"photometryDownload":"https://www.reggiani.net/en/family/?cat=yori-evo-ghostrack-system&famiglia=yori-evo-ghostrack&lang=en","manufacturerContact":"https://www.reggiani.net/en/contacts/"},
+  "review":{"exactConfigurationConfirmed":false,"officialPhotometryAvailable":false,"meetsPhysicalTarget":true,"meetsOpticalTarget":null,"meetsControlTarget":true,"notes":"Highest-upside physical candidate. Family-level IES/LDT resources exist, but exact 43 mm narrow/spot/flood configurations have not been isolated and must not be inferred from other Yori sizes or older generations."}
+}

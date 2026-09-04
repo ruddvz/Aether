@@ -1,0 +1,18 @@
+{
+  "$schema": "../../../../schemas/aether-photometry-candidate.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "candidateId": "erco-eclipse-48v-xs",
+  "status": "shortlisted",
+  "manufacturer": "ERCO",
+  "family": "Eclipse 48V for Minirail track XS",
+  "regionAvailability": ["India: ERCO office/representation", "Asia: ERCO regional offices"],
+  "finishOptions": ["White", "Black", "Silver", "Project colours documented at family level"],
+  "configurations": [
+    {"role":"deep-tail narrow","exactModelCode":null,"opticCode":"Narrow spot","cctK":3000,"cri":97,"beamAngleDegPublished":5,"powerW":null,"lumens":null,"dimensionsMm":[32,32,105],"driverModel":null,"dimming":["Casambi","DALI via Gateway"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Family architecture explicitly publishes 5 degree Narrow spot and 3000K CRI97, but the exact XS article number, exact 3000K power/output and matching file are not yet isolated."},
+    {"role":"mid-field spot","exactModelCode":null,"opticCode":"Spot","cctK":3000,"cri":97,"beamAngleDegPublished":18,"powerW":null,"lumens":null,"dimensionsMm":[32,32,105],"driverModel":null,"dimming":["Casambi","DALI via Gateway"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Exact XS 3000K CRI97 article-level photometry required."},
+    {"role":"upper-field flood","exactModelCode":null,"opticCode":"Flood","cctK":3000,"cri":97,"beamAngleDegPublished":30,"powerW":null,"lumens":null,"dimensionsMm":[32,32,105],"driverModel":null,"dimming":["Casambi","DALI via Gateway"],"photometryStatus":"missing","iesPath":null,"iesSha256":null,"notes":"Exact XS 3000K CRI97 article-level photometry required."}
+  ],
+  "sources":{"productPage":"https://www.erco.com/en/products/indoor/spotlights-for-track/eclipse-48v-7077/","datasheet":"https://www.erco.com/cdn/downloaddata/2025_01/db/pep-full/famspecs/1_2057/eclipse-48V-19322_2057_1-web.pdf","photometryDownload":null,"manufacturerContact":"https://www.erco.com/en/contact/india-2909/"},
+  "review":{"exactConfigurationConfirmed":false,"officialPhotometryAvailable":false,"meetsPhysicalTarget":true,"meetsOpticalTarget":true,"meetsControlTarget":true,"notes":"Excellent 32 mm premium optical platform and the published 5/18/30 degree architecture matches the three roles. Exact XS 3000K CRI97 article data and files remain unverified; family maximum-output values must not be transferred to this configuration."}
+}
