@@ -7,8 +7,10 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[1]
 RESPONSE_SCHEMA = ROOT / "schemas/aether-kinetic-rfq-response.schema.json"
 DISPATCH_SCHEMA = ROOT / "schemas/aether-kinetic-rfq-dispatch.schema.json"
+CONTACT_SCHEMA = ROOT / "schemas/aether-kinetic-rfq-contact-evidence.schema.json"
 TEMPLATE = ROOT / "fixtures/vx4800/kinetics/qualification/rfq-response-template-v1.json"
 DISPATCH = ROOT / "fixtures/vx4800/kinetics/qualification/rfq-dispatch-register-v1.json"
+CONTACTS = ROOT / "fixtures/vx4800/kinetics/qualification/rfq-contact-evidence-v1.json"
 RFQ = ROOT / "fixtures/vx4800/kinetics/qualification/rfq-requirements-v1.json"
 
 
@@ -36,8 +38,10 @@ def identified_variant(fake):
 def test_rfq_execution_artifacts_validate():
     response_schema = load(RESPONSE_SCHEMA)
     dispatch_schema = load(DISPATCH_SCHEMA)
+    contact_schema = load(CONTACT_SCHEMA)
     assert not errors(load(TEMPLATE), response_schema)
     assert not errors(load(DISPATCH), dispatch_schema)
+    assert not errors(load(CONTACTS), contact_schema)
 
 
 def test_dispatch_register_covers_exactly_the_six_controlled_rfq_packages():
@@ -49,13 +53,54 @@ def test_dispatch_register_covers_exactly_the_six_controlled_rfq_packages():
     assert len(dispatch_ids) == 6
 
 
-def test_repository_research_is_not_misrepresented_as_external_dispatch():
+def test_ready_to_issue_is_not_misrepresented_as_external_dispatch():
     dispatch = load(DISPATCH)
     assert dispatch["status"] == "dispatch-planning"
-    assert all(item["dispatchStatus"] == "not-issued" for item in dispatch["packages"])
+    statuses = {item["rfqPackageId"]: item["dispatchStatus"] for item in dispatch["packages"]}
+    assert statuses == {
+        "RFQ-KIN-BRG-01": "ready-to-issue",
+        "RFQ-KIN-DRV-01": "ready-to-issue",
+        "RFQ-KIN-BELT-01": "ready-to-issue",
+        "RFQ-KIN-BRK-01": "ready-to-issue",
+        "RFQ-KIN-FBK-01": "ready-to-issue",
+        "RFQ-KIN-FAB-01": "not-issued",
+    }
     assert all(item["issuedDate"] is None for item in dispatch["packages"])
     assert all(item["dispatchChannelReference"] is None for item in dispatch["packages"])
     assert all(item["responseRecord"] is None for item in dispatch["packages"])
+
+
+def test_contact_qualified_targets_are_bound_to_current_contact_evidence():
+    dispatch = load(DISPATCH)
+    contacts = load(CONTACTS)
+    contact_ids = {record["id"] for record in contacts["records"]}
+    qualified = [
+        target
+        for package in dispatch["packages"]
+        for target in package["candidateTargets"]
+        if target["targetStatus"] == "contact-qualified"
+    ]
+    assert len(qualified) == 5
+    assert all(target["contactEvidenceRef"] in contact_ids for target in qualified)
+
+    unresolved = [
+        target
+        for package in dispatch["packages"]
+        for target in package["candidateTargets"]
+        if target["targetStatus"] != "contact-qualified"
+    ]
+    assert unresolved
+    assert all(target["contactEvidenceRef"] is None for target in unresolved)
+
+
+def test_ready_to_issue_requires_at_least_one_contact_qualified_target():
+    schema = load(DISPATCH_SCHEMA)
+    fake = deepcopy(load(DISPATCH))
+    bearing = next(item for item in fake["packages"] if item["rfqPackageId"] == "RFQ-KIN-BRG-01")
+    for target in bearing["candidateTargets"]:
+        target["targetStatus"] = "research-required"
+        target["contactEvidenceRef"] = None
+    assert errors(fake, schema)
 
 
 def test_issued_status_requires_a_real_external_reference_and_date():
@@ -168,5 +213,5 @@ def test_dispatch_candidates_do_not_close_engineering_selection():
     dispatch_text = DISPATCH.read_text().lower()
     assert "candidate target is not an issued rfq" in dispatch_text
     assert "no dispatch state selects a component" in dispatch_text
-    assert "drive application-engineering supplier target tbd" in dispatch_text
+    assert "contact qualification proves only that a current public route exists" in dispatch_text
     assert "prototype precision fabricator target tbd" in dispatch_text
