@@ -16,6 +16,16 @@
       "qualificationStatus": "contact-qualified-not-issued"
     },
     {
+      "id": "KRC-BRG-SCHAEFFLER-01",
+      "rfqPackageIds": ["RFQ-KIN-BRG-01"],
+      "organization": "Schaeffler Canada Inc.",
+      "sourceUrl": "https://www.schaeffler.com/en/meta/worldwide/locations-worldwide/locations_worldwide_detail/?companyids=73791",
+      "accessedDate": "2026-09-04",
+      "channelType": "regional-sales-service",
+      "publicContactReference": "Official Schaeffler Canada location page publishes the Montréal Canadian contact route, including +1 514-748-5111, toll-free 800-361-5841 and info.ca@schaeffler.com. This qualifies a current contact route only; no bearing variant or application suitability is implied.",
+      "qualificationStatus": "contact-qualified-not-issued"
+    },
+    {
       "id": "KRC-BELT-GATES-01",
       "rfqPackageIds": ["RFQ-KIN-BELT-01"],
       "organization": "Gates Corporation",
@@ -33,6 +43,16 @@
       "accessedDate": "2026-09-04",
       "channelType": "regional-sales-service",
       "publicContactReference": "Official RINGSPANN USA/Canada/Mexico contact page provides North American engineering/regional-sales routes and the German headquarters general contact channel for product enquiries.",
+      "qualificationStatus": "contact-qualified-not-issued"
+    },
+    {
+      "id": "KRC-BRK-MAYR-01",
+      "rfqPackageIds": ["RFQ-KIN-BRK-01"],
+      "organization": "Chr. Mayr GmbH + Co. KG",
+      "sourceUrl": "https://www.mayr.com/en/products/safety-brakes~48215",
+      "accessedDate": "2026-09-04",
+      "channelType": "technical-support",
+      "publicContactReference": "Official mayr safety-brake page provides a technical enquiry form for specific requirements and the manufacturer telephone route +49 (0)8341 804-0. This qualifies an enquiry route only; no brake family, torque or safety performance is selected.",
       "qualificationStatus": "contact-qualified-not-issued"
     },
     {
@@ -54,7 +74,17 @@
       "channelType": "online-support",
       "publicContactReference": "Official SEW-EURODRIVE Canada Online Support lists Canadian support phone routes and online-support@sew-eurodrive.ca for technical/product support; Canadian locations are also published on the official site.",
       "qualificationStatus": "contact-qualified-not-issued"
+    },
+    {
+      "id": "KRC-FAB-BORMILL-01",
+      "rfqPackageIds": ["RFQ-KIN-FAB-01"],
+      "organization": "Bormill Inc.",
+      "sourceUrl": "https://bormillinc.com/capacities.html",
+      "accessedDate": "2026-09-04",
+      "channelType": "regional-sales-service",
+      "publicContactReference": "Official Bormill capacity page publishes large vertical turning up to 114-144 inch swing, fabrication/welding, prototype machining, a Stoney Creek Ontario address, phone and request-a-quote channel. These public capabilities justify an RFQ enquiry only; post-weld flatness, NDT, traceability and proof-load capability remain supplier-response questions.",
+      "qualificationStatus": "contact-qualified-not-issued"
     }
   ],
-  "qualificationRule": "A verified public supplier contact route may move a dispatch target to contact-qualified, but it is not evidence that an RFQ was sent. Actual issue still requires an issue date and external thread/channel reference in the dispatch register."
+  "qualificationRule": "A verified public supplier contact route may move a dispatch target to contact-qualified, but it is not evidence that an RFQ was sent or that the supplier is technically approved. Actual issue still requires an issue date and external thread/channel reference in the dispatch register; technical comparison still requires a validated supplier response."
 }
