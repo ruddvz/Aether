@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-suspension-qualification.schema.json",
+  "title": "AETHERIA suspension qualification shortlist",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "qualificationRevision",
+    "status",
+    "finalSystemApproved",
+    "authority",
+    "currentArchitecture",
+    "candidates",
+    "lowerBridle",
+    "promotionGate"
+  ],
+  "properties": {
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"type": "string"},
+    "qualificationRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "finalSystemApproved": {"type": "boolean"},
+    "authority": {"enum": ["research-and-rfq-input", "controlled"]},
+    "currentArchitecture": {
+      "type": "object",
+      "required": ["lineCount", "upperGripper", "mainCable", "lowerAttachment"],
+      "properties": {
+        "lineCount": {"type": "integer", "minimum": 1},
+        "upperGripper": {"type": "string"},
+        "mainCable": {"type": "string"},
+        "lowerAttachment": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["candidateId", "manufacturer", "role", "status", "strengths", "blockers", "sources"],
+        "properties": {
+          "candidateId": {"type": "string"},
+          "manufacturer": {"type": "string"},
+          "role": {"type": "string"},
+          "status": {"type": "string"},
+          "strengths": {"type": "array", "items": {"type": "string"}},
+          "blockers": {"type": "array", "items": {"type": "string"}},
+          "sources": {"type": "object", "minProperties": 1}
+        },
+        "additionalProperties": true
+      }
+    },
+    "lowerBridle": {
+      "type": "object",
+      "required": ["status", "concept", "requiredDevelopment"],
+      "properties": {
+        "status": {"type": "string"},
+        "concept": {"type": "string"},
+        "requiredDevelopment": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "promotionGate": {
+      "type": "object",
+      "required": [
+        "actualElementMassControlled",
+        "dynamicLineDesignLoadControlled",
+        "exactUpperGripperSelected",
+        "exactMatchedCableSelected",
+        "lowerBridleEngineered",
+        "secondaryRetentionResolved",
+        "samplePullSlipTestPassed",
+        "fatigueTestPassed",
+        "fullPreHangTestPassed"
+      ],
+      "additionalProperties": {"type": "boolean"}
+    }
+  },
+  "additionalProperties": true
+}
