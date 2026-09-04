@@ -7,9 +7,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.fixture(scope="session")
-def built_release():
-    subprocess.run([sys.executable, str(ROOT / "scripts/build_release.py")], check=True)
-    return ROOT / "build/vx4800/AETHERIA_VORTEX_v5.2.0.zip"
+def built_product():
+    subprocess.run([sys.executable, str(ROOT / "scripts/build_product.py")], check=True)
+    return ROOT / "build/vx4800"
 
 
 @pytest.fixture(scope="session")
