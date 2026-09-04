@@ -109,9 +109,24 @@ def test_project_structural_release_requires_all_prerequisite_gates():
     prerequisites = [name for name in gates if name != "projectStructuralReleaseApproved"]
     if gates["projectStructuralReleaseApproved"]:
         assert all(gates[name] for name in prerequisites)
+        assert brief["authority"] == "controlled"
+        assert brief["status"] == "approved"
+        assert brief["reactionOutputs"]["currentStatus"] == "approved"
+        assert all(zone["positionStatus"] == "controlled" for zone in brief["interfaceZones"])
+        assert all(zone["reactionStatus"] == "approved" for zone in brief["interfaceZones"])
     else:
         assert gates["projectStructuralReleaseApproved"] is False
         assert not all(gates[name] for name in prerequisites)
+
+
+def test_approved_metadata_cannot_exist_with_open_structural_gates():
+    brief = load_json(BRIEF)
+    gates = brief["promotionGate"]
+    if brief["status"] == "approved" or brief["authority"] == "controlled":
+        assert brief["status"] == "approved"
+        assert brief["authority"] == "controlled"
+        assert all(gates.values())
+        assert brief["reactionOutputs"]["currentStatus"] == "approved"
 
 
 def test_current_structural_release_and_global_release_gate_remain_open():
