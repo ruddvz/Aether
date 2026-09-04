@@ -6,9 +6,10 @@ import bpy
 
 from aether_blender_lib import create_area_light, ensure_collection, link_object
 
-VISUALIZATION_REVISION = "0.5.0"
+VISUALIZATION_REVISION = "0.6.0"
 MACRO_TARGET_ID = "VX-001"
 MACRO_CARD_NAME = "MACRO_NEUTRAL_CARD"
+MACRO_CARD_MATERIAL = "MAT_MACRO_NEUTRAL_CARD"
 MACRO_LIGHT_PREFIX = "MACRO_RIG_"
 
 
@@ -47,14 +48,31 @@ def _slim_butterfly_spines() -> int:
     count = 0
     for obj in bpy.data.objects:
         if obj.name == "CENTRAL_SPINE" or obj.name.startswith("CENTRAL_SPINE."):
-            obj.scale.x *= 0.78
-            obj.scale.y *= 0.70
-            obj.scale.z *= 0.82
-            obj["aetheria_geometry_status"] = "visualization-sculptural-abstraction-slimmed-0.5.0"
+            obj.scale.x *= 0.70
+            obj.scale.y *= 0.60
+            obj.scale.z *= 0.75
+            obj["aetheria_geometry_status"] = "visualization-sculptural-abstraction-slimmed-0.6.0"
             count += 1
     if count != 3:
         raise RuntimeError(f"Expected 3 linked butterfly prototype spines, found {count}")
     return count
+
+
+def _get_macro_card_material() -> bpy.types.Material:
+    material = bpy.data.materials.get(MACRO_CARD_MATERIAL)
+    if material is None:
+        material = bpy.data.materials.new(MACRO_CARD_MATERIAL)
+        material.use_nodes = True
+    nodes = material.node_tree.nodes
+    bsdf = nodes.get("Principled BSDF")
+    _set_socket(bsdf, "Base Color", (0.16, 0.18, 0.20, 1.0))
+    _set_socket(bsdf, "Metallic", 0.0)
+    _set_socket(bsdf, "Roughness", 0.82)
+    material.diffuse_color = (0.16, 0.18, 0.20, 1.0)
+    material["aetheria_authority"] = "visualization-only"
+    material["aetheria_stage_role"] = "optical-macro-neutral-reflection-card"
+    material.use_fake_user = True
+    return material
 
 
 def _build_macro_stage() -> None:
@@ -77,18 +95,15 @@ def _build_macro_stage() -> None:
         card.name = MACRO_CARD_NAME
         link_object(card, stage_collection)
         card.rotation_euler = Vector((0.0, 0.0, 1.0)).rotation_difference(card_normal).to_euler()
-        stage_material = bpy.data.materials.get("MAT_STAGE_IVORY")
-        if stage_material is None:
-            raise RuntimeError("MAT_STAGE_IVORY is missing")
-        card.data.materials.append(stage_material)
+        card.data.materials.append(_get_macro_card_material())
         card.hide_render = True
         card["aetheria_stage_role"] = "optical-macro-neutral-reflection-card"
         card["aetheria_authority"] = "visualization-only"
 
     macro_lights = (
-        ("MACRO_RIG_KEY", target + Vector((0.52, -0.48, 0.42)), 72.0, 0.46, (1.0, 0.92, 0.84)),
-        ("MACRO_RIG_EDGE", target + Vector((-0.44, 0.34, 0.28)), 108.0, 0.34, (0.78, 0.88, 1.0)),
-        ("MACRO_RIG_FILL", target + Vector((-0.34, -0.38, -0.16)), 34.0, 0.62, (1.0, 0.96, 0.90)),
+        ("MACRO_RIG_KEY", target + Vector((0.52, -0.48, 0.36)), 48.0, 0.48, (1.0, 0.92, 0.84)),
+        ("MACRO_RIG_EDGE", target + Vector((-0.44, 0.34, 0.24)), 76.0, 0.36, (0.78, 0.88, 1.0)),
+        ("MACRO_RIG_FILL", target + Vector((-0.34, -0.38, -0.14)), 24.0, 0.64, (1.0, 0.96, 0.90)),
     )
     for name, location, energy, size, color in macro_lights:
         if bpy.data.objects.get(name) is None:
@@ -178,7 +193,7 @@ def prepare_render_mode(camera_name: str) -> str:
     _set_product_visibility()
     if camera_name == "CAM_BUTTERFLY_MACRO":
         _set_macro_visibility()
-        scene.view_settings.exposure = -0.10
+        scene.view_settings.exposure = -0.55
         scene["aetheria_active_render_mode"] = "optical-macro-isolated"
         return "optical-macro-isolated"
     scene.view_settings.exposure = -0.45
