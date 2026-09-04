@@ -3,13 +3,25 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import bpy
 
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+
+from lookdev_refinements import (
+    FINISH_MATERIALS,
+    SPINE_REFINEMENT_TAG,
+    apply_finish_variant,
+    apply_master_refinements,
+)
+
 
 def cli_args() -> argparse.Namespace:
-    argv = __import__("sys").argv
+    argv = sys.argv
     argv = argv[argv.index("--") + 1 :] if "--" in argv else []
     p = argparse.ArgumentParser()
     p.add_argument("--report", default=None)
@@ -28,7 +40,7 @@ def validate_environment(
     minimum_objects: int,
 ) -> tuple[int, int]:
     collection = bpy.data.collections.get(collection_name)
-    objects = list(collection.all_objects) if collection else []
+    objects = [obj for obj in collection.all_objects if obj is not None] if collection else []
     if collection is None:
         fail(errors, f"visualization environment collection is missing: {collection_name}")
         return 0, 0
@@ -43,6 +55,20 @@ def validate_environment(
     return len(objects), len(lights)
 
 
+def _finish_objects() -> list[bpy.types.Object]:
+    result = []
+    for obj in bpy.data.objects:
+        if obj.name == "CANOPY_FIXED":
+            result.append(obj)
+        elif obj.name == "SUSPENSION_YOKES_240":
+            result.append(obj)
+        elif obj.name.startswith("CENTRAL_SPINE"):
+            result.append(obj)
+        elif obj.name.startswith("LED_HEAD_") and not obj.name.endswith("_LENS"):
+            result.append(obj)
+    return result
+
+
 def main() -> None:
     args = cli_args()
     errors: list[str] = []
@@ -52,7 +78,7 @@ def main() -> None:
         fail(errors, f"Blender {bpy.app.version_string} is older than the 5.2 pipeline target")
     if scene.get("aetheria_fixture_id") != "vx4800-bf-01": fail(errors, "scene fixture id is missing or incorrect")
     if scene.get("aetheria_design_revision") != "1.3.0": fail(errors, "scene design revision is missing or incorrect")
-    if scene.get("aetheria_visualization_revision") != "0.12.0": fail(errors, "scene visualization revision must be 0.12.0")
+    if scene.get("aetheria_visualization_revision") != "0.13.0": fail(errors, "scene visualization revision must be 0.13.0")
     if scene.get("aetheria_authority") != "visualization-only": fail(errors, "scene authority must remain visualization-only")
 
     instances = [o for o in bpy.data.objects if o.instance_type == "COLLECTION" and o.instance_collection and o.name.startswith("VX-")]
@@ -91,6 +117,13 @@ def main() -> None:
     actual_cameras = [o for o in bpy.data.objects if o.type == "CAMERA"]
     if len(actual_cameras) != len(camera_names): fail(errors, f"expected exactly {len(camera_names)} cameras, found {len(actual_cameras)}")
 
+    macro = bpy.data.objects.get("CAM_BUTTERFLY_MACRO")
+    residential_medium = bpy.data.objects.get("CAM_ARCH_RESIDENTIAL_MEDIUM")
+    if macro and abs(float(macro.data.lens) - 165.0) > 1e-6:
+        fail(errors, f"final butterfly macro lens must be 165 mm, found {macro.data.lens}")
+    if residential_medium and abs(float(residential_medium.data.lens) - 46.0) > 1e-6:
+        fail(errors, f"final residential-medium lens must be 46 mm, found {residential_medium.data.lens}")
+
     material_names = {
         "MAT_BUTTERFLY_OPTICAL_GLASS", "MAT_PVD_DARK_CHAMPAGNE", "MAT_PVD_BLACK_TITANIUM",
         "MAT_BRUSHED_BRASS", "MAT_SATIN_NICKEL", "MAT_CABLE_STAINLESS",
@@ -111,8 +144,35 @@ def main() -> None:
     spines = [o for o in bpy.data.objects if o.name.startswith("CENTRAL_SPINE")]
     if len(spines) != 3: fail(errors, f"expected 3 linked prototype spine objects, found {len(spines)}")
     for spine in spines:
-        if spine.get("aetheria_spine_refinement") != "0.11-smaller-sculptural-centre":
-            fail(errors, f"{spine.name} is missing 0.11 spine refinement metadata")
+        if spine.get("aetheria_spine_refinement") != SPINE_REFINEMENT_TAG:
+            fail(errors, f"{spine.name} is missing final spine refinement metadata")
+
+    scale_before = {spine.name: tuple(float(v) for v in spine.scale) for spine in spines}
+    apply_master_refinements()
+    scale_once = {spine.name: tuple(float(v) for v in spine.scale) for spine in spines}
+    apply_master_refinements()
+    scale_twice = {spine.name: tuple(float(v) for v in spine.scale) for spine in spines}
+    if scale_before != scale_once or scale_once != scale_twice:
+        fail(errors, "master lookdev refinements are not idempotent across repeated calls")
+    if scene.get("aetheria_refinement_idempotence") != "guarded":
+        fail(errors, "scene does not record guarded lookdev idempotence")
+
+    finish_switch_counts = {}
+    for variant in ("black_titanium", "satin_nickel", "brushed_brass", "dark_champagne"):
+        replaced = apply_finish_variant(variant)
+        finish_switch_counts[variant] = replaced
+        if replaced <= 0:
+            fail(errors, f"finish switch to {variant} replaced no material slots")
+        target = FINISH_MATERIALS[variant]
+        for obj in _finish_objects():
+            if not getattr(obj, "data", None) or not hasattr(obj.data, "materials"):
+                continue
+            for material in obj.data.materials:
+                if material and material.name in set(FINISH_MATERIALS.values()) | {"MAT_BUTTERFLY_BODY_CHAMPAGNE", "MAT_LED_HEAD_TITANIUM"}:
+                    if material.name != target:
+                        fail(errors, f"finish switch {variant} did not fully propagate to {obj.name}")
+    if scene.get("aetheria_active_finish_variant") != "dark_champagne":
+        fail(errors, "finish-switch validation did not restore dark_champagne study")
 
     environment_results = {
         "residential": validate_environment(errors, "85_ENV_RESIDENTIAL", "ENV_RES_", 4, 20),
@@ -163,6 +223,8 @@ def main() -> None:
         "materials": len(bpy.data.materials),
         "glassAbsorptionDensity": absorption_density,
         "refinedSpines": len(spines),
+        "idempotentRefinements": scale_before == scale_twice,
+        "finishSwitchCounts": finish_switch_counts,
         "animationAction": animation_action.name if animation_action else None,
         "animationCycleFrames": cycle_frames,
         "animationReferenceRpm": rpm,
