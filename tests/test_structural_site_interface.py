@@ -8,6 +8,7 @@ BRIEF = ROOT / "fixtures/vx4800/structural/interface-brief-v1.json"
 SCHEMA = ROOT / "schemas/aether-structural-site-interface.schema.json"
 FIXTURE = ROOT / "fixtures/vx4800/fixture.json"
 RELEASE_GATE = ROOT / "fixtures/vx4800/compliance/release-gate-v1.json"
+EVIDENCE_INDEX = ROOT / "fixtures/vx4800/compliance/evidence-index-v1.json"
 
 
 def load_json(path: Path):
@@ -101,6 +102,17 @@ def test_equal_eighth_reaction_sharing_and_premature_anchor_selection_are_forbid
     assert "eight interface zones share reactions equally" in text
     assert "select anchors from a catalog before actual substrate" in text
     assert "without assuming equal 1/8 sharing" in requirements
+
+
+def test_structural_brief_is_repository_evidence_not_structural_approval():
+    index = load_json(EVIDENCE_INDEX)
+    records = {entry["id"]: entry for entry in index["records"]}
+    evidence = records["EVID-REPO-STRUCTURAL-BRIEF-V1"]
+    assert evidence["evidenceClass"] == "REPOSITORY"
+    assert evidence["sourceType"] == "repository-file"
+    assert evidence["canClosePhysicalTest"] is False
+    assert evidence["reference"] == "fixtures/vx4800/structural/interface-brief-v1.json"
+    assert "does not provide approved reactions" in evidence["claim"]
 
 
 def test_project_structural_release_requires_all_prerequisite_gates():
