@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "decisionDate": "2026-09-04",
+  "status": "qualification-in-progress",
+  "authority": "research-and-supplier-qualification-only",
+  "selectionBrief": "../selection-brief.json",
+  "finalApprovalGranted": false,
+  "finalists": [
+    {
+      "rank": 1,
+      "candidateId": "precision-evo16",
+      "role": "photometric-data reference finalist",
+      "whyItRemains": [
+        "Current manufacturer page publishes 3000K, CRI 90+, 6 degree, 16 degree and 30 degree optics.",
+        "Current manufacturer page exposes official IES downloads for the required narrow, medium and flood roles.",
+        "DALI control and premium finishes are published.",
+        "Public technical data is substantially more complete than the other current candidates."
+      ],
+      "knownMisses": [
+        "65.8 mm aperture exceeds the preferred 45 mm visual target."
+      ],
+      "blockingQuestions": [
+        "Confirm exact orderability of EVO16-MJ-SN-IO-30K-UN-RBZ, EVO16-MJ-SN-IO-30K-ME-RBZ and EVO16-MJ-SN-IO-30K-FL-RBZ or provide corrected current order codes.",
+        "Confirm that G2490.334.314-06.IES, G2490.334.314-15.IES and G2490.334.314-30.IES correspond to the same current Evo 16 light engine and are valid for the exact 3000K configurations.",
+        "Resolve the published 16 degree medium optic versus the -15 IES filename discrepancy.",
+        "Provide the raw LM-63 files directly or through a stable manufacturer download so repository SHA-256 provenance can be controlled.",
+        "Confirm the exact DALI/DALI-2 power-supply architecture and supported head count for the intended 14-head installation."
+      ],
+      "promotionGate": "No controlled-product promotion until exact model identity and all three raw IES files are received, hashed, parsed and independently cross-checked."
+    },
+    {
+      "rank": 2,
+      "candidateId": "reggiani-yori-evo-ghostrack-43",
+      "role": "physical-fit finalist",
+      "whyItRemains": [
+        "43 mm head size meets the preferred compact visual target.",
+        "Current family information publishes 3000K and DALI availability.",
+        "Current family information publishes CRI options through >95 and >98.",
+        "The family supports premium/special finishes and exposes photometry resources."
+      ],
+      "knownMisses": [],
+      "blockingQuestions": [
+        "Provide exact current 43 mm article numbers for the closest available narrow, approximately 15 degree, and approximately 30 degree optics at 3000K.",
+        "Confirm exact CRI, power, delivered lumens and driver/control configuration for each article.",
+        "Provide exact IES or LDT files for those three configurations.",
+        "Confirm whether a 3 to 7 degree fixed optic exists in the current 43 mm family. If not, state the narrowest current fixed optic.",
+        "Confirm special-finish availability suitable for dark bronze or dark champagne canopy integration."
+      ],
+      "promotionGate": "No controlled-product promotion until exact current articles and configuration-matched photometry are received."
+    }
+  ],
+  "alternates": [
+    "erco-eclipse-48v-xs",
+    "formalighting-zero40-lv",
+    "kit-concept-a90d-5l"
+  ],
+  "decisionRules": [
+    "Do not convert family-level data into exact SKU truth.",
+    "Do not treat a published beam angle as measured photometry.",
+    "Do not mix CCT, wattage, optic or driver photometry across configurations.",
+    "Do not mark photometry received until the raw supplier or laboratory file is stored and hashed.",
+    "A compact physical head does not outrank a larger head if exact controlled photometry cannot be obtained.",
+    "Final selection may remain open between the two finalists until supplier returns are complete."
+  ],
+  "nextControlledStep": "Obtain supplier responses and exact raw photometry, then run the existing candidate evaluator and LM-63 ingestion pipeline before any final selection."
+}
