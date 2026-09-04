@@ -97,3 +97,13 @@ All notable repository and product presentation changes are recorded here.
 - Added a deterministic fail-safe P0 DXF generator that reproduces only controlled canopy/carrier coordination, all 240 suspension exits and all 14 fixed accent-head locations while leaving unresolved mechanism footprints as annotation-only TBD callouts.
 - Explicitly separated vertical rotation-axis direction from its still-unresolved physical XY datum; the P0 drawing no longer infers the composition origin as the bearing/shaft axis.
 - Added regression coverage for authority boundaries, no-slip-ring/fixed-side sensing, common-cause separation, failure-state geometry, traceable TBDs, physical rotation-axis datum gating, P0 drawing behavior and fail-closed release behavior.
+
+## 2026-09-04 - VX4800 kinetic RFQ execution controls
+
+- Added a supplier-response schema that normalizes exact family/model/variant identity, evidence revision/provenance, assumptions, missing inputs, compliance status, mating data, maintenance data and numeric rating conditions.
+- Removed any direct `selected` state from supplier response intake; supplier responses can become at most `shortlisted-not-selected` until separate engineering release gates close.
+- Added a fail-closed dispatch register that distinguishes repository research targets from actually issued RFQs and requires an issue date plus external channel reference before `issued` can be claimed.
+- Added current evidence-backed dispatch targets for bearing, synchronous transmission, direct-carrier brake and fixed-side feedback while keeping unqualified drive/fabrication targets explicitly research-required.
+- Added regression tests preventing shortlist candidacy without exact variant identity/assumption disclosure and preventing false external-dispatch claims.
+- Added a controlled RFQ execution guide covering dispatch, response normalization, clarification, technical comparison and the selection firewall.
+- Opened GitHub Issue #29 to track real external dispatches and normalized supplier-response intake.
