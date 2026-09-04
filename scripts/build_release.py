@@ -70,6 +70,18 @@ def generate_current_sources() -> list[tuple[str, Path]]:
     ]
 
 
+def historical_member_bytes(archive_name: str, source_path: Path) -> bytes:
+    data = source_path.read_bytes()
+    if archive_name == "product/fixture.json":
+        # The verified V5.2 release used the canonical JSON content with standard
+        # two-space pretty formatting. The recovery commit compacted formatting
+        # only. Re-serializing here preserves semantic authority while reproducing
+        # the exact historical release member bytes.
+        parsed = json.loads(data)
+        data = (json.dumps(parsed, indent=2) + "\n").encode("utf-8")
+    return data
+
+
 def write_member(zf: zipfile.ZipFile, name: str, data: bytes) -> None:
     info = zipfile.ZipInfo(name, STAMP)
     info.compress_type = zipfile.ZIP_DEFLATED
@@ -82,7 +94,7 @@ def build_candidate() -> Path:
     with zipfile.ZipFile(CANDIDATE_OUT, "w", zipfile.ZIP_DEFLATED, compresslevel=7) as zf:
         write_member(zf, "README.md", README.encode("utf-8"))
         for archive_name, source_path in sources:
-            data = source_path.read_bytes()
+            data = historical_member_bytes(archive_name, source_path)
             hashes.append(f"{sha256_bytes(data)}  {archive_name}")
             write_member(zf, archive_name, data)
         write_member(zf, "SHA256SUMS.txt", ("\n".join(hashes) + "\n").encode("utf-8"))
