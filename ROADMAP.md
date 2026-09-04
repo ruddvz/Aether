@@ -51,6 +51,16 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [ ] Pass production-equivalent attachment proof and fatigue tests
   - [ ] Resolve occupied-space failure/fragment retention strategy
 - [ ] Engineer rotating carrier, bearing, drive, braking and secondary retention
+  - [x] Define separate primary, drive, braking, service-lock and secondary-retention load paths
+  - [x] Preserve fixed-side powered systems and the current no-slip-ring boundary
+  - [x] Compare bearing, positive-drive and power-off brake architecture families without inventing ratings
+  - [x] Define positive mechanical service lock and normally-clear annular secondary retention
+  - [x] Define balance/trim, fixed-side feedback, abnormal-motion and no-auto-restart requirements
+  - [x] Define calculation inputs and staged physical dynamics/clearance validation
+  - [ ] Control rotating mass, center of gravity, production variation and dynamic load cases
+  - [ ] Select bearing and approve combined-load/mounting calculation
+  - [ ] Select drive/brake and approve torque/stopping calculations
+  - [ ] Validate service lock, secondary retention, feedback and fault handling
 - [ ] Structural calculation and site interface reactions
 - [ ] Full factory pre-hang and dynamic-clearance test
 - [ ] Electrical architecture and service access
