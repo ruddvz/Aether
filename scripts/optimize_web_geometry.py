@@ -52,8 +52,9 @@ def build() -> Path:
 
     source_bytes = SOURCE.stat().st_size
     optimized_bytes = OPTIMIZED.stat().st_size
+    byte_delta = optimized_bytes - source_bytes
     manifest = {
-        "schemaVersion": "1.0.0",
+        "schemaVersion": "1.1.0",
         "fixtureId": "vx4800-bf-01",
         "designRevision": "1.3.0",
         "authority": "coordination-only-derived-web-asset",
@@ -66,8 +67,10 @@ def build() -> Path:
             "file": OPTIMIZED.name,
             "sha256": sha256(OPTIMIZED),
             "byteLength": optimized_bytes,
-            "compressionRatio": round(optimized_bytes / source_bytes, 6),
+            "rawByteRatio": round(optimized_bytes / source_bytes, 6),
+            "rawByteDelta": byte_delta,
             "extensionsExpected": ["EXT_meshopt_compression"],
+            "performanceIntent": "Meshopt-encoded browser review asset; raw GLB size is not required to be smaller than the already compact instanced source.",
         },
         "optimizer": {
             "tool": "glTF-Transform CLI",
@@ -80,11 +83,18 @@ def build() -> Path:
             "mayBecomeManufacturingAuthority": False,
             "nodeIdentityMustBePreserved": True,
             "sourceGeometryRemainsAuthoritativeForCoordinationQa": True,
+            "rawFileSizeReductionRequired": False,
         },
+        "notes": [
+            "The source GLB already reuses three butterfly meshes across 240 instances and is therefore unusually compact.",
+            "EXT_meshopt_compression adds decoder metadata and may increase raw container bytes for this specific model.",
+            "The derived asset exists to exercise a standard web delivery path and preserve a future optimization hook without changing source coordination authority."
+        ],
     }
     MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n")
     print(OPTIMIZED)
     print(manifest["optimized"]["sha256"])
+    print(f"source bytes={source_bytes} optimized bytes={optimized_bytes} delta={byte_delta:+d}")
     return OPTIMIZED
 
 
