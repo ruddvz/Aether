@@ -14,6 +14,7 @@ if str(HERE) not in sys.path:
 
 from environment_library import prepare_environment_render
 from lookdev_modes import prepare_render_mode
+from lookdev_refinements import FINISH_MATERIALS, apply_finish_variant
 
 
 def cli_args() -> argparse.Namespace:
@@ -25,6 +26,7 @@ def cli_args() -> argparse.Namespace:
     p.add_argument("--preset", default=None, help="Legacy combined render preset")
     p.add_argument("--quality", default=None, help="Quality tier from render_quality.json")
     p.add_argument("--output-profile", default=None, help="Aspect/resolution profile from output_profiles.json")
+    p.add_argument("--finish", default=None, help="Visualization finish override")
     p.add_argument("--output", default=None)
     p.add_argument("--repo-root", default=".")
     p.add_argument("--fixture-lights", choices=("preset", "on", "off"), default="preset")
@@ -73,12 +75,13 @@ def set_fixture_lights(enabled: bool) -> int:
     return count
 
 
-def _print_shots(catalogue: dict) -> None:
+def _print_shots(catalogue: dict, manifest: dict) -> None:
     for name, shot in catalogue["shots"].items():
         print(
             f"{name}: camera={shot['camera']} aspect={shot['aspect']} "
             f"environment={shot['environment']} purpose={shot['purpose']}"
         )
+    print("finish variants: " + ", ".join(manifest.get("finishVariants", [])))
 
 
 def main() -> None:
@@ -89,9 +92,10 @@ def main() -> None:
     qualities = _read_json(base / "render_quality.json")
     output_profiles = _read_json(base / "output_profiles.json")
     catalogue = _read_json(base / "shot_catalogue.json")
+    manifest = _read_json(base / "scene_manifest.json")
 
     if args.list_shots:
-        _print_shots(catalogue)
+        _print_shots(catalogue, manifest)
         return
     if not args.output:
         raise SystemExit("--output is required unless --list-shots is used")
@@ -158,6 +162,11 @@ def main() -> None:
     if environment_mode is not None:
         render_mode = environment_mode
 
+    finish_name = args.finish or manifest.get("defaultFinish", "dark_champagne")
+    if finish_name not in manifest.get("finishVariants", []) or finish_name not in FINISH_MATERIALS:
+        raise SystemExit(f"Unknown visualization finish: {finish_name}")
+    finish_replacements = apply_finish_variant(finish_name)
+
     if args.fixture_lights != "preset":
         fixture_lights_enabled = args.fixture_lights == "on"
     fixture_count = set_fixture_lights(fixture_lights_enabled)
@@ -171,8 +180,8 @@ def main() -> None:
     scene.render.filepath = str(output)
     bpy.ops.render.render(write_still=True)
     print(
-        f"Rendered {settings_label}: {output} | mode={render_mode} | "
-        f"fixture conceptual lights={'on' if fixture_lights_enabled else 'off'}"
+        f"Rendered {settings_label}: {output} | mode={render_mode} | finish={finish_name} "
+        f"finishSlots={finish_replacements} | fixture conceptual lights={'on' if fixture_lights_enabled else 'off'}"
     )
 
 
