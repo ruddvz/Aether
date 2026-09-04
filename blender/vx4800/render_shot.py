@@ -13,6 +13,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 from environment_library import prepare_environment_render
+from environment_variants import prepare_additional_environment_render
 from lookdev_modes import prepare_render_mode
 from lookdev_refinements import FINISH_MATERIALS, apply_finish_variant
 
@@ -161,6 +162,9 @@ def main() -> None:
     environment_mode = prepare_environment_render(camera_name)
     if environment_mode is not None:
         render_mode = environment_mode
+    additional_environment_mode = prepare_additional_environment_render(camera_name)
+    if additional_environment_mode is not None:
+        render_mode = additional_environment_mode
 
     finish_name = args.finish or manifest.get("defaultFinish", "dark_champagne")
     if finish_name not in manifest.get("finishVariants", []) or finish_name not in FINISH_MATERIALS:
