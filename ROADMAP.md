@@ -54,6 +54,15 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [ ] Structural calculation and site interface reactions
 - [ ] Full factory pre-hang and dynamic-clearance test
 - [ ] Electrical architecture and service access
+  - [x] Separate fixed-canopy lighting / kinetic / auxiliary electrical domains
+  - [x] Preserve no-slip-ring architecture while rotating field has no electrical loads
+  - [x] Define DALI-2 preferred lighting-control and commissioning architecture
+  - [x] Define service access, component identification and replacement requirements
+  - [ ] Select exact head and driver/control-gear topology
+  - [ ] Resolve protective earthing/bonding and market supply variants
+  - [ ] Complete wiring/voltage-drop and canopy thermal validation
+  - [ ] Resolve kinetic electrical safety and lockout architecture
+  - [ ] Pass first-article electrical/service tests
 - [ ] Complete luminaire certification/test plan
 
 ## Viewer and review tooling
