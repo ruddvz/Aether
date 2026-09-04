@@ -33,6 +33,12 @@ This roadmap describes repository capabilities, not promised commercial release 
 ## VORTEX product engineering
 - [ ] Resolve actual installed mass and center of gravity
 - [ ] Select rated suspension cable/gripper/yoke system
+  - [x] Formal 0.81-1.0 mm stainless cable/gripper supplier-qualification shortlist
+  - [ ] Control final S/M/L butterfly and lower-yoke masses
+  - [ ] Establish kinetic line design load and approved load factors
+  - [ ] Engineer and proof-test the lower three-point anti-rotation bridle/yoke
+  - [ ] Resolve independent secondary retention
+  - [ ] Complete supplier sample pull/slip/fatigue qualification
 - [ ] Resolve butterfly attachment detail and material tier
 - [ ] Engineer rotating carrier, bearing, drive, braking and secondary retention
 - [ ] Structural calculation and site interface reactions
