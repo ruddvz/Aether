@@ -7,7 +7,7 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [x] Engineering and presentation authority separation
 - [x] 240-element controlled VORTEX engineering schedule
 - [x] Deterministic V5.2 viewer generation
-- [x] Deterministic release ZIP and SHA-256 manifest
+- [x] Repository-native product artifact build
 - [x] GitHub Pages catalog architecture
 - [x] Public versioned JSON Schemas
 - [x] Canonical fixture JSON public route
@@ -40,9 +40,26 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [ ] Electrical architecture and service access
 - [ ] Complete luminaire certification/test plan
 
+## Blender visualization and rendering
+- [x] Pin Blender 5.2.1 LTS visualization baseline
+- [x] Deterministic Blender scene generator from repository data
+- [x] 240 traceable linked butterfly instances from the controlled schedule
+- [x] 240 microcables plus visual yoke/lead system
+- [x] 14 fixed LED-head placeholders at controlled set-out positions
+- [x] Cycles material library and finish variants
+- [x] Named hero/detail/elevation/top cameras
+- [x] Preview, 4K hero, vertical and square render presets
+- [x] Blender-native scene validation script
+- [x] Headless Blender build workflow for the generated master scene
+- [ ] Validate first generated `VX4800_MASTER.blend` on GitHub Blender 5.2.1 runner
+- [ ] Approve first photoreal hero render
+- [ ] Add architectural environment scene library
+- [ ] Add measured supplier IES workflow after exact photometry is controlled
+- [ ] Add animation/render-farm presets after kinetic engineering matures
+
 ## Viewer and review tooling
 - [x] Refactor single-file development source into reusable Three.js modules
-- [x] Keep generated standalone HTML as a release artifact
+- [x] Keep generated standalone HTML as a presentation artifact
 - [x] Add optimized GLB pipeline with glTF-Transform
 - [x] Add three-mesh-bvh inspection and proximity tools
 - [x] Add measurement/annotation mode
@@ -61,5 +78,6 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [ ] Shared viewer UI package
 - [ ] Shared material library
 - [ ] Shared photometry library
+- [ ] Shared Blender material/render library
 - [ ] Fixture editor driven by JSON Schema
 - [ ] Collection navigation for FLIGHT, OCEAN, BOTANICA, CELESTIAL and ABSTRACT MOTION

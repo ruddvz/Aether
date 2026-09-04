@@ -1,0 +1,96 @@
+name: Build VX4800 Blender master
+
+on:
+  push:
+    branches:
+      - "feat/vx4800-blender-*"
+    paths:
+      - "blender/vx4800/aether_blender_lib.py"
+      - "blender/vx4800/build_scene.py"
+      - "blender/vx4800/validate_scene.py"
+      - "blender/vx4800/render_shot.py"
+      - "blender/vx4800/scene_manifest.json"
+      - "blender/vx4800/render_presets.json"
+      - ".github/workflows/blender.yml"
+      - "fixtures/vx4800/fixture.json"
+      - "fixtures/vx4800/composition/engineering-v1.3.0.csv"
+      - "fixtures/vx4800/photometry/led-setout-engineering-v1.3.0.csv"
+      - "fixtures/vx4800/photometry/concept-v5.2.0.json"
+      - "fixtures/vx4800/geometry/parameters-v1.3.0.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-blend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Cache Blender distribution
+        id: blender-cache
+        uses: actions/cache@v4
+        with:
+          path: .blender-cache
+          key: blender-5.2.1-linux-x64
+
+      - name: Download and verify Blender 5.2.1 LTS
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .blender-cache
+          cd .blender-cache
+          curl -fsSLO https://download.blender.org/release/Blender5.2/blender-5.2.1-linux-x64.tar.xz
+          curl -fsSLO https://download.blender.org/release/Blender5.2/blender-5.2.1.sha256
+          grep 'blender-5.2.1-linux-x64.tar.xz' blender-5.2.1.sha256 | sha256sum -c -
+          tar -xf blender-5.2.1-linux-x64.tar.xz
+          rm blender-5.2.1-linux-x64.tar.xz blender-5.2.1.sha256
+
+      - name: Build Blender master and preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          BLENDER="$GITHUB_WORKSPACE/.blender-cache/blender-5.2.1-linux-x64/blender"
+          "$BLENDER" --background --factory-startup \
+            --python blender/vx4800/build_scene.py -- \
+            --repo-root "$GITHUB_WORKSPACE" \
+            --output blender/vx4800/VX4800_MASTER.blend \
+            --render-preview build/blender/VX4800_HERO_PREVIEW.png
+
+      - name: Validate generated Blender scene
+        shell: bash
+        run: |
+          set -euo pipefail
+          BLENDER="$GITHUB_WORKSPACE/.blender-cache/blender-5.2.1-linux-x64/blender"
+          "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
+            --python blender/vx4800/validate_scene.py -- \
+            --report build/blender/validation.json
+
+      - name: Upload Blender validation outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: vx4800-blender-validation
+          path: |
+            build/blender/VX4800_HERO_PREVIEW.png
+            build/blender/validation.json
+          if-no-files-found: error
+
+      - name: Refresh generated Blender master on feature branch
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add blender/vx4800/VX4800_MASTER.blend
+          if git diff --cached --quiet; then
+            echo "Blender master is unchanged"
+          else
+            git commit -m "chore(blender): refresh VX4800 master [skip ci]"
+            git push
+          fi
