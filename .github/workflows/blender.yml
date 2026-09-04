@@ -6,6 +6,7 @@ on:
       - "feat/vx4800-blender-*"
     paths:
       - "blender/vx4800/aether_blender_lib.py"
+      - "blender/vx4800/lookdev_modes.py"
       - "blender/vx4800/build_entrypoint.py"
       - "blender/vx4800/build_scene.py"
       - "blender/vx4800/validate_scene.py"

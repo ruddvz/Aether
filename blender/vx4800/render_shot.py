@@ -8,6 +8,12 @@ from pathlib import Path
 
 import bpy
 
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+
+from lookdev_modes import prepare_render_mode
+
 
 def cli_args() -> argparse.Namespace:
     argv = sys.argv
@@ -57,6 +63,7 @@ def main() -> None:
     preset = presets[args.preset]
     scene.camera = camera
     apply_preset(scene, preset)
+    render_mode = prepare_render_mode(args.camera)
     fixture_lights_enabled = bool(preset.get("fixtureLights", True))
     if args.fixture_lights != "preset":
         fixture_lights_enabled = args.fixture_lights == "on"
@@ -71,7 +78,7 @@ def main() -> None:
     bpy.ops.render.render(write_still=True)
     print(
         f"Rendered {args.camera} / {args.preset}: {output} | "
-        f"fixture conceptual lights={'on' if fixture_lights_enabled else 'off'}"
+        f"mode={render_mode} | fixture conceptual lights={'on' if fixture_lights_enabled else 'off'}"
     )
 
 

@@ -3,7 +3,7 @@
   "fixtureId": "vx4800-bf-01",
   "productCode": "VX4800-BF-01",
   "designRevision": "1.3.0",
-  "visualizationRevision": "0.4.0",
+  "visualizationRevision": "0.5.0",
   "blenderTarget": "5.2.1 LTS",
   "authority": "visualization-only",
   "sources": {
@@ -48,9 +48,10 @@
     "The Blender scene is a rendering and visualization derivative, not manufacturing authority.",
     "Butterfly object transforms are generated from the controlled 240-row engineering schedule.",
     "LED head bodies and Blender light energy are visual placeholders until exact supplier photometry is controlled.",
-    "Optical glass, metal micro-roughness, suspension display diameter and photographic stage lighting are visualization studies only.",
+    "Optical glass, metal micro-roughness, suspension display diameter, sculptural spine proportions and photographic stage lighting are visualization studies only.",
     "Clean product render presets suppress the conceptual 14-head beam contribution without deleting or moving the 14 controlled-position light objects.",
-    "CAM_BUTTERFLY_MACRO is a visualization camera aimed at controlled instance VX-001; it does not alter that instance or its schedule mapping.",
+    "CAM_BUTTERFLY_MACRO is a visualization camera aimed at controlled instance VX-001; macro isolation hides unrelated render objects only and never alters VX-001 or its schedule mapping.",
+    "The 0.5.0 optical study uses reduced volume absorption and dedicated neutral-card lighting to evaluate transmission, thickness and edge response without asserting a commercial glass specification.",
     "Any artistic geometry refinement that departs from controlled geometry must stay inside the Blender visualization domain."
   ]
 }

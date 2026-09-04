@@ -13,6 +13,10 @@ if str(HERE) not in sys.path:
 
 runpy.run_path(str(HERE / "build_scene.py"), run_name="__main__")
 
+from lookdev_modes import apply_master_lookdev
+
+apply_master_lookdev()
+
 # Preserve the complete finish-study material library in the generated master,
 # including variants that are intentionally not assigned in the default scene.
 for material in bpy.data.materials:
