@@ -1,4 +1,5 @@
 from pathlib import Path
+import copy
 import importlib.util
 import json
 
@@ -7,6 +8,8 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts/assemble_vx4800_photometry_role_set.py"
 SCHEMA = ROOT / "schemas/aether-photometry-role-set.schema.json"
+SYSTEM_PLAN = ROOT / "fixtures/vx4800/photometry/system-validation-plan-v1.json"
+SYSTEM_PLAN_SCHEMA = ROOT / "schemas/aether-photometry-system-validation-plan.schema.json"
 FIXTURE = ROOT / "fixtures/vx4800/fixture.json"
 BRIEF = ROOT / "fixtures/vx4800/photometry/selection-brief.json"
 
@@ -96,12 +99,7 @@ def test_duplicate_configuration_ids_are_blocked(tmp_path):
     result = module.assemble_role_set(
         fixture_path=FIXTURE,
         selection_brief_path=BRIEF,
-        role_package_paths=make_role_paths(
-            tmp_path,
-            **{
-                "mid-field spot": {"configuration_id": "CFG-N"},
-            },
-        ),
+        role_package_paths=make_role_paths(tmp_path, **{"mid-field spot": {"configuration_id": "CFG-N"}}),
     )
     assert result["consistency"]["configurationIdsUnique"] is False
     assert result["eligibility"]["roleSetEligibleForSystemValidation"] is False
@@ -113,12 +111,7 @@ def test_wrong_package_role_is_blocked(tmp_path):
     result = module.assemble_role_set(
         fixture_path=FIXTURE,
         selection_brief_path=BRIEF,
-        role_package_paths=make_role_paths(
-            tmp_path,
-            **{
-                "upper-field flood": {"role": "mid-field spot"},
-            },
-        ),
+        role_package_paths=make_role_paths(tmp_path, **{"upper-field flood": {"role": "mid-field spot"}}),
     )
     assert result["consistency"]["allRoleNamesMatchPackages"] is False
     assert result["eligibility"]["roleSetEligibleForSystemValidation"] is False
@@ -129,12 +122,7 @@ def test_wrong_cct_is_blocked(tmp_path):
     result = module.assemble_role_set(
         fixture_path=FIXTURE,
         selection_brief_path=BRIEF,
-        role_package_paths=make_role_paths(
-            tmp_path,
-            **{
-                "deep-tail narrow": {"cct": 2700},
-            },
-        ),
+        role_package_paths=make_role_paths(tmp_path, **{"deep-tail narrow": {"cct": 2700}}),
     )
     assert result["consistency"]["allCctMatch"] is False
     assert result["eligibility"]["roleSetEligibleForSystemValidation"] is False
@@ -145,12 +133,7 @@ def test_incomplete_exact_package_is_blocked(tmp_path):
     result = module.assemble_role_set(
         fixture_path=FIXTURE,
         selection_brief_path=BRIEF,
-        role_package_paths=make_role_paths(
-            tmp_path,
-            **{
-                "mid-field spot": {"eligible": False},
-            },
-        ),
+        role_package_paths=make_role_paths(tmp_path, **{"mid-field spot": {"eligible": False}}),
     )
     assert result["consistency"]["allRolePackagesEligible"] is False
     assert result["eligibility"]["roleSetEligibleForSystemValidation"] is False
@@ -161,12 +144,7 @@ def test_single_family_strategy_is_preferred_but_not_falsely_mandatory(tmp_path)
     result = module.assemble_role_set(
         fixture_path=FIXTURE,
         selection_brief_path=BRIEF,
-        role_package_paths=make_role_paths(
-            tmp_path,
-            **{
-                "upper-field flood": {"manufacturer": "Alternate Manufacturer", "family": "Alternate Family"},
-            },
-        ),
+        role_package_paths=make_role_paths(tmp_path, **{"upper-field flood": {"manufacturer": "Alternate Manufacturer", "family": "Alternate Family"}}),
     )
     assert result["consistency"]["singleManufacturerFamily"] is False
     assert result["consistency"]["allSystemInputChecksPass"] is True
@@ -177,11 +155,7 @@ def test_controlled_product_binding_is_4_6_4_and_14_heads():
     fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
     brief = json.loads(BRIEF.read_text(encoding="utf-8"))
     quantities = {entry["role"]: entry["quantity"] for entry in brief["optics"]}
-    assert quantities == {
-        "deep-tail narrow": 4,
-        "mid-field spot": 6,
-        "upper-field flood": 4,
-    }
+    assert quantities == {"deep-tail narrow": 4, "mid-field spot": 6, "upper-field flood": 4}
     assert fixture["optical"]["emitters"][0]["quantity"] == 14
     assert sum(quantities.values()) == 14
 
@@ -192,3 +166,37 @@ def test_role_set_script_cannot_approve_product_photometry():
     assert '"full14HeadPhotometricValidationCompleted": False' in text
     assert '"applicationPerformanceValidated": False' in text
     assert "--product-photometry-approved" not in text
+
+
+def test_full_system_validation_plan_is_schema_valid_and_open():
+    plan = json.loads(SYSTEM_PLAN.read_text(encoding="utf-8"))
+    schema = json.loads(SYSTEM_PLAN_SCHEMA.read_text(encoding="utf-8"))
+    errors = list(Draft202012Validator(schema).iter_errors(plan))
+    assert not errors, [error.message for error in errors]
+    assert plan["authority"] == "qualification-plan"
+    assert plan["status"] == "open"
+    assert plan["controlledInputs"]["headCount"] == 14
+    assert plan["controlledInputs"]["presentationLightingIsAuthority"] is False
+    assert plan["controlledInputs"]["blenderLightingIsAuthority"] is False
+    assert plan["controlledInputs"]["syntheticPhotometryMayCloseProductGate"] is False
+    assert [layer["id"] for layer in plan["validationLayers"]] == ["L1-DIRECT", "L2-OCCLUSION", "L3-REFLECTANCE", "L4-TOLERANCE"]
+    assert all(layer["status"] == "not-run" for layer in plan["validationLayers"])
+    assert all(value is False for value in plan["promotionGate"].values())
+
+
+def test_system_validation_cannot_claim_approval_before_prerequisites():
+    plan = json.loads(SYSTEM_PLAN.read_text(encoding="utf-8"))
+    schema = json.loads(SYSTEM_PLAN_SCHEMA.read_text(encoding="utf-8"))
+    invalid = copy.deepcopy(plan)
+    invalid["promotionGate"]["productPhotometryApproved"] = True
+    errors = list(Draft202012Validator(schema).iter_errors(invalid))
+    assert errors
+
+
+def test_full_system_pass_requires_acceptance_criteria_and_core_validation_gates():
+    plan = json.loads(SYSTEM_PLAN.read_text(encoding="utf-8"))
+    schema = json.loads(SYSTEM_PLAN_SCHEMA.read_text(encoding="utf-8"))
+    invalid = copy.deepcopy(plan)
+    invalid["promotionGate"]["full14HeadPhotometricValidationCompleted"] = True
+    errors = list(Draft202012Validator(schema).iter_errors(invalid))
+    assert errors
