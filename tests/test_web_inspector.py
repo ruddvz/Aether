@@ -40,7 +40,7 @@ def test_pages_publish_inspector_and_optimized_coordination_asset(built_site):
     assert inspector.exists()
     assert inspector_js.exists()
     assert optimized.exists() and optimized.stat().st_size > 1000
-    assert source.exists() and source.stat().st_size > optimized.stat().st_size
+    assert source.exists() and source.stat().st_size > 1000
     assert manifest_path.exists()
 
     manifest = json.loads(manifest_path.read_text())
@@ -48,6 +48,9 @@ def test_pages_publish_inspector_and_optimized_coordination_asset(built_site):
     assert manifest["optimizer"]["package"] == "@gltf-transform/cli@4.5.0"
     assert manifest["optimized"]["extensionsExpected"] == ["EXT_meshopt_compression"]
     assert manifest["constraints"]["mayReplaceControlledCoordinationGlb"] is False
+    assert manifest["constraints"]["mayBecomeManufacturingAuthority"] is False
+    assert manifest["constraints"]["rawFileSizeReductionRequired"] is False
+    assert optimized.stat().st_size - source.stat().st_size == manifest["optimized"]["rawByteDelta"]
     assert hashlib.sha256(source.read_bytes()).hexdigest() == manifest["source"]["sha256"]
     assert hashlib.sha256(optimized.read_bytes()).hexdigest() == manifest["optimized"]["sha256"]
 
