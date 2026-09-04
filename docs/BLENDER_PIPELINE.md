@@ -29,7 +29,7 @@ Lookdev, finish studies, environments and camera changes do not become upstream 
 
 ## Rendering model
 
-Cycles is the production renderer. The current master includes linked faceted optical S/M/L butterfly studies, four metal finish directions, a dark premium studio stage, isolated butterfly macro mode, four architectural contexts and a constant-speed motion reference.
+Cycles is the production renderer. The final 0.13 master includes linked faceted optical S/M/L butterfly studies, four metal finish directions, a dark premium studio stage, isolated butterfly macro mode, four architectural contexts and a constant-speed motion reference.
 
 The 14 `RENDER_LIGHT_*` objects are fixture-integrated conceptual light studies at controlled positions. Their Blender energy values are not electrical watts, candela, lumens or lux and do not represent final measured photometry.
 
@@ -94,7 +94,7 @@ Room dimensions, floor and ceiling datums, stairs, columns, furniture, plinths, 
 
 ## Optical lookdev
 
-The optical shader uses a physically plausible dielectric/transmission basis with IOR 1.50, low micro-roughness and restrained pale edge absorption. The 0.12 baseline reduces the earlier overly strong absorption so macro and installed views read as transparent decorative material rather than black mirrored leaves.
+The optical shader uses a physically plausible dielectric/transmission basis with IOR 1.50, low micro-roughness and restrained pale edge absorption. The final baseline keeps visualization-only absorption density at 3.5 and uses a dedicated isolated macro context to judge transmission rather than tuning the material only from a distant hero view.
 
 Thin-film/rainbow effects remain deliberately disabled because no controlled coating specification supports them. Optical lookdev does not approve glass composition, polymer grade, coating, supplier, thickness or optical qualification.
 
@@ -108,6 +108,14 @@ The visualization finish variants are:
 - `satin_nickel`.
 
 `render_shot.py --finish ...` applies a presentation-only material override to appropriate visual metal surfaces without changing geometry or controlled engineering data. It does not select a PVD chemistry, substrate, brushing process, colour tolerance, durability specification or supplier.
+
+Revision 0.13 makes finish switching reversible within one Blender session. Validation deliberately switches through multiple variants and restores dark champagne so an interactive designer is not constrained to a one-shot render process.
+
+## Idempotent final refinements
+
+Final optical/spine refinements are guarded with explicit metadata. Re-running the refinement layer does not multiply the sculptural-spine scale reduction. Blender-native validation calls the refinement routine repeatedly and confirms that object scales remain unchanged after the first application.
+
+This is a workflow-safety property only. It does not promote the sculptural centre geometry into an engineering attachment specification.
 
 ## Motion reference
 
@@ -126,16 +134,17 @@ The dedicated Blender workflow:
 1. obtains and checksum-verifies Blender 5.2.1 LTS;
 2. builds the complete master through `build_entrypoint.py`;
 3. opens and validates the generated `.blend` inside Blender;
-4. checks controlled counts, visualization revision, cameras, environments, optics and motion-reference metadata;
+4. checks controlled counts, visualization revision, cameras, environments, optics, repeat-call idempotence, sequential finish switching and motion-reference metadata;
 5. refreshes the generated binary on the feature branch when source changes require it;
-6. renders targeted Cycles visual QA for core framing, installed environments and finish variants;
-7. uploads individual preview images plus `validation.json`.
+6. uploads one validated master artifact;
+7. fans independent Cycles QA renders out across a parallel matrix;
+8. collects the validation report and targeted previews into one combined review artifact.
 
-The routine visual suite is intentionally targeted rather than rendering every historical camera on every source change. The complete named-shot catalogue remains available for deliberate full review.
+The final 0.13 gate used 12 targeted visual checks covering product hero, full elevation, macro optics, residential wide/medium, vertical marketing, staircase, hospitality, atrium and three alternate finish studies. The complete thirteen-shot catalogue remains available for deliberate full review.
 
 ## Measured photometry boundary
 
-When exact approved supplier IES/LDT files are controlled, a measured-photometry render mode may be added without deleting or relabelling the conceptual rig. Measured data must retain source provenance and must never be inferred from visually pleasing Blender beams.
+Exact approved supplier IES/LDT data belongs to the measured-photometry domain and must retain source provenance. The Blender conceptual rig must not be relabelled as measured output. Repository-level Radiance validation or supplier qualification can inform a future measured render mode, but visually pleasing Blender beams are never evidence of photometric compliance.
 
 ## Licensing boundary
 
