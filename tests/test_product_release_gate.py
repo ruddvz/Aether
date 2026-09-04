@@ -78,6 +78,15 @@ def test_physical_domains_require_physical_evidence():
         assert "PHYSICAL" in required or "THIRD_PARTY" in required, requirement_id
 
 
+def test_passed_or_not_applicable_rows_require_traceable_references():
+    gate = load_json(GATE)
+    for entry in gate["evidenceMatrix"]:
+        if entry["status"] == "passed":
+            assert entry.get("evidenceRefs"), f"Passed requirement lacks evidence refs: {entry['id']}"
+        if entry["status"] == "not-applicable":
+            assert entry.get("deviationRefs"), f"N/A requirement lacks disposition refs: {entry['id']}"
+
+
 def test_first_article_and_release_stages_are_not_released():
     gate = load_json(GATE)
     stages = {entry["id"]: entry for entry in gate["releaseStages"]}
