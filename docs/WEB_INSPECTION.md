@@ -58,12 +58,16 @@ Every unique loaded mesh geometry receives a BVH. Three.js raycasting is replace
 
 For a selected butterfly element, the inspector:
 
-1. filters nearby element candidates using bounding spheres,
-2. evaluates the nearest candidates with `MeshBVH.closestPointToGeometry`,
-3. reports the nearest surface-to-surface distance in millimetres,
-4. visualizes the two closest points with a line.
+1. computes a conservative surface-distance lower bound for every other element from their world-space bounding spheres,
+2. sorts candidates from smallest to largest lower bound,
+3. evaluates exact coordination-mesh distances with `MeshBVH.closestPointToGeometry`,
+4. stops only when the next candidate's lower bound cannot beat the current exact best distance,
+5. reports the resulting nearest surface-to-surface distance in millimetres,
+6. visualizes the two closest points with a line.
 
-This is a coordination-model clearance measurement. It is not a final engineering clearance calculation because the coordination butterfly meshes are deliberately simplified.
+There is deliberately no fixed candidate-count cap. The lower-bound stop condition makes the result the exact nearest surface pair for the loaded coordination meshes while avoiding unnecessary BVH comparisons.
+
+This is still a coordination-model clearance measurement. It is not a final engineering clearance calculation because the coordination butterfly meshes are deliberately simplified.
 
 ## Measurement mode
 
@@ -78,6 +82,20 @@ Annotation mode places a marker at a clicked surface point. Notes are stored in 
 Annotations are intentionally local and non-authoritative. Clearing browser storage or using the Clear Review control removes them.
 
 A future controlled review workflow may export annotations into a separate review-record schema, but that must remain distinct from product authority.
+
+## V5.2 historical release authority
+
+The verified historical V5.2 ZIP is guarded by `releases/vx4800/5.2.0/authority.json`.
+
+During repository recovery, live `fixture.json` formatting was compacted without changing the parsed JSON object. The original V5.2 ZIP had serialized that same object with two-space indentation and one trailing newline. `scripts/build_release.py` reproduces that historical member serialization only inside the frozen V5.2 package, then verifies:
+
+- exact archive SHA-256,
+- exact archive byte length,
+- member order,
+- every member byte length,
+- every member SHA-256.
+
+Live fixture formatting remains non-authoritative. A semantic fixture change would alter the reconstructed member SHA and fail the release gate.
 
 ## Public routes
 
