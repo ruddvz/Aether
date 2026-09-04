@@ -108,6 +108,8 @@ All notable repository and product presentation changes are recorded here.
 - Verified current official public routes for Kaydon Bearings, Schaeffler Canada, SEW-EURODRIVE Canada, Gates Corporation, RINGSPANN, Mayr and HEIDENHAIN.
 - Added Bormill as a contact-qualified Ontario fabrication-enquiry target based on its published large vertical turning, fabrication/welding and prototype-machining capabilities, while leaving distortion control, traceability, NDT, inspection and proof-load capability as unanswered RFQ questions.
 - Advanced all six controlled RFQ packages to `ready-to-issue` without claiming any package was sent or any supplier/fabricator was technically approved.
-- Added regression tests preventing shortlist candidacy without exact variant identity/assumption disclosure, preventing technical-comparison status without review gates, preventing false dispatch claims and requiring contact-evidence linkage for every ready-to-issue target.
-- Added a controlled RFQ execution guide covering contact qualification, dispatch, response normalization, clarification, technical comparison and the selection firewall.
+- Added a fail-closed outbound-manifest schema and manifest that keep all six supplier-specific drafts in `prepared-not-sent` state.
+- Prepared tailored outbound drafts for bearing, motor/reducer, synchronous transmission, direct-carrier brake, fixed-side feedback and prototype fabrication, each preserving the package-specific unknowns rather than inventing final sizing inputs.
+- Added regression tests preventing shortlist candidacy without exact variant identity/assumption disclosure, preventing technical-comparison status without review gates, preventing false dispatch claims, requiring contact-evidence linkage and checking that outbound preparation cannot silently mutate dispatch state.
+- Added a controlled RFQ execution guide covering contact qualification, outbound preparation, dispatch, response normalization, clarification, technical comparison and the selection firewall.
 - Opened GitHub Issue #29 to track actual external dispatches and normalized supplier-response intake.
