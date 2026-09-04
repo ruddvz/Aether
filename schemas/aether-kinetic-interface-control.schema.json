@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-interface-control.schema.json",
+  "title": "AETHERIA VX4800 kinetic mechanical interface control",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "interfaceRevision",
+    "status",
+    "authority",
+    "finalInterfaceControlReleased",
+    "controlledBaseline",
+    "datumFramework",
+    "mechanicalInterfaces",
+    "interfaceParameters",
+    "toleranceClosures",
+    "failureStateModels",
+    "serviceabilityRules",
+    "releaseGates"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "interfaceRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "authority": {"enum": ["engineering-development-input", "controlled"]},
+    "finalInterfaceControlReleased": {"type": "boolean"},
+    "controlledBaseline": {
+      "type": "object",
+      "required": ["elementCount", "sizeAllocation", "canopyEnvelopeMm", "rotatingCarrierCoordinationMm", "speedRpm", "fixedAccentHeadCount", "slipRingStatus"],
+      "properties": {
+        "elementCount": {"const": 240},
+        "sizeAllocation": {"const": {"S": 66, "M": 144, "L": 30}},
+        "canopyEnvelopeMm": {"const": [2400, 1500, 150]},
+        "rotatingCarrierCoordinationMm": {"const": {"width": 2260, "depth": 1330, "thicknessParameter": 24}},
+        "speedRpm": {"const": {"minimum": 0.08, "nominal": 0.36, "maximum": 0.65}},
+        "fixedAccentHeadCount": {"const": 14},
+        "slipRingStatus": {"const": "not-required-by-current-architecture"}
+      },
+      "additionalProperties": true
+    },
+    "datumFramework": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "role", "status", "rule"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "status": {"enum": ["functional-reference", "tbd-to-drawing", "released"]},
+          "rule": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "mechanicalInterfaces": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["id", "function", "fixedSide", "rotatingSide", "reactionPath", "prohibitedCommonCause", "serviceRequirement", "releaseDependencies"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "function": {"type": "string", "minLength": 1},
+          "fixedSide": {"type": "array", "items": {"type": "string"}},
+          "rotatingSide": {"type": "array", "items": {"type": "string"}},
+          "reactionPath": {"type": "string", "minLength": 1},
+          "prohibitedCommonCause": {"type": "array", "items": {"type": "string"}},
+          "serviceRequirement": {"type": "string", "minLength": 1},
+          "releaseDependencies": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        }
+      }
+    },
+    "interfaceParameters": {
+      "type": "array",
+      "minItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "value", "unit", "dependency", "usedBy"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["tbd", "controlled", "released"]},
+          "value": {"type": ["number", "string", "null"]},
+          "unit": {"type": ["string", "null"]},
+          "dependency": {"type": "string", "minLength": 1},
+          "usedBy": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        }
+      }
+    },
+    "toleranceClosures": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "contributors", "acceptanceSource"],
+        "properties": {
+          "status": {"enum": ["tbd", "controlled", "released"]},
+          "contributors": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+          "acceptanceSource": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "failureStateModels": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["id", "purpose", "geometryToModel", "mustRemainTrue"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "purpose": {"type": "string", "minLength": 1},
+          "geometryToModel": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "mustRemainTrue": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        }
+      }
+    },
+    "serviceabilityRules": {"type": "array", "minItems": 5, "items": {"type": "string"}},
+    "releaseGates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "datumsLinkedToControlledDrawing",
+        "selectedBearingMatingDataControlled",
+        "selectedDriveMatingDataControlled",
+        "selectedBrakeMatingDataControlled",
+        "serviceLockGeometryVerified",
+        "secondaryRetentionGeometryVerified",
+        "feedbackAirGapRunoutVerified",
+        "toleranceStackApproved",
+        "serviceExtractionStudyApproved",
+        "failureStateGeometryReviewed"
+      ],
+      "properties": {
+        "datumsLinkedToControlledDrawing": {"type": "boolean"},
+        "selectedBearingMatingDataControlled": {"type": "boolean"},
+        "selectedDriveMatingDataControlled": {"type": "boolean"},
+        "selectedBrakeMatingDataControlled": {"type": "boolean"},
+        "serviceLockGeometryVerified": {"type": "boolean"},
+        "secondaryRetentionGeometryVerified": {"type": "boolean"},
+        "feedbackAirGapRunoutVerified": {"type": "boolean"},
+        "toleranceStackApproved": {"type": "boolean"},
+        "serviceExtractionStudyApproved": {"type": "boolean"},
+        "failureStateGeometryReviewed": {"type": "boolean"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"finalInterfaceControlReleased": {"const": true}}, "required": ["finalInterfaceControlReleased"]},
+      "then": {
+        "properties": {
+          "authority": {"const": "controlled"},
+          "status": {"const": "released"},
+          "interfaceParameters": {
+            "not": {"contains": {"properties": {"status": {"const": "tbd"}}, "required": ["status"]}}
+          },
+          "toleranceClosures": {
+            "not": {"contains": {"properties": {"status": {"const": "tbd"}}, "required": ["status"]}}
+          },
+          "releaseGates": {
+            "properties": {
+              "datumsLinkedToControlledDrawing": {"const": true},
+              "selectedBearingMatingDataControlled": {"const": true},
+              "selectedDriveMatingDataControlled": {"const": true},
+              "selectedBrakeMatingDataControlled": {"const": true},
+              "serviceLockGeometryVerified": {"const": true},
+              "secondaryRetentionGeometryVerified": {"const": true},
+              "feedbackAirGapRunoutVerified": {"const": true},
+              "toleranceStackApproved": {"const": true},
+              "serviceExtractionStudyApproved": {"const": true},
+              "failureStateGeometryReviewed": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": true
+}
