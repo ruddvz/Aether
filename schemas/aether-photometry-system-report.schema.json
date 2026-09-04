@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-photometry-system-report.schema.json",
+  "title": "AETHERIA VX4800 photometry system validation report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "fixtureId", "designRevision", "authority", "status", "sourceClass", "scene", "inputChecks", "sources", "directLayer", "summary", "warnings", "generatedAt"],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "schemaVersion": {"const": "1.0.0"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "designRevision": {"const": "1.3.0"},
+    "authority": {"const": "derived-system-review"},
+    "status": {"enum": ["pipeline-pass", "pipeline-fail", "direct-layer-pass"]},
+    "sourceClass": {"enum": ["synthetic-test-only", "controlled-review-input"]},
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "coordinateSystem", "roleSet", "ledSetoutPath", "ledSetoutSha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "coordinateSystem": {"const": "ceiling XY; z-positive-down"},
+        "roleSet": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["path", "sha256", "status"],
+          "properties": {
+            "path": {"type": "string", "minLength": 1},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "status": {"type": "string", "minLength": 1}
+          }
+        },
+        "ledSetoutPath": {"type": "string", "minLength": 1},
+        "ledSetoutSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "inputChecks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["setoutShaAndPositionsMatch", "controlledRoleQuantitiesMatch", "roleCounts", "sourceIntegrityPass", "exactRoleSetControlled", "syntheticSourcesOnlyWhenSynthetic", "allPipelineInputChecksPass"],
+      "properties": {
+        "setoutShaAndPositionsMatch": {"type": "boolean"},
+        "controlledRoleQuantitiesMatch": {"type": "boolean"},
+        "roleCounts": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0},
+          "required": ["deep-tail narrow", "mid-field spot", "upper-field flood"]
+        },
+        "sourceIntegrityPass": {"type": "boolean"},
+        "exactRoleSetControlled": {"type": "boolean"},
+        "syntheticSourcesOnlyWhenSynthetic": {"type": "boolean"},
+        "allPipelineInputChecksPass": {"type": "boolean"}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "configurationId", "iesPath", "iesSha256", "provenanceStatus", "syntheticTest", "photometricType", "horizontalPlaneCount", "verticalAngleCount"],
+        "properties": {
+          "role": {"enum": ["deep-tail narrow", "mid-field spot", "upper-field flood"]},
+          "configurationId": {"type": "string", "minLength": 1},
+          "iesPath": {"type": "string", "minLength": 1},
+          "iesSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "provenanceStatus": {"enum": ["synthetic-test", "supplier", "laboratory"]},
+          "syntheticTest": {"type": "boolean"},
+          "photometricType": {"type": "integer"},
+          "horizontalPlaneCount": {"type": "integer", "minimum": 1},
+          "verticalAngleCount": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "directLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "coordinateConvention", "sensors", "acceptance"],
+      "properties": {
+        "method": {"type": "string", "minLength": 1},
+        "coordinateConvention": {"type": "string", "minLength": 1},
+        "sensors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sensorId", "category", "pointM", "normal", "totalIlluminanceLux", "contributions"],
+            "properties": {
+              "sensorId": {"type": "string", "minLength": 1},
+              "category": {"enum": ["target", "spill", "reference"]},
+              "pointM": {"$ref": "#/$defs/vector3"},
+              "normal": {"$ref": "#/$defs/vector3"},
+              "totalIlluminanceLux": {"type": "number", "minimum": 0},
+              "contributions": {
+                "type": "array",
+                "minItems": 14,
+                "maxItems": 14,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["ledId", "role", "distanceM", "verticalAngleDeg", "horizontalAngleDeg", "candela", "incidenceCosine", "outputScale", "illuminanceLux"],
+                  "properties": {
+                    "ledId": {"type": "string", "pattern": "^LED-(0[1-9]|1[0-4])$"},
+                    "role": {"enum": ["deep-tail narrow", "mid-field spot", "upper-field flood"]},
+                    "distanceM": {"type": "number", "exclusiveMinimum": 0},
+                    "verticalAngleDeg": {"type": "number", "minimum": 0, "maximum": 180},
+                    "horizontalAngleDeg": {"type": "number", "minimum": 0, "exclusiveMaximum": 360},
+                    "candela": {"type": "number", "minimum": 0},
+                    "incidenceCosine": {"type": "number", "minimum": 0, "maximum": 1},
+                    "outputScale": {"type": "number", "minimum": 0, "maximum": 1},
+                    "illuminanceLux": {"type": "number", "minimum": 0}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "acceptance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "criteriaPass", "results"],
+          "properties": {
+            "status": {"enum": ["not-released", "released"]},
+            "criteriaPass": {"type": ["boolean", "null"]},
+            "results": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["sensorId", "measuredLux", "minimumLux", "maximumLux", "pass"],
+                "properties": {
+                  "sensorId": {"type": "string", "minLength": 1},
+                  "measuredLux": {"type": "number", "minimum": 0},
+                  "minimumLux": {"type": ["number", "null"], "minimum": 0},
+                  "maximumLux": {"type": ["number", "null"], "minimum": 0},
+                  "pass": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pipelinePass", "headCount", "sensorCount", "minimumLux", "maximumLux", "averageLux", "controlledInputsReady", "acceptanceCriteriaReleased", "directDistributionValidated", "occlusionAssessmentCompleted", "reflectanceAssessmentCompletedWhereRequired", "toleranceSensitivityValidated", "full14HeadPhotometricValidationCompleted", "applicationPerformanceValidated", "productPhotometryApproved"],
+      "properties": {
+        "pipelinePass": {"type": "boolean"},
+        "headCount": {"const": 14},
+        "sensorCount": {"type": "integer", "minimum": 1},
+        "minimumLux": {"type": ["number", "null"], "minimum": 0},
+        "maximumLux": {"type": ["number", "null"], "minimum": 0},
+        "averageLux": {"type": ["number", "null"], "minimum": 0},
+        "controlledInputsReady": {"type": "boolean"},
+        "acceptanceCriteriaReleased": {"type": "boolean"},
+        "directDistributionValidated": {"type": "boolean"},
+        "occlusionAssessmentCompleted": {"const": false},
+        "reflectanceAssessmentCompletedWhereRequired": {"const": false},
+        "toleranceSensitivityValidated": {"const": false},
+        "full14HeadPhotometricValidationCompleted": {"const": false},
+        "applicationPerformanceValidated": {"const": false},
+        "productPhotometryApproved": {"const": false}
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "generatedAt": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "number"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"sourceClass": {"const": "synthetic-test-only"}}},
+      "then": {
+        "properties": {
+          "summary": {
+            "properties": {
+              "controlledInputsReady": {"const": false},
+              "acceptanceCriteriaReleased": {"const": false},
+              "directDistributionValidated": {"const": false},
+              "productPhotometryApproved": {"const": false}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "direct-layer-pass"}}},
+      "then": {
+        "properties": {
+          "sourceClass": {"const": "controlled-review-input"},
+          "inputChecks": {
+            "properties": {
+              "setoutShaAndPositionsMatch": {"const": true},
+              "controlledRoleQuantitiesMatch": {"const": true},
+              "sourceIntegrityPass": {"const": true},
+              "exactRoleSetControlled": {"const": true},
+              "allPipelineInputChecksPass": {"const": true}
+            }
+          },
+          "summary": {
+            "properties": {
+              "pipelinePass": {"const": true},
+              "controlledInputsReady": {"const": true},
+              "acceptanceCriteriaReleased": {"const": true},
+              "directDistributionValidated": {"const": true},
+              "productPhotometryApproved": {"const": false}
+            }
+          },
+          "directLayer": {"properties": {"acceptance": {"properties": {"status": {"const": "released"}, "criteriaPass": {"const": true}}}}}
+        }
+      }
+    }
+  ]
+}
