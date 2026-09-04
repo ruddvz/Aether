@@ -8,6 +8,7 @@ PLAN = ROOT / "fixtures/vx4800/manufacturing/quality-plan-v1.json"
 SCHEMA = ROOT / "schemas/aether-manufacturing-quality-plan.schema.json"
 FIXTURE = ROOT / "fixtures/vx4800/fixture.json"
 RELEASE_GATE = ROOT / "fixtures/vx4800/compliance/release-gate-v1.json"
+EVIDENCE_INDEX = ROOT / "fixtures/vx4800/compliance/evidence-index-v1.json"
 
 
 def load_json(path: Path):
@@ -101,6 +102,17 @@ def test_packaging_preserves_identity_and_protects_suspension_and_butterflies():
     assert pack["transportValidationRequirementStatus"] == "not-defined"
 
 
+def test_manufacturing_plan_is_repository_evidence_not_production_validation():
+    index = load_json(EVIDENCE_INDEX)
+    records = {entry["id"]: entry for entry in index["records"]}
+    evidence = records["EVID-REPO-MFG-QUALITY-V1"]
+    assert evidence["evidenceClass"] == "REPOSITORY"
+    assert evidence["sourceType"] == "repository-file"
+    assert evidence["canClosePhysicalTest"] is False
+    assert evidence["reference"] == "fixtures/vx4800/manufacturing/quality-plan-v1.json"
+    assert "does not prove" in evidence["claim"]
+
+
 def test_production_release_requires_all_manufacturing_gates():
     plan = load_json(PLAN)
     gates = plan["promotionGate"]
@@ -111,8 +123,20 @@ def test_production_release_requires_all_manufacturing_gates():
         assert plan["status"] == "approved"
         assert plan["configurationControl"]["releasedBomStatus"] == "released"
         assert plan["configurationControl"]["releasedManufacturingPackageStatus"] == "released"
+        assert all(stage["releaseStatus"] == "released" for stage in plan["manufacturingStages"])
     else:
         assert gates["productionReleaseApproved"] is False
+
+
+def test_approved_metadata_cannot_exist_with_open_manufacturing_gates():
+    plan = load_json(PLAN)
+    gates = plan["promotionGate"]
+    if plan["status"] == "approved" or plan["authority"] == "controlled":
+        assert plan["status"] == "approved"
+        assert plan["authority"] == "controlled"
+        assert all(gates.values())
+        assert plan["configurationControl"]["releasedBomStatus"] == "released"
+        assert plan["configurationControl"]["releasedManufacturingPackageStatus"] == "released"
 
 
 def test_current_manufacturing_and_global_production_release_remain_false():
