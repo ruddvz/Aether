@@ -57,13 +57,28 @@ def main() -> None:
     for light in render_lights:
         if light.get("aetheria_photometry_status") != "conceptual-render-only": fail(errors, f"{light.name} is missing conceptual photometry status")
 
-    camera_names = {"CAM_HERO_FRONT_3Q", "CAM_HERO_LOW", "CAM_FULL_ELEVATION", "CAM_CANOPY_DETAIL", "CAM_BUTTERFLY_MACRO", "CAM_TAIL_DETAIL", "CAM_TOP_SET_OUT"}
+    camera_names = {
+        "CAM_HERO_FRONT_3Q", "CAM_HERO_LOW", "CAM_FULL_ELEVATION", "CAM_CANOPY_DETAIL",
+        "CAM_BUTTERFLY_MACRO", "CAM_TAIL_DETAIL", "CAM_TOP_SET_OUT",
+        "CAM_ARCH_RESIDENTIAL_WIDE", "CAM_ARCH_RESIDENTIAL_MEDIUM", "CAM_VERTICAL_MARKETING",
+    }
     missing_cameras = sorted(camera_names - set(bpy.data.objects.keys()))
     if missing_cameras: fail(errors, f"missing cameras: {missing_cameras}")
 
     material_names = {"MAT_BUTTERFLY_OPTICAL_GLASS", "MAT_PVD_DARK_CHAMPAGNE", "MAT_PVD_BLACK_TITANIUM", "MAT_BRUSHED_BRASS", "MAT_SATIN_NICKEL", "MAT_CABLE_STAINLESS", "MAT_BUTTERFLY_BODY_CHAMPAGNE", "MAT_LED_HEAD_TITANIUM", "MAT_LED_LENS_3000K", "MAT_STAGE_IVORY"}
     missing_materials = sorted(material_names - set(bpy.data.materials.keys()))
     if missing_materials: fail(errors, f"missing materials: {missing_materials}")
+
+    env = bpy.data.collections.get("85_ENV_RESIDENTIAL")
+    env_objects = list(env.all_objects) if env else []
+    if not env: fail(errors, "residential visualization environment collection is missing")
+    elif len(env_objects) < 20: fail(errors, f"residential environment is unexpectedly sparse: {len(env_objects)} objects")
+    for obj in env_objects:
+        if obj.get("aetheria_authority") != "visualization-only":
+            fail(errors, f"residential environment object lacks visualization-only authority: {obj.name}")
+    env_lights = [o for o in env_objects if o.type == "LIGHT" and o.name.startswith("ENV_RES_")]
+    if len(env_lights) != 3: fail(errors, f"expected 3 residential photographic environment lights, found {len(env_lights)}")
+
     source_sha_keys = [k for k in scene.keys() if str(k).startswith("source_sha256_")]
     if len(source_sha_keys) < 5: fail(errors, "source SHA-256 provenance is incomplete")
 
@@ -82,6 +97,8 @@ def main() -> None:
         "renderLights": len(render_lights),
         "cameras": len([o for o in bpy.data.objects if o.type == "CAMERA"]),
         "materials": len(bpy.data.materials),
+        "residentialEnvironmentObjects": len(env_objects),
+        "residentialEnvironmentLights": len(env_lights),
         "errors": errors,
     }
     if args.report:

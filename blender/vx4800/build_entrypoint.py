@@ -13,12 +13,14 @@ if str(HERE) not in sys.path:
 
 runpy.run_path(str(HERE / "build_scene.py"), run_name="__main__")
 
+from environment_library import build_environment_library
 from lookdev_modes import apply_master_lookdev
 
 apply_master_lookdev()
+build_environment_library()
 
-# Preserve the complete finish-study material library in the generated master,
-# including variants that are intentionally not assigned in the default scene.
+# Preserve the complete finish-study and environment material libraries in the
+# generated master, including variants intentionally hidden in the default view.
 for material in bpy.data.materials:
     if material.name.startswith("MAT_"):
         material.use_fake_user = True

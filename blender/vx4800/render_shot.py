@@ -12,6 +12,7 @@ HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
+from environment_library import prepare_environment_render
 from lookdev_modes import prepare_render_mode
 
 
@@ -64,6 +65,9 @@ def main() -> None:
     scene.camera = camera
     apply_preset(scene, preset)
     render_mode = prepare_render_mode(args.camera)
+    environment_mode = prepare_environment_render(args.camera)
+    if environment_mode is not None:
+        render_mode = environment_mode
     fixture_lights_enabled = bool(preset.get("fixtureLights", True))
     if args.fixture_lights != "preset":
         fixture_lights_enabled = args.fixture_lights == "on"

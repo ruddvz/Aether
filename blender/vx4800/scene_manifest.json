@@ -3,7 +3,7 @@
   "fixtureId": "vx4800-bf-01",
   "productCode": "VX4800-BF-01",
   "designRevision": "1.3.0",
-  "visualizationRevision": "0.6.0",
+  "visualizationRevision": "0.7.0",
   "blenderTarget": "5.2.1 LTS",
   "authority": "visualization-only",
   "sources": {
@@ -31,6 +31,7 @@
     "60_CAMERAS",
     "70_LIGHT_RIGS",
     "80_RENDER_STAGE",
+    "85_ENV_RESIDENTIAL",
     "90_HELPERS"
   ],
   "defaultFinish": "dark_champagne",
@@ -42,7 +43,10 @@
     "CAM_CANOPY_DETAIL": {"location": [2.8, -4.4, -0.35], "target": [0.0, 0.0, -0.08], "lensMm": 90},
     "CAM_BUTTERFLY_MACRO": {"location": [0.86, -1.28, -0.66], "target": [0.422911, -0.410912, -0.657938], "lensMm": 105},
     "CAM_TAIL_DETAIL": {"location": [2.4, -4.4, -4.35], "target": [0.0, 0.0, -4.28], "lensMm": 100},
-    "CAM_TOP_SET_OUT": {"location": [0.0, 0.0, 7.8], "target": [0.0, 0.0, -0.20], "lensMm": 70}
+    "CAM_TOP_SET_OUT": {"location": [0.0, 0.0, 7.8], "target": [0.0, 0.0, -0.20], "lensMm": 70},
+    "CAM_ARCH_RESIDENTIAL_WIDE": {"location": [7.2, -12.8, -3.70], "target": [0.0, 0.45, -2.55], "lensMm": 45},
+    "CAM_ARCH_RESIDENTIAL_MEDIUM": {"location": [5.5, -10.2, -3.05], "target": [0.0, 0.10, -2.55], "lensMm": 55},
+    "CAM_VERTICAL_MARKETING": {"location": [5.8, -10.6, -3.20], "target": [0.0, 0.10, -2.55], "lensMm": 52}
   },
   "notes": [
     "The Blender scene is a rendering and visualization derivative, not manufacturing authority.",
@@ -51,7 +55,8 @@
     "Optical glass, metal micro-roughness, suspension display diameter, sculptural spine proportions and photographic stage lighting are visualization studies only.",
     "Clean product render presets suppress the conceptual 14-head beam contribution without deleting or moving the 14 controlled-position light objects.",
     "CAM_BUTTERFLY_MACRO is a visualization camera aimed at controlled instance VX-001; macro isolation hides unrelated render objects only and never alters VX-001 or its schedule mapping.",
-    "The 0.6.0 optical study retains IOR 1.50 and reduced volume absorption, while using a medium neutral reflection card and level 3/4 camera to judge transmission and edge response without asserting a commercial glass specification.",
+    "The residential environment is visualization-only architecture around the unchanged fixture, with a flat ceiling underside at Z=+0.15 m and a floor top at Z=-6.0 m for visual scale; these are not site-interface or structural design values.",
+    "Architectural environment lighting is photographic visualization lighting and is separate from the 14 controlled-position conceptual fixture lights.",
     "Any artistic geometry refinement that departs from controlled geometry must stay inside the Blender visualization domain."
   ]
 }
