@@ -1,14 +1,21 @@
 from copy import deepcopy
 from pathlib import Path
+import importlib.util
 import json
 
 import ezdxf
 import pytest
 
-from scripts.generate_kinetic_p0 import assert_p0_boundary, build
-
 ROOT = Path(__file__).resolve().parents[1]
 INTERFACE = ROOT / "fixtures/vx4800/kinetics/interface-control-v1.json"
+GENERATOR = ROOT / "scripts/generate_kinetic_p0.py"
+
+_spec = importlib.util.spec_from_file_location("generate_kinetic_p0", GENERATOR)
+assert _spec is not None and _spec.loader is not None
+_module = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_module)
+assert_p0_boundary = _module.assert_p0_boundary
+build = _module.build
 
 
 def layer_entities(modelspace, layer):
