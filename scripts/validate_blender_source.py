@@ -28,7 +28,7 @@ def main() -> None:
 
     if manifest.get("fixtureId") != "vx4800-bf-01": fail("Blender manifest fixtureId mismatch")
     if manifest.get("designRevision") != "1.3.0": fail("Blender manifest designRevision mismatch")
-    if manifest.get("visualizationRevision") != "0.12.0": fail("Blender manifest visualizationRevision mismatch")
+    if manifest.get("visualizationRevision") != "0.13.0": fail("Blender manifest visualizationRevision mismatch")
     if manifest.get("authority") != "visualization-only": fail("Blender manifest authority must be visualization-only")
     if manifest.get("blenderTarget") != "5.2.1 LTS": fail("Blender target must remain pinned to 5.2.1 LTS")
     for key, rel in manifest.get("sources", {}).items():
@@ -36,6 +36,10 @@ def main() -> None:
     for path in BLENDER.glob("*.py"):
         source = path.read_text(); ast.parse(source, filename=str(path))
         if not has_gpl_spdx_header(source): fail(f"Blender API script lacks GPL-compatible SPDX header: {path}")
+
+    refinement_source = (BLENDER / "lookdev_refinements.py").read_text()
+    if "SPINE_REFINEMENT_TAG" not in refinement_source or "_FINISH_REPLACEABLE_MATERIALS" not in refinement_source:
+        fail("Final Blender lookdev idempotence guards are missing")
 
     with (ROOT / manifest["sources"]["composition"]).open(newline="") as f: rows = list(csv.DictReader(f))
     if len(rows) != 240: fail(f"Blender pipeline expected 240 controlled composition rows, got {len(rows)}")
