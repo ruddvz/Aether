@@ -28,6 +28,7 @@ def main() -> None:
 
     if manifest.get("fixtureId") != "vx4800-bf-01": fail("Blender manifest fixtureId mismatch")
     if manifest.get("designRevision") != "1.3.0": fail("Blender manifest designRevision mismatch")
+    if manifest.get("visualizationRevision") != "0.12.0": fail("Blender manifest visualizationRevision mismatch")
     if manifest.get("authority") != "visualization-only": fail("Blender manifest authority must be visualization-only")
     if manifest.get("blenderTarget") != "5.2.1 LTS": fail("Blender target must remain pinned to 5.2.1 LTS")
     for key, rel in manifest.get("sources", {}).items():
@@ -58,12 +59,19 @@ def main() -> None:
         "CAM_HERO_FRONT_3Q", "CAM_HERO_LOW", "CAM_FULL_ELEVATION", "CAM_CANOPY_DETAIL",
         "CAM_BUTTERFLY_MACRO", "CAM_TAIL_DETAIL", "CAM_TOP_SET_OUT",
         "CAM_ARCH_RESIDENTIAL_WIDE", "CAM_ARCH_RESIDENTIAL_MEDIUM", "CAM_VERTICAL_MARKETING",
+        "CAM_ARCH_STAIRCASE_WIDE", "CAM_ARCH_HOSPITALITY_WIDE", "CAM_ARCH_ATRIUM_WIDE",
     }
     if set(manifest.get("cameraShots", {})) != required_cameras: fail("Blender camera-shot manifest is incomplete")
-    if "85_ENV_RESIDENTIAL" not in manifest.get("collections", []): fail("Residential Blender environment collection is missing from manifest")
+    required_environment_collections = {"85_ENV_RESIDENTIAL", "86_ENV_STAIRCASE", "87_ENV_HOSPITALITY", "88_ENV_ATRIUM"}
+    if not required_environment_collections.issubset(set(manifest.get("collections", []))):
+        fail("Blender architectural environment collections are incomplete in manifest")
+
+    finish_variants = manifest.get("finishVariants", [])
+    if finish_variants != ["dark_champagne", "black_titanium", "brushed_brass", "satin_nickel"]:
+        fail("Blender finish-variant set changed unexpectedly")
 
     shots = shot_catalogue.get("shots", {})
-    if len(shots) != 10: fail(f"Expected 10 named Blender shots, found {len(shots)}")
+    if len(shots) != 13: fail(f"Expected 13 named Blender shots, found {len(shots)}")
     shot_cameras = {shot.get("camera") for shot in shots.values()}
     if shot_cameras != required_cameras: fail("Named shot catalogue must cover every manifest camera exactly once")
     for name, shot in shots.items():
@@ -84,6 +92,8 @@ def main() -> None:
     print(f"- fixed LED positions: {len(led_rows)}")
     print(f"- cameras: {len(required_cameras)}")
     print(f"- named shots: {len(shots)}")
+    print(f"- architectural environments: {len(required_environment_collections)}")
+    print(f"- finish variants: {len(finish_variants)}")
     print(f"- quality tiers: {len(required_qualities)}")
     print(f"- output profiles: {len(required_output_profiles)}")
     print(f"- legacy render presets: {len(required_presets)}")
