@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aetheria.example/schemas/aether-photometry-system-validation-plan.schema.json",
+  "title": "AETHERIA VX4800 full photometric system validation plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "fixtureId", "designRevision", "authority", "status", "purpose", "controlledInputs", "sceneRequirements", "metricsRequiringReleasedAcceptanceCriteriaBeforePass", "validationLayers", "promotionGate", "rules"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "designRevision": {"const": "1.3.0"},
+    "authority": {"enum": ["qualification-plan", "controlled"]},
+    "status": {"enum": ["open", "approved"]},
+    "purpose": {"type": "string", "minLength": 20},
+    "controlledInputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roleSetRequired", "engineeringLedSetoutRequired", "headCount", "presentationLightingIsAuthority", "blenderLightingIsAuthority", "syntheticPhotometryMayCloseProductGate"],
+      "properties": {
+        "roleSetRequired": {"const": true},
+        "engineeringLedSetoutRequired": {"const": true},
+        "headCount": {"const": 14},
+        "presentationLightingIsAuthority": {"const": false},
+        "blenderLightingIsAuthority": {"const": false},
+        "syntheticPhotometryMayCloseProductGate": {"const": false}
+      }
+    },
+    "sceneRequirements": {"type": "array", "minItems": 8, "items": {"type": "string", "minLength": 5}},
+    "metricsRequiringReleasedAcceptanceCriteriaBeforePass": {"type": "array", "minItems": 6, "items": {"type": "string", "minLength": 5}},
+    "validationLayers": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "status", "note"],
+        "properties": {
+          "id": {"enum": ["L1-DIRECT", "L2-OCCLUSION", "L3-REFLECTANCE", "L4-TOLERANCE"]},
+          "name": {"type": "string", "minLength": 3},
+          "status": {"enum": ["not-run", "in-progress", "passed", "failed", "not-required"]},
+          "note": {"type": "string", "minLength": 10}
+        }
+      }
+    },
+    "promotionGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exactRoleSetControlled", "controlledSceneGeometryReleased", "controlledHeadAimingReleased", "surfaceAssumptionsReleased", "acceptanceCriteriaReleased", "directDistributionValidated", "occlusionAssessmentCompleted", "reflectanceAssessmentCompletedWhereRequired", "toleranceSensitivityValidated", "independentReviewCompleted", "full14HeadPhotometricValidationCompleted", "applicationPerformanceValidated", "productPhotometryApproved"],
+      "properties": {
+        "exactRoleSetControlled": {"type": "boolean"},
+        "controlledSceneGeometryReleased": {"type": "boolean"},
+        "controlledHeadAimingReleased": {"type": "boolean"},
+        "surfaceAssumptionsReleased": {"type": "boolean"},
+        "acceptanceCriteriaReleased": {"type": "boolean"},
+        "directDistributionValidated": {"type": "boolean"},
+        "occlusionAssessmentCompleted": {"type": "boolean"},
+        "reflectanceAssessmentCompletedWhereRequired": {"type": "boolean"},
+        "toleranceSensitivityValidated": {"type": "boolean"},
+        "independentReviewCompleted": {"type": "boolean"},
+        "full14HeadPhotometricValidationCompleted": {"type": "boolean"},
+        "applicationPerformanceValidated": {"type": "boolean"},
+        "productPhotometryApproved": {"type": "boolean"}
+      }
+    },
+    "rules": {"type": "array", "minItems": 6, "items": {"type": "string", "minLength": 10}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"promotionGate": {"properties": {"full14HeadPhotometricValidationCompleted": {"const": true}}}}},
+      "then": {"properties": {"promotionGate": {"properties": {"exactRoleSetControlled": {"const": true}, "controlledSceneGeometryReleased": {"const": true}, "controlledHeadAimingReleased": {"const": true}, "surfaceAssumptionsReleased": {"const": true}, "acceptanceCriteriaReleased": {"const": true}, "directDistributionValidated": {"const": true}, "occlusionAssessmentCompleted": {"const": true}, "toleranceSensitivityValidated": {"const": true}, "independentReviewCompleted": {"const": true}}}}}
+    },
+    {
+      "if": {"properties": {"promotionGate": {"properties": {"productPhotometryApproved": {"const": true}}}}},
+      "then": {"properties": {"authority": {"const": "controlled"}, "status": {"const": "approved"}, "promotionGate": {"properties": {"full14HeadPhotometricValidationCompleted": {"const": true}, "applicationPerformanceValidated": {"const": true}, "acceptanceCriteriaReleased": {"const": true}}}}}
+    }
+  ]
+}
