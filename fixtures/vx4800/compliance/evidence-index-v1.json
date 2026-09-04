@@ -94,6 +94,16 @@
       "reference": "fixtures/vx4800/service/lifecycle-plan-v1.json",
       "claim": "Defines lifecycle inspection, maintenance, spares, post-service verification and service-history requirements; it does not establish inspection intervals or prove maintenance/service evidence.",
       "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-SPECTRAL-VALIDATION-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/photometry/spectral/validation-plan-v1.json",
+      "claim": "Defines SPD provenance, colour-quality cross-check methods and promotion gates; it does not provide supplier/laboratory SPD evidence, a current TM-30-24 report, or product photometry approval.",
+      "canClosePhysicalTest": false
     }
   ]
 }
