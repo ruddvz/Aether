@@ -64,6 +64,17 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [ ] Resolve kinetic electrical safety and lockout architecture
   - [ ] Pass first-article electrical/service tests
 - [ ] Complete luminaire certification/test plan
+  - [x] Separate repository validation from physical/certification evidence
+  - [x] Define IEC / India / North America standards target and applicability-review matrix
+  - [x] Define first-article, construction-release and production-release evidence gates
+  - [x] Define full 240-element pre-hang, serviceability and deviation/re-test framework
+  - [ ] Confirm exact standards/applicability with selected certification body/laboratory
+  - [ ] Freeze exact first-article configuration/BOM
+  - [ ] Complete first-article inspection and physical qualification
+  - [ ] Complete applicable third-party luminaire safety/conformity tests
+  - [ ] Compile controlled technical construction/release evidence file
+  - [ ] Approve project-specific construction release
+  - [ ] Approve repeatable production release and factory routine controls
 
 ## Viewer and review tooling
 - [x] Refactor single-file development source into reusable Three.js modules
