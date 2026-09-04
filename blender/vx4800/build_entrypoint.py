@@ -15,6 +15,7 @@ runpy.run_path(str(HERE / "build_scene.py"), run_name="__main__")
 
 from animation_reference import apply_nominal_rotation_reference
 from environment_library import build_environment_library
+from environment_variants import build_additional_environments
 from lookdev_modes import apply_master_lookdev
 from lookdev_refinements import apply_master_refinements
 
@@ -22,6 +23,7 @@ apply_master_lookdev()
 apply_master_refinements()
 apply_nominal_rotation_reference()
 build_environment_library()
+build_additional_environments()
 
 # Preserve the complete finish-study and environment material libraries in the
 # generated master, including variants intentionally hidden in the default view.
