@@ -21,18 +21,36 @@ The scene itself validated correctly: 240 butterfly instances, 66 S / 144 M / 30
 9. The studio stage creates distracting bright geometry and gives little useful scale or depth information.
 10. The image has excess unstructured negative space while still failing to contain the full product height.
 
-## Visualization revision 0.2.0 goals
+## Visualization revision 0.2.0 review
 
-- Preserve every controlled element transform, ID and 66/144/30 size allocation.
-- Replace flat wing slabs with closed faceted optical wing geometry that stays within the controlled nominal butterfly thickness.
-- Replace literal segmented insect anatomy with a restrained sculptural central spine.
-- Keep the optical shader explicitly labelled as a visualization material study because the commercial butterfly material is not locked.
-- Add subtle micro-roughness variation to metal finish studies without presenting shader values as supplier specifications.
-- Separate fixture-integrated conceptual 14-head lighting from photographic render-stage lighting through explicit object metadata.
-- Use a dark premium studio baseline with stronger key/fill/rim separation so glass edges and metal highlights become legible.
-- Reframe the existing six cameras before adding any new camera set.
-- Reduce suspension display diameter as a visualization choice only, with explicit metadata that it is not a rated suspension diameter.
-- Increase the quick Cycles preview to 64 samples with adaptive sampling so render reviews are less dominated by low-sample noise.
+The 0.2.0 Cycles preview was produced by workflow run 33898059475 from source commit `8b1370130e150e2a1b349648d2d6d2eb61f7209b`.
+
+Improvements visible in the render:
+
+- the full canopy and controlled lower tail fit in frame;
+- the overall descending vortex is readable;
+- the canopy and carrier have clearer metal response;
+- linked butterfly geometry has moved away from literal insect anatomy;
+- the dark studio direction provides substantially more contrast than the original ivory stage.
+
+Remaining defects:
+
+1. The 240 suspension lines still form a bright curtain and compete with the butterflies.
+2. The separate floor and backdrop planes create a visible diagonal studio horizon through the composition.
+3. The lower fixture dissolves into an overexposed floor pool. Much of that pool comes from the conceptual 14-head beam study, which should not be conflated with clean product photography.
+4. The first radial fan facet layout creates too many small reflective triangles, so the optical wings can read like silver glitter rather than transparent decorative glass.
+5. The hero viewpoint is too high and reveals the canopy top surface, weakening the installed architectural-lighting reading.
+6. Background illumination is still too bright and uneven for a clean optical-product baseline.
+
+## Visualization revision 0.3.0 goals
+
+- Keep all controlled transforms, IDs, 66/144/30 allocation and 14 fixed head positions unchanged.
+- Reduce only the visualization display diameter and specular prominence of suspension lines, explicitly without making a rated hardware claim.
+- Replace radial fan facets with broad perimeter facets and a large central optical face, all within the controlled nominal wing thickness envelope.
+- Use a single matte dark product backdrop without a floor seam in the clean studio hero.
+- Turn the 14 conceptual fixture beams off in clean product presets while retaining the 14 objects, their controlled positions and an explicit renderer override for later lighting studies.
+- Lower the hero and canopy-detail viewpoints so the canopy is primarily read from below.
+- Retain restrained key/fill/rim/top photographic lighting for edge definition rather than fixture-beam effects.
 
 ## Blender 5.2 rendering basis
 

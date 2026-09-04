@@ -7,6 +7,7 @@ import json
 import math
 from pathlib import Path
 
+import bmesh
 import bpy
 from mathutils import Vector
 
@@ -137,14 +138,14 @@ def mark_visual_finish(material: bpy.types.Material, status: str = "visualizatio
 def make_glass_material() -> bpy.types.Material:
     m = principled_material(
         "MAT_BUTTERFLY_OPTICAL_GLASS",
-        "#F7FCFF",
+        "#FAFDFF",
         metallic=0.0,
-        roughness=0.018,
+        roughness=0.014,
         transmission=1.0,
         ior=1.50,
-        coat=0.08,
+        coat=0.06,
     )
-    m.diffuse_color = rgba("#F7FCFF")
+    m.diffuse_color = rgba("#FAFDFF")
     m["aetheria_authority"] = "visualization-only"
     m["aetheria_material_status"] = "optical-glass-visualization-study-not-commercially-locked"
     nodes = m.node_tree.nodes
@@ -156,21 +157,21 @@ def make_glass_material() -> bpy.types.Material:
         noise = nodes.new("ShaderNodeTexNoise")
         noise.name = "AETHERIA_GLASS_MICRO_ROUGHNESS"
         noise.noise_dimensions = "3D"
-        noise.inputs["Scale"].default_value = 480.0
-        noise.inputs["Detail"].default_value = 1.5
-        noise.inputs["Roughness"].default_value = 0.35
+        noise.inputs["Scale"].default_value = 420.0
+        noise.inputs["Detail"].default_value = 1.2
+        noise.inputs["Roughness"].default_value = 0.32
         ramp = nodes.new("ShaderNodeValToRGB")
         ramp.name = "AETHERIA_GLASS_ROUGHNESS_RANGE"
-        ramp.color_ramp.elements[0].color = (0.010, 0.010, 0.010, 1.0)
-        ramp.color_ramp.elements[1].color = (0.030, 0.030, 0.030, 1.0)
+        ramp.color_ramp.elements[0].color = (0.008, 0.008, 0.008, 1.0)
+        ramp.color_ramp.elements[1].color = (0.024, 0.024, 0.024, 1.0)
         links.new(tex.outputs["Generated"], noise.inputs["Vector"])
         links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
         links.new(ramp.outputs["Color"], bsdf.inputs["Roughness"])
     output = nodes.get("Material Output")
     absorption = nodes.new("ShaderNodeVolumeAbsorption")
     absorption.name = "AETHERIA_EDGE_ABSORPTION"
-    absorption.inputs["Color"].default_value = rgba("#E5F1F4")
-    absorption.inputs["Density"].default_value = 0.06
+    absorption.inputs["Color"].default_value = rgba("#E8F3F5")
+    absorption.inputs["Density"].default_value = 0.035
     links.new(absorption.outputs["Volume"], output.inputs["Volume"])
     return m
 
@@ -196,18 +197,18 @@ def build_materials() -> dict[str, bpy.types.Material]:
     black_titanium = mark_visual_finish(principled_material("MAT_PVD_BLACK_TITANIUM", "#151515", 0.92, 0.20, coat=0.18, anisotropic=0.10))
     brass = mark_visual_finish(principled_material("MAT_BRUSHED_BRASS", "#A87D45", 0.94, 0.22, coat=0.16, anisotropic=0.30))
     nickel = mark_visual_finish(principled_material("MAT_SATIN_NICKEL", "#969894", 0.92, 0.29, coat=0.10, anisotropic=0.18))
-    cable = mark_visual_finish(principled_material("MAT_CABLE_STAINLESS", "#747C82", 0.95, 0.24), "visualization-cable-appearance")
-    body = mark_visual_finish(principled_material("MAT_BUTTERFLY_BODY_CHAMPAGNE", "#9B7650", 0.92, 0.18, coat=0.22), "visualization-butterfly-spine-finish")
+    cable = mark_visual_finish(principled_material("MAT_CABLE_STAINLESS", "#474D52", 0.92, 0.38), "visualization-cable-appearance")
+    body = mark_visual_finish(principled_material("MAT_BUTTERFLY_BODY_CHAMPAGNE", "#8F6E4D", 0.92, 0.20, coat=0.20), "visualization-butterfly-spine-finish")
     led_head = mark_visual_finish(principled_material("MAT_LED_HEAD_TITANIUM", "#151513", 0.92, 0.19, coat=0.18), "visualization-head-finish")
     stage = principled_material("MAT_STAGE_IVORY", "#D9D3C8", 0.0, 0.68)
-    dark_stage = principled_material("MAT_STAGE_DARK", "#171614", 0.0, 0.46)
+    dark_stage = principled_material("MAT_STAGE_DARK", "#080706", 0.0, 0.90)
     for material, low, high, scale in (
         (champagne, 0.13, 0.22, 180.0),
         (black_titanium, 0.16, 0.25, 210.0),
         (brass, 0.18, 0.28, 150.0),
         (nickel, 0.24, 0.34, 190.0),
-        (cable, 0.20, 0.30, 260.0),
-        (body, 0.14, 0.23, 220.0),
+        (cable, 0.32, 0.46, 260.0),
+        (body, 0.16, 0.25, 220.0),
         (led_head, 0.15, 0.24, 220.0),
     ):
         add_micro_roughness(material, low, high, scale)
@@ -328,23 +329,41 @@ def faceted_wing_mesh(name: str, points, thickness: float) -> bpy.types.Mesh:
     if polygon_signed_area(points) < 0.0:
         points.reverse()
     n = len(points)
-    edge_z = thickness * 0.30
     cx, cy = polygon_centroid(points)
-    top_ring = [(x, y, edge_z) for x, y in points]
-    bottom_ring = [(x, y, -edge_z) for x, y in points]
-    top_hub = (cx, cy, thickness * 0.50)
-    bottom_hub = (cx, cy, -thickness * 0.50)
-    verts = top_ring + bottom_ring + [top_hub, bottom_hub]
-    top_idx = 2 * n
-    bottom_idx = top_idx + 1
-    faces = []
+    outer_z = thickness * 0.20
+    inner_z = thickness * 0.46
+    inset = 0.70
+    top_outer = [(x, y, outer_z) for x, y in points]
+    top_inner = [
+        (cx + (x - cx) * inset, cy + (y - cy) * inset, inner_z)
+        for x, y in points
+    ]
+    bottom_outer = [(x, y, -outer_z) for x, y in points]
+    bottom_inner = [
+        (cx + (x - cx) * inset, cy + (y - cy) * inset, -inner_z)
+        for x, y in points
+    ]
+    verts = top_outer + top_inner + bottom_outer + bottom_inner
+    to = 0
+    ti = n
+    bo = 2 * n
+    bi = 3 * n
+    faces: list[tuple[int, ...]] = [
+        tuple(ti + i for i in range(n)),
+        tuple(reversed([bi + i for i in range(n)])),
+    ]
     for i in range(n):
         j = (i + 1) % n
-        faces.append((top_idx, i, j))
-        faces.append((bottom_idx, n + j, n + i))
-        faces.append((i, n + i, n + j, j))
+        faces.append((to + i, to + j, ti + j, ti + i))
+        faces.append((bo + j, bo + i, bi + i, bi + j))
+        faces.append((to + j, to + i, bo + i, bo + j))
     mesh = bpy.data.meshes.new(name)
     mesh.from_pydata(verts, [], faces)
+    bm = bmesh.new()
+    bm.from_mesh(mesh)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bm.to_mesh(mesh)
+    bm.free()
     mesh.update()
     return mesh
 
@@ -382,7 +401,7 @@ def add_sculptural_spine(collection, span: float, length: float, thickness: floa
 
 def make_butterfly_prototype(size, span, length, thickness, fold_deg, mats):
     c = bpy.data.collections.new(f"PROTO_BUTTERFLY_{size}")
-    edge_bevel = min(0.00072, max(0.00042, thickness * 0.095))
+    edge_bevel = min(0.00065, max(0.00038, thickness * 0.082))
     for side, label in ((1, "L"), (-1, "R")):
         for kind, suffix, trim in (("fore", "FORE", 0.0), ("hind", "HIND", -3.0)):
             outline = wing_outline(kind, span, length, side)
@@ -496,18 +515,13 @@ def create_led_head(name, x, y, mat_body, mat_lens, collection):
 
 
 def build_stage(mats, collection) -> None:
-    bpy.ops.mesh.primitive_plane_add(size=30.0, location=(0, 0, -5.35))
-    floor = bpy.context.object
-    floor.name = "STAGE_FLOOR"
-    link_object(floor, collection)
-    floor.data.materials.append(mats["dark_stage"])
-    floor["aetheria_stage_role"] = "dark-premium-studio-floor"
-    bpy.ops.mesh.primitive_plane_add(size=30.0, location=(0, 7.0, -1.25), rotation=(math.radians(90), 0, 0))
+    bpy.ops.mesh.primitive_plane_add(size=32.0, location=(0, 7.0, -1.3), rotation=(math.radians(90), 0, 0))
     wall = bpy.context.object
     wall.name = "STAGE_BACKDROP"
     link_object(wall, collection)
     wall.data.materials.append(mats["dark_stage"])
-    wall["aetheria_stage_role"] = "dark-premium-studio-backdrop"
+    wall["aetheria_stage_role"] = "seamless-dark-product-background"
+    wall["aetheria_authority"] = "visualization-only"
 
 
 def configure_scene(scene) -> None:
@@ -526,7 +540,7 @@ def configure_scene(scene) -> None:
         scene.view_settings.look = "AgX - Medium High Contrast"
     except Exception:
         pass
-    scene.view_settings.exposure = -0.35
+    scene.view_settings.exposure = -0.45
     world = scene.world
     if world is None:
         world = bpy.data.worlds.new("AETHERIA_WORLD")
@@ -534,9 +548,9 @@ def configure_scene(scene) -> None:
     world.use_nodes = True
     background = world.node_tree.nodes.get("Background")
     if background:
-        background.inputs["Color"].default_value = (0.010, 0.009, 0.008, 1.0)
-        background.inputs["Strength"].default_value = 0.16
-    world.color = (0.010, 0.009, 0.008)
+        background.inputs["Color"].default_value = (0.008, 0.007, 0.006, 1.0)
+        background.inputs["Strength"].default_value = 0.12
+    world.color = (0.008, 0.007, 0.006)
     scene.frame_start = 1
     scene.frame_end = 4001
     scene.render.fps = 24

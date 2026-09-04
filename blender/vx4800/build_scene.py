@@ -15,7 +15,7 @@ from aether_blender_lib import (
     read_json, sha256,
 )
 
-VISUALIZATION_REVISION = "0.2.0"
+VISUALIZATION_REVISION = "0.3.0"
 BLENDER_TARGET = "5.2.1 LTS"
 
 
@@ -133,7 +133,7 @@ def build_scene(repo_root: Path, output: Path, render_preview: Path | None = Non
         "SUSPENSION_MICROCABLES_240",
         collections["30_SUSPENSION"],
         mats["cable"],
-        bevel_depth=0.00032,
+        bevel_depth=0.00018,
     )
     cables.parent = rotor_root
     cables["aetheria_authority"] = "visualization-derived-from-controlled-schedule"
@@ -143,7 +143,7 @@ def build_scene(repo_root: Path, output: Path, render_preview: Path | None = Non
         "SUSPENSION_YOKES_240",
         collections["30_SUSPENSION"],
         mats["body"],
-        bevel_depth=0.00042,
+        bevel_depth=0.00028,
     )
     yokes.parent = rotor_root
     yokes["aetheria_authority"] = "visualization-yoke-detail"
@@ -227,26 +227,26 @@ def build_scene(repo_root: Path, output: Path, render_preview: Path | None = Non
     scene.camera = cameras["CAM_HERO_FRONT_3Q"]
 
     build_stage(mats, collections["80_RENDER_STAGE"])
-    target = (0.0, 0.0, -2.45)
+    target = (0.0, 0.0, -2.35)
     create_area_light(
-        "RIG_KEY", (4.8, -5.8, 2.4), target, 1450, 3.8, (1.0, 0.90, 0.79),
-        collections["70_LIGHT_RIGS"], shape="DISK", spread_deg=115,
+        "RIG_KEY", (4.8, -5.8, 2.2), target, 1180, 3.8, (1.0, 0.90, 0.79),
+        collections["70_LIGHT_RIGS"], shape="DISK", spread_deg=110,
     )
     create_area_light(
-        "RIG_FILL", (-5.5, -3.2, -0.8), target, 430, 4.8, (0.78, 0.86, 1.0),
-        collections["70_LIGHT_RIGS"], shape="DISK", spread_deg=125,
+        "RIG_FILL", (-5.5, -3.2, -0.9), target, 300, 4.8, (0.78, 0.86, 1.0),
+        collections["70_LIGHT_RIGS"], shape="DISK", spread_deg=120,
     )
     create_area_light(
-        "RIG_RIM_RIGHT", (5.1, 3.2, -0.4), target, 1750, 2.8, (1.0, 0.78, 0.58),
-        collections["70_LIGHT_RIGS"], shape="RECTANGLE", size_y=0.55, spread_deg=90,
+        "RIG_RIM_RIGHT", (5.1, 3.2, -0.4), target, 1320, 2.8, (1.0, 0.78, 0.58),
+        collections["70_LIGHT_RIGS"], shape="RECTANGLE", size_y=0.55, spread_deg=88,
     )
     create_area_light(
-        "RIG_RIM_LEFT", (-5.0, 3.0, -2.5), target, 1350, 2.6, (0.72, 0.82, 1.0),
-        collections["70_LIGHT_RIGS"], shape="RECTANGLE", size_y=0.48, spread_deg=90,
+        "RIG_RIM_LEFT", (-5.0, 3.0, -2.5), target, 1020, 2.6, (0.72, 0.82, 1.0),
+        collections["70_LIGHT_RIGS"], shape="RECTANGLE", size_y=0.48, spread_deg=88,
     )
     create_area_light(
-        "RIG_TOP", (0.0, -0.8, 5.0), (0.0, 0.0, -1.25), 720, 4.2, (1.0, 0.94, 0.86),
-        collections["70_LIGHT_RIGS"], shape="DISK", spread_deg=105,
+        "RIG_TOP", (0.0, -0.8, 5.0), (0.0, 0.0, -1.25), 540, 4.2, (1.0, 0.94, 0.86),
+        collections["70_LIGHT_RIGS"], shape="DISK", spread_deg=100,
     )
 
     for proto in prototypes.values():

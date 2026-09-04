@@ -17,6 +17,7 @@ def cli_args() -> argparse.Namespace:
     p.add_argument("--preset", default="hero")
     p.add_argument("--output", required=True)
     p.add_argument("--repo-root", default=".")
+    p.add_argument("--fixture-lights", choices=("preset", "on", "off"), default="preset")
     return p.parse_args(argv)
 
 
@@ -34,6 +35,15 @@ def apply_preset(scene: bpy.types.Scene, preset: dict) -> None:
         scene.cycles.adaptive_threshold = preset.get("adaptiveThreshold", 0.01)
 
 
+def set_fixture_lights(enabled: bool) -> int:
+    count = 0
+    for obj in bpy.data.objects:
+        if obj.type == "LIGHT" and obj.name.startswith("RENDER_LIGHT_"):
+            obj.hide_render = not enabled
+            count += 1
+    return count
+
+
 def main() -> None:
     args = cli_args()
     repo_root = Path(args.repo_root).resolve()
@@ -44,15 +54,25 @@ def main() -> None:
     if not camera or camera.type != "CAMERA":
         raise SystemExit(f"Unknown camera: {args.camera}")
     scene = bpy.context.scene
+    preset = presets[args.preset]
     scene.camera = camera
-    apply_preset(scene, presets[args.preset])
+    apply_preset(scene, preset)
+    fixture_lights_enabled = bool(preset.get("fixtureLights", True))
+    if args.fixture_lights != "preset":
+        fixture_lights_enabled = args.fixture_lights == "on"
+    fixture_count = set_fixture_lights(fixture_lights_enabled)
+    if fixture_count != 14:
+        raise SystemExit(f"Expected 14 fixture-integrated conceptual render lights, found {fixture_count}")
     output = Path(args.output)
     if not output.is_absolute():
         output = repo_root / output
     output.parent.mkdir(parents=True, exist_ok=True)
     scene.render.filepath = str(output)
     bpy.ops.render.render(write_still=True)
-    print(f"Rendered {args.camera} / {args.preset}: {output}")
+    print(
+        f"Rendered {args.camera} / {args.preset}: {output} | "
+        f"fixture conceptual lights={'on' if fixture_lights_enabled else 'off'}"
+    )
 
 
 if __name__ == "__main__":
