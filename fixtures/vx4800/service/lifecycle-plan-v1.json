@@ -1,0 +1,152 @@
+{
+  "$schema": "../../../schemas/aether-lifecycle-service-plan.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authority": "qualification-plan",
+  "status": "open",
+  "purpose": "Define lifecycle inspection, preventive maintenance, spares, fault history, post-service verification and return-to-service controls for an installed VX4800 without inventing service intervals or component lives before final hardware and field evidence exist.",
+  "boundaries": {
+    "commissionedAsInstalledBaselineRequired": true,
+    "genericFixedMaintenanceIntervalsApproved": false,
+    "genericLubricationIntervalApproved": false,
+    "genericSafetyCriticalReplacementLifeApproved": false,
+    "supplierRecommendationAloneCanOverrideProductQualification": false,
+    "commercialEquivalentCanReplaceQualifiedPartWithoutEngineeringReview": false,
+    "maintenanceMayChangeSafetyLimitsWithoutEngineeringApproval": false,
+    "serviceWorkMayBypassMechanicalServiceLock": false,
+    "returnToServiceRequiresAffectedVerification": true
+  },
+  "serviceBaseline": {
+    "requiredRecords": [
+      "fixture serial and build configuration",
+      "project/site identity",
+      "as-installed controlled component identities",
+      "approved site deviations",
+      "structural approval reference",
+      "lighting commissioning record",
+      "kinetic commissioning record",
+      "motion configuration and released limits",
+      "photographic condition baseline",
+      "first inspection due date"
+    ],
+    "status": "not-established"
+  },
+  "inspectionDomains": [
+    {
+      "id": "STRUCTURE-INTERFACE",
+      "criticality": "safety-critical",
+      "intervalStatus": "not-defined",
+      "checks": ["visible support/interface condition", "accessible fastener/locking condition where specified", "secondary-retention structural termination", "unexpected movement/deformation/corrosion", "site modification affecting support load path"]
+    },
+    {
+      "id": "SUSPENSION",
+      "criticality": "safety-critical",
+      "intervalStatus": "not-defined",
+      "checks": ["cable condition including kink/abrasion/broken wires", "gripper/terminal/yoke condition", "slip or length change indicators", "attachment security", "independent retention condition", "replacement element line identity"]
+    },
+    {
+      "id": "BUTTERFLY-ASSEMBLIES",
+      "criticality": "qualification-dependent",
+      "intervalStatus": "not-defined",
+      "checks": ["crack/chip/deformation/crazing appropriate to released material tier", "attachment condition", "orientation and contact damage", "finish/optical degradation", "fragment-retention features where released"]
+    },
+    {
+      "id": "KINETIC-SYSTEM",
+      "criticality": "safety-critical",
+      "intervalStatus": "not-defined",
+      "checks": ["bearing/drive/brake condition per released component architecture", "service lock", "secondary retention", "feedback/index hardware", "abnormal noise/vibration", "leakage/wear/contamination where relevant", "balance/trim integrity", "fault history"]
+    },
+    {
+      "id": "ELECTRICAL-LIGHTING",
+      "criticality": "safety-critical",
+      "intervalStatus": "not-defined",
+      "checks": ["isolation/protection/bonding condition", "wiring/connectors/control gear", "14 fixed head condition", "thermal discoloration or damage", "control/fault logs where available", "released optic/CCT/head identity after replacement"]
+    },
+    {
+      "id": "FINISH-ARCHITECTURAL",
+      "criticality": "quality",
+      "intervalStatus": "not-defined",
+      "checks": ["visible finish condition", "cleaning damage", "architectural interference introduced after handover", "access-panel/service-zone condition"]
+    }
+  ],
+  "eventTriggeredInspection": [
+    {"id": "ABNORMAL-STOP", "required": true, "trigger": "fault/emergency/abnormal torque stop or unexplained kinetic fault", "minimumScope": ["kinetic system", "suspension/field", "clearance/interference", "fault record"]},
+    {"id": "PHYSICAL-CONTACT", "required": true, "trigger": "butterfly/cable/head/canopy/architecture contact or snag", "minimumScope": ["affected elements", "suspension", "kinetic alignment", "dynamic clearance"]},
+    {"id": "STRUCTURAL-EVENT", "required": true, "trigger": "building/ceiling structural modification, impact, significant movement or other event judged capable of affecting support", "minimumScope": ["project structure", "interfaces", "secondary retention", "alignment"]},
+    {"id": "WATER-CONTAMINATION", "required": true, "trigger": "water ingress or contamination affecting canopy/electrical/kinetic hardware", "minimumScope": ["electrical", "kinetic", "corrosion/contamination", "insulation/safety checks as applicable"]},
+    {"id": "UNAUTHORIZED-CHANGE", "required": true, "trigger": "unapproved part, setting, wiring, software limit or structural modification discovered", "minimumScope": ["configuration audit", "evidence impact", "affected physical verification"]},
+    {"id": "MAJOR-SERVICE", "required": true, "trigger": "replacement/repair of safety-critical suspension, kinetic, structural or electrical item", "minimumScope": ["affected system", "configuration traceability", "post-service verification", "return-to-service gate"]}
+  ],
+  "maintenanceControl": {
+    "releasedProcedureRequiredForSafetyCriticalWork": true,
+    "authorizedPersonnelRequired": true,
+    "electricalIsolationRequiredWhereApplicable": true,
+    "mechanicalServiceLockRequiredForRotatingFieldService": true,
+    "replacementPartIdentityRecorded": true,
+    "safetyCriticalFastenerOrLockingRequirementMustBeControlled": true,
+    "lubricantTypeAndQuantityMustComeFromReleasedComponentProcedure": true,
+    "uncontrolledCleaningChemicalOnOpticalOrFinishSurfacePermitted": false,
+    "serviceDeviationRegisterRequired": true,
+    "originalFailureHistoryMustBePreserved": true
+  },
+  "sparesControl": {
+    "criticalSparesListRequired": true,
+    "exactQualifiedIdentityRequiredForSafetyCriticalSpares": true,
+    "spareQuantityStrategyStatus": "not-defined",
+    "butterflyTierAndFinishMatchRequired": true,
+    "replacementButterflyMassBalanceImpactReviewRequired": true,
+    "lightingReplacementPhotometricElectricalEquivalenceReviewRequired": true,
+    "kineticReplacementQualificationImpactReviewRequired": true,
+    "obsoletePartSubstitutionRequiresEngineeringReview": true,
+    "uncontrolledCannibalizationPermitted": false
+  },
+  "postServiceVerification": [
+    {"id": "CONFIGURATION", "required": true, "requirement": "Record removed and installed part identities, revision/configuration effect and approved deviation/change reference."},
+    {"id": "MECHANICAL", "required": true, "requirement": "Verify affected fastening, locking, suspension, retention, alignment and service-lock conditions before motion."},
+    {"id": "ELECTRICAL", "required": true, "requirement": "Complete affected isolation/bonding/wiring/function/safety checks before energization where electrical work occurred."},
+    {"id": "KINETIC", "required": true, "requirement": "Where kinetic behavior can be affected, re-verify released low-speed/nominal motion, feedback and stop behavior before return to normal operation."},
+    {"id": "CLEARANCE", "required": true, "requirement": "Where geometry, mass, line length or alignment changed, re-verify affected dynamic/static clearance."},
+    {"id": "LIGHTING", "required": true, "requirement": "Where head/control gear changed, confirm exact released configuration and affected addressing/groups/scenes/function."},
+    {"id": "BASELINE", "required": true, "requirement": "Update as-maintained configuration/history without erasing the commissioned as-installed baseline or prior failures."}
+  ],
+  "faultAndHistory": {
+    "faultEventLogRequired": true,
+    "serviceWorkOrderHistoryRequired": true,
+    "inspectionHistoryRequired": true,
+    "replacementPartHistoryRequired": true,
+    "configurationChangeHistoryRequired": true,
+    "recurringFaultTrendReviewRequired": true,
+    "fieldFailureEscalationProcessRequired": true,
+    "safetyRelatedFieldIssueEvidenceImpactReviewRequired": true
+  },
+  "intervalRelease": {
+    "initialIntervalsRequireSelectedComponentManufacturerInputs": true,
+    "initialIntervalsRequireQualificationTestInputs": true,
+    "initialIntervalsRequireCommissionedDutyCycle": true,
+    "fieldHistoryMayShortenInterval": true,
+    "intervalMayBeExtendedWithoutEngineeringReview": false,
+    "currentIntervalStatus": "not-released"
+  },
+  "promotionGate": {
+    "commissionedServiceBaselineControlled": false,
+    "inspectionCriteriaReleased": false,
+    "inspectionIntervalsReleased": false,
+    "safetyCriticalMaintenanceProceduresReleased": false,
+    "criticalSparesListReleased": false,
+    "obsolescenceSubstitutionProcessReleased": false,
+    "faultAndServiceHistorySystemReleased": false,
+    "postServiceVerificationProcedureReleased": false,
+    "returnToServiceGateReleased": false,
+    "ownerServiceDocumentationReleased": false,
+    "lifecycleServicePlanApproved": false
+  },
+  "rules": [
+    "Do not invent bearing, brake, cable, gripper, electrical or material service life before exact selected hardware and qualification evidence exist.",
+    "A replacement part that physically fits is not automatically qualified or equivalent.",
+    "Any service action affecting mass, line length, balance, alignment, motion limits or safety retention requires appropriate engineering impact review and affected verification.",
+    "The commissioned as-installed baseline and failure history are historical evidence and must not be overwritten by later maintenance records.",
+    "Return to service requires closure of the verification appropriate to the work performed; successful visual operation alone is insufficient.",
+    "Repository planning evidence cannot close physical inspection or maintenance evidence."
+  ]
+}
