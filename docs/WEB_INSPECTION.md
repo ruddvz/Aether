@@ -10,7 +10,7 @@ The public technical inspector is intended for:
 - checking the nearest coordination clearance between butterfly elements,
 - taking point-to-point browser measurements,
 - placing local review annotations,
-- sharing a lightweight browser model with architects, designers, engineers and internal reviewers.
+- sharing a browser coordination model with architects, designers, engineers and internal reviewers.
 
 It is not a structural, fabrication, electrical, photometric, certification or manufacturing release.
 
@@ -33,13 +33,15 @@ The optimized GLB may never replace the source coordination GLB in geometry QA o
 
 The output uses `EXT_meshopt_compression` and is decoded in the browser by the Three.js Meshopt decoder.
 
+The source coordination GLB already shares only three butterfly meshes across 240 element nodes, so it is unusually compact before compression. For this fixture, Meshopt metadata may make the raw GLB container slightly larger. Raw file-size reduction is therefore not an acceptance criterion. The optimization gate instead verifies a valid Meshopt-encoded derivative, preserved node and mesh identity, bounded overhead, and an unchanged source coordination asset.
+
 The optimization manifest records:
 
 - source SHA-256,
 - source byte length,
 - optimized SHA-256,
 - optimized byte length,
-- compression ratio,
+- raw byte ratio and delta,
 - optimizer package/version,
 - explicit authority constraints.
 
