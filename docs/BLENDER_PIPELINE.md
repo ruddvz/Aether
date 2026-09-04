@@ -34,7 +34,47 @@ Photographic lighting is separate:
 - `MACRO_RIG_*` for isolated optical-detail QA;
 - `ENV_RES_*` for architectural environment photography.
 
-Clean product presets can suppress the conceptual fixture beams without deleting or moving their objects.
+Baseline named shots suppress the conceptual fixture beams without deleting or moving their objects.
+
+## Named shots and render UX
+
+`shot_catalogue.json` is the preferred render/review interface. Each named shot binds:
+
+- one existing camera;
+- intended visual purpose;
+- expected aspect ratio;
+- studio, macro or architectural environment role;
+- default production quality tier;
+- default high-resolution output profile;
+- lightweight preview output profile;
+- conceptual fixture-light state.
+
+The current catalogue covers all ten cameras exactly once. This prevents a common review error where a valid camera is accidentally rendered through the wrong aspect preset.
+
+`render_shot.py --list-shots` prints the available semantic shot names. A named shot can be rendered at its defaults or overridden with a compatible quality tier/output profile. The legacy `--camera` + `--preset` route remains available for advanced use.
+
+## Quality tiers
+
+Quality is independent from output size:
+
+- `draft`: very low samples for layout checks;
+- `lookdev`: moderate preview quality for materials, lights and camera iteration;
+- `production`: higher-quality final working renders with 16-bit output;
+- `hero`: high-sample final hero/detail rendering with tighter adaptive sampling.
+
+The quality definitions live in `render_quality.json`. They intentionally avoid blindly maximizing sample count.
+
+## Output profiles
+
+Resolution/aspect lives separately in `output_profiles.json`:
+
+- landscape preview and 4K;
+- vertical preview and 2160 x 3840 marketing output;
+- square preview and 4096 x 4096 detail output.
+
+A named shot rejects an output profile whose declared aspect does not match the shot.
+
+The older `render_presets.json` remains temporarily supported for backwards compatibility with existing commands and integrations.
 
 ## Cameras and render modes
 
@@ -45,6 +85,8 @@ The master currently carries ten named cameras spanning product hero, dramatic l
 ## Architectural environments
 
 Architectural geometry is visualization-only and exists to establish believable scale, mounting context, materials and photographic composition. The current residential scene uses a flat mounting ceiling zone around the unchanged canopy and a visual floor datum. Those room dimensions are not site-interface or structural design values.
+
+The residential reference environment now uses a dark warm-stone contrast zone, walnut joinery, floor-to-ceiling glazing, restrained furniture and procedural surface variation. The goal is photographic context and scale, not an interior-design claim.
 
 Future staircase, hospitality and atrium environments should reuse the same rule: architecture supports the chandelier, remains realistically scaled and never becomes upstream product authority.
 
@@ -62,10 +104,10 @@ The dedicated Blender workflow:
 2. builds the complete master through `build_entrypoint.py`;
 3. opens and validates the generated `.blend` inside Blender;
 4. refreshes the generated binary on the feature branch;
-5. renders Cycles product, macro and architectural QA previews;
-6. uploads the validation report and preview images as workflow artifacts.
+5. renders a nine-image Cycles visual-QA suite using named shots and aspect-correct preview profiles;
+6. uploads the validation report and individual preview images as workflow artifacts.
 
-The ordinary repository workflow separately validates canonical product data, Blender source policy, geometry, regression tests and repository artifacts.
+The ordinary repository workflow separately validates canonical product data, Blender source policy, controlled geometry, web geometry, regression tests and repository artifacts.
 
 ## Measured photometry boundary
 

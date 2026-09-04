@@ -32,18 +32,46 @@ blender --background blender/vx4800/VX4800_MASTER.blend \
   --python blender/vx4800/validate_scene.py
 ```
 
-Render a named camera shot:
+## Render by named shot
+
+Named shots are the preferred human/automation interface because each shot records its intended camera, aspect ratio, environment and production defaults.
+
+List the catalogue:
 
 ```bash
 blender --background blender/vx4800/VX4800_MASTER.blend \
   --python blender/vx4800/render_shot.py -- \
   --repo-root . \
-  --camera CAM_HERO_FRONT_3Q \
-  --preset hero \
-  --output renders/vx4800/hero_front_3q.png
+  --list-shots
 ```
 
-Architectural cameras automatically enable their visualization-only environment and disable the dark product stage. The butterfly macro camera automatically isolates the controlled target instance for optical QA without changing that instance's controlled transform.
+Render the product hero at its production defaults:
+
+```bash
+blender --background blender/vx4800/VX4800_MASTER.blend \
+  --python blender/vx4800/render_shot.py -- \
+  --repo-root . \
+  --shot product_hero \
+  --output renders/vx4800/product_hero.png
+```
+
+Render the same shot at lookdev quality and preview resolution:
+
+```bash
+blender --background blender/vx4800/VX4800_MASTER.blend \
+  --python blender/vx4800/render_shot.py -- \
+  --repo-root . \
+  --shot product_hero \
+  --quality lookdev \
+  --output-profile landscape_preview \
+  --output renders/vx4800/product_hero_preview.png
+```
+
+The current quality tiers are `draft`, `lookdev`, `production` and `hero`. Output profiles independently define landscape, vertical or square resolution. The shot catalogue rejects aspect/profile mismatches.
+
+The older `--camera` + `--preset` path remains available for advanced or legacy use.
+
+Architectural shots automatically enable their visualization-only environment and disable the dark product stage. The butterfly macro shot automatically isolates the controlled target instance for optical QA without changing that instance's controlled transform.
 
 ## Scene structure
 
@@ -56,8 +84,9 @@ The generated scene contains:
 - linked S/M/L optical visualization prototypes;
 - separate fixture-integrated conceptual lights and photographic render lights;
 - studio product-render stage;
-- visualization-only residential architectural environment;
-- ten named product, detail, technical and architectural cameras.
+- visualization-only double-height residential environment;
+- ten named product, detail, technical and architectural cameras;
+- ten validated named shot definitions.
 
 Every butterfly instance carries its engineering element ID and source schedule values as Blender custom properties.
 
@@ -67,6 +96,6 @@ The 14 `RENDER_LIGHT_*` objects represent conceptual fixture-integrated lighting
 
 The optical butterfly shader remains a visualization material study until a commercial material/process is controlled. A convincing render does not approve glass composition, PMMA grade, material thickness, attachment geometry, finished mass, proof strength or fatigue life.
 
-## Generated binary
+## Generated binary and CI
 
-`VX4800_MASTER.blend` is generated from repository source data. The Blender GitHub workflow rebuilds it with Blender 5.2.1 LTS, validates it in Blender, refreshes the binary when needed and renders visual-QA previews.
+`VX4800_MASTER.blend` is generated from repository source data. The Blender GitHub workflow rebuilds it with Blender 5.2.1 LTS, validates it inside Blender, refreshes the binary when needed and renders the visual-QA shot suite.

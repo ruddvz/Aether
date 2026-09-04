@@ -51,3 +51,19 @@ All notable repository and product presentation changes are recorded here.
 - Replaced archive-oriented build steps with `scripts/build_product.py`, which builds repository product artifacts directly without generating ZIP packages.
 - Removed ZIP-specific CI gates and download publication from the active repository workflow.
 - Kept engineering revision 1.3.0 and presentation revision 5.2.0 unchanged; the new web tooling remains review-only and cannot become manufacturing authority.
+
+## 2026-09-04 - VX4800 Blender visualization and photoreal pipeline
+
+- Added the Blender 5.2.1 LTS visualization master generated from controlled VX4800 repository data.
+- Preserved all 240 engineering element identities and the controlled 66 S / 144 M / 30 L allocation inside linked Blender instances.
+- Added Blender-native validation for controlled instance counts, suspension splines, fixed LED placeholders, conceptual fixture lights, cameras, materials and visualization authority.
+- Added procedural faceted optical butterfly studies with linked S/M/L prototypes, physically plausible transmission/IOR lookdev and visualization-only sculptural spine refinement.
+- Added premium dark-champagne, black-titanium, brushed-brass, satin-nickel and stainless visual material studies with micro-roughness.
+- Separated the 14 fixture-integrated conceptual light studies from photographic product, macro and architectural lighting rigs.
+- Added dark-studio hero, isolated butterfly macro and double-height residential architectural visualization modes.
+- Added a visualization-only residential environment with flat mounting ceiling context, glazing, restrained furniture, material hierarchy and procedural surface variation.
+- Added ten traceable product/detail/technical/architectural cameras and a named-shot catalogue covering every camera.
+- Separated render quality tiers from landscape, vertical and square output profiles while retaining legacy preset compatibility.
+- Expanded Blender CI from a single preview into a nine-image aspect-correct Cycles visual-QA suite plus Blender-native validation artifacts.
+- Corrected the human build instructions so local complete-master builds use the same `build_entrypoint.py` path as GitHub Actions.
+- Kept engineering revision 1.3.0, controlled coordinates, fixed head set-out and manufacturing authority unchanged throughout the visualization work.
