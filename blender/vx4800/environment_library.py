@@ -12,7 +12,7 @@ from aether_blender_lib import (
     set_socket,
 )
 
-VISUALIZATION_REVISION = "0.8.0"
+VISUALIZATION_REVISION = "0.9.0"
 ENVIRONMENT_ID = "residential-double-height"
 ENV_COLLECTION = "85_ENV_RESIDENTIAL"
 ENV_LIGHT_PREFIX = "ENV_RES_"
@@ -33,27 +33,27 @@ def _mark_material(material: bpy.types.Material, role: str) -> bpy.types.Materia
 
 def _environment_materials() -> dict[str, bpy.types.Material]:
     plaster = _mark_material(
-        principled_material("MAT_ENV_RES_PLASTER", "#B8B2AA", 0.0, 0.80),
+        principled_material("MAT_ENV_RES_PLASTER", "#A79E93", 0.0, 0.82),
         "warm-mineral-plaster",
     )
     limestone = _mark_material(
-        principled_material("MAT_ENV_RES_LIMESTONE", "#6D6863", 0.0, 0.42),
-        "honed-limestone-floor",
+        principled_material("MAT_ENV_RES_LIMESTONE", "#4C4945", 0.0, 0.38),
+        "honed-dark-limestone-floor",
     )
     feature_stone = _mark_material(
-        principled_material("MAT_ENV_RES_FEATURE_STONE", "#514D49", 0.0, 0.56),
-        "warm-stone-feature-wall",
+        principled_material("MAT_ENV_RES_FEATURE_STONE", "#302D2B", 0.0, 0.50),
+        "charcoal-warm-stone-feature-wall",
     )
     walnut = _mark_material(
-        principled_material("MAT_ENV_RES_WALNUT", "#2F211A", 0.0, 0.32, coat=0.04),
-        "walnut-furniture",
+        principled_material("MAT_ENV_RES_WALNUT", "#2A1B14", 0.0, 0.30, coat=0.035),
+        "dark-walnut-joinery",
     )
     textile = _mark_material(
-        principled_material("MAT_ENV_RES_TEXTILE", "#373532", 0.0, 0.76),
-        "upholstery-textile",
+        principled_material("MAT_ENV_RES_TEXTILE", "#55504A", 0.0, 0.80),
+        "warm-grey-upholstery-textile",
     )
     rug = _mark_material(
-        principled_material("MAT_ENV_RES_RUG", "#5A5652", 0.0, 0.88),
+        principled_material("MAT_ENV_RES_RUG", "#777067", 0.0, 0.90),
         "woven-rug",
     )
     glass = _mark_material(
@@ -61,14 +61,14 @@ def _environment_materials() -> dict[str, bpy.types.Material]:
             "MAT_ENV_RES_WINDOW_GLASS",
             "#DDE9EE",
             0.0,
-            0.12,
+            0.10,
             transmission=1.0,
             ior=1.45,
         ),
         "architectural-glazing-visual-study",
     )
     sky = _mark_material(
-        make_emission_material("MAT_ENV_RES_SKY_CARD", "#8FAEC8", 0.45),
+        make_emission_material("MAT_ENV_RES_SKY_CARD", "#7898B3", 0.28),
         "daylight-view-card",
     )
     return {
@@ -122,7 +122,20 @@ def _build_room_shell(collection: bpy.types.Collection, mats: dict[str, bpy.type
     _cube("ENV_RES_FLOOR", collection, (11.4, 18.0, 0.16), (0.0, 0.2, -6.08), mats["limestone"], "floor", 0.012)
     _cube("ENV_RES_CEILING", collection, (11.4, 12.6, 0.22), (0.0, 0.1, 0.26), mats["plaster"], "flat-mounting-ceiling", 0.010)
     _cube("ENV_RES_BACK_WALL", collection, (11.4, 0.20, 6.15), (0.0, 5.8, -2.925), mats["plaster"], "back-wall", 0.012)
-    _cube("ENV_RES_FEATURE_WALL", collection, (8.0, 0.07, 5.45), (0.35, 5.67, -3.05), mats["feature_stone"], "warm-stone-feature-wall", 0.010)
+
+    # The darker central stone zone is positioned behind the controlled vortex so
+    # transparent edges remain legible without changing any fixture coordinates.
+    _cube("ENV_RES_FEATURE_WALL", collection, (4.85, 0.075, 5.35), (0.15, 5.67, -3.02), mats["feature_stone"], "vortex-contrast-stone-zone", 0.010)
+    for index, x in enumerate((3.05, 3.38, 3.71, 4.04, 4.37, 4.70, 5.03), start=1):
+        _cube(
+            f"ENV_RES_WALNUT_SLAT_{index:02d}",
+            collection,
+            (0.24, 0.085, 4.85),
+            (x, 5.655, -3.14),
+            mats["walnut"],
+            "vertical-walnut-joinery",
+            0.012,
+        )
     _cube("ENV_RES_RIGHT_WALL", collection, (0.20, 4.6, 6.15), (5.6, 3.5, -2.925), mats["plaster"], "partial-side-wall", 0.012)
 
     _cube("ENV_RES_LEFT_FRONT_PIER", collection, (0.22, 1.45, 6.15), (-5.6, -4.75, -2.925), mats["plaster"], "window-pier", 0.010)
@@ -149,32 +162,55 @@ def _build_room_shell(collection: bpy.types.Collection, mats: dict[str, bpy.type
 def _build_furniture(collection: bpy.types.Collection, mats: dict[str, bpy.types.Material]) -> None:
     # Furniture stays outside the central chandelier footprint and exists only for
     # architectural scale/photographic composition.
-    _cube("ENV_RES_RUG", collection, (3.5, 2.6, 0.025), (-3.15, 1.45, -5.975), mats["rug"], "rug", 0.008)
-    _cube("ENV_RES_SOFA_BASE", collection, (2.85, 0.90, 0.38), (-3.35, 3.00, -5.80), mats["textile"], "sofa-base", 0.10)
-    _cube("ENV_RES_SOFA_BACK", collection, (2.85, 0.24, 1.00), (-3.35, 3.35, -5.48), mats["textile"], "sofa-back", 0.10)
-    _cube("ENV_RES_SOFA_ARM_L", collection, (0.22, 0.92, 0.62), (-4.68, 3.00, -5.67), mats["textile"], "sofa-arm", 0.08)
-    _cube("ENV_RES_SOFA_ARM_R", collection, (0.22, 0.92, 0.62), (-2.02, 3.00, -5.67), mats["textile"], "sofa-arm", 0.08)
+    _cube("ENV_RES_RUG", collection, (3.8, 2.7, 0.025), (-3.25, 1.35, -5.975), mats["rug"], "rug", 0.008)
+    _cube("ENV_RES_SOFA_BASE", collection, (3.15, 0.96, 0.32), (-3.45, 3.05, -5.82), mats["textile"], "sofa-base", 0.12)
+    _cube("ENV_RES_SOFA_BACK", collection, (3.15, 0.23, 0.90), (-3.45, 3.42, -5.48), mats["textile"], "sofa-back", 0.12)
+    _cube("ENV_RES_SOFA_ARM_L", collection, (0.22, 0.96, 0.58), (-4.91, 3.05, -5.68), mats["textile"], "sofa-arm", 0.09)
+    _cube("ENV_RES_SOFA_ARM_R", collection, (0.22, 0.96, 0.58), (-1.99, 3.05, -5.68), mats["textile"], "sofa-arm", 0.09)
+    for index, x in enumerate((-4.35, -3.45, -2.55), start=1):
+        _cube(
+            f"ENV_RES_SOFA_SEAT_{index:02d}",
+            collection,
+            (0.82, 0.78, 0.11),
+            (x, 2.96, -5.58),
+            mats["textile"],
+            "sofa-seat-cushion",
+            0.07,
+        )
+        _cube(
+            f"ENV_RES_SOFA_CUSHION_{index:02d}",
+            collection,
+            (0.78, 0.18, 0.66),
+            (x, 3.27, -5.25),
+            mats["textile"],
+            "sofa-back-cushion",
+            0.08,
+        )
 
-    _cube("ENV_RES_COFFEE_TOP", collection, (1.45, 0.78, 0.075), (-2.95, 1.15, -5.55), mats["walnut"], "coffee-table-top", 0.035)
-    for index, x in enumerate((-3.48, -2.42), start=1):
+    _cube("ENV_RES_COFFEE_TOP", collection, (1.55, 0.82, 0.075), (-2.95, 1.08, -5.55), mats["walnut"], "coffee-table-top", 0.035)
+    for index, x in enumerate((-3.52, -2.38), start=1):
         _cube(
             f"ENV_RES_COFFEE_LEG_{index:02d}",
             collection,
-            (0.09, 0.54, 0.38),
-            (x, 1.15, -5.78),
+            (0.09, 0.56, 0.38),
+            (x, 1.08, -5.78),
             mats["walnut"],
             "coffee-table-leg",
             0.018,
         )
 
-    _cube("ENV_RES_CONSOLE", collection, (2.35, 0.50, 0.10), (2.65, 5.20, -5.22), mats["walnut"], "console-top", 0.020)
+    _cube("ENV_RES_CONSOLE", collection, (2.15, 0.42, 0.095), (3.55, 5.18, -5.23), mats["walnut"], "floating-console", 0.025)
 
 
 def _build_environment_lights(collection: bpy.types.Collection) -> None:
     specs = (
-        ("ENV_RES_WINDOW_LIGHT", (-5.05, 0.10, -2.95), (0.0, 0.0, -2.65), 780.0, 4.6, (0.72, 0.84, 1.0), "RECTANGLE", 5.0, 0.65),
-        ("ENV_RES_WARM_FILL", (4.4, -2.6, -1.90), (0.0, 0.4, -2.8), 230.0, 3.0, (1.0, 0.82, 0.65), "RECTANGLE", 1.2, 0.24),
-        ("ENV_RES_BACK_RIM", (2.8, 5.0, -1.20), (0.0, 0.0, -2.7), 360.0, 2.4, (1.0, 0.88, 0.72), "RECTANGLE", 0.8, 0.38),
+        # Broad daylight establishes room exposure but contributes no visible rectangular specular hotspot.
+        ("ENV_RES_WINDOW_LIGHT", (-5.20, 0.10, -2.90), (0.0, 0.0, -2.65), 520.0, 4.8, (0.70, 0.82, 1.0), "RECTANGLE", 5.3, 0.0),
+        # Warm front key provides gentle metal response without flattening the transparent field.
+        ("ENV_RES_WARM_KEY", (4.5, -3.0, -1.80), (0.0, 0.15, -2.75), 320.0, 3.2, (1.0, 0.82, 0.64), "RECTANGLE", 1.0, 0.18),
+        # Narrower rear sources create the glass edge structure visible in the studio baseline.
+        ("ENV_RES_BACK_RIM", (2.6, 5.05, -1.35), (0.0, 0.0, -2.75), 450.0, 2.6, (1.0, 0.87, 0.70), "RECTANGLE", 0.65, 0.28),
+        ("ENV_RES_EDGE_LEFT", (-2.8, 4.8, -2.05), (0.0, 0.0, -2.85), 260.0, 3.6, (0.72, 0.84, 1.0), "RECTANGLE", 0.38, 0.22),
     )
     for name, location, target, energy, size, color, shape, size_y, specular_factor in specs:
         light = create_area_light(
@@ -187,7 +223,7 @@ def _build_environment_lights(collection: bpy.types.Collection) -> None:
             collection,
             shape=shape,
             size_y=size_y,
-            spread_deg=115 if name == "ENV_RES_WINDOW_LIGHT" else 100,
+            spread_deg=115 if name == "ENV_RES_WINDOW_LIGHT" else 96,
         )
         if hasattr(light.data, "specular_factor"):
             light.data.specular_factor = specular_factor
@@ -216,6 +252,7 @@ def build_environment_library() -> None:
     scene["aetheria_residential_environment_id"] = ENVIRONMENT_ID
     scene["aetheria_residential_floor_top_z_m"] = -6.0
     scene["aetheria_residential_ceiling_underside_z_m"] = 0.15
+    scene["aetheria_residential_lookdev_status"] = "premium-contrast-study-visualization-only"
 
 
 def _set_world(scene: bpy.types.Scene, color: tuple[float, float, float, float], strength: float) -> None:
@@ -253,8 +290,8 @@ def _show_residential(scene: bpy.types.Scene) -> None:
             obj.hide_render = True
         if obj.type == "LIGHT" and obj.name.startswith("MACRO_RIG_"):
             obj.hide_render = True
-    scene.view_settings.exposure = -0.48
-    _set_world(scene, (0.055, 0.070, 0.10, 1.0), 0.14)
+    scene.view_settings.exposure = -0.72
+    _set_world(scene, (0.035, 0.045, 0.065, 1.0), 0.085)
     scene["aetheria_active_environment"] = ENVIRONMENT_ID
 
 
