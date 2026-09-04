@@ -64,6 +64,16 @@
       "reference": "fixtures/vx4800/structural/interface-brief-v1.json",
       "claim": "Defines structural/site-interface inputs, load-case requirements and unresolved promotion gates; it does not provide approved reactions, anchors or a project structural calculation.",
       "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-MFG-QUALITY-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/manufacturing/quality-plan-v1.json",
+      "claim": "Defines manufacturing quality, traceability, substitution, inspection, FAT and production-release gates; it does not prove the production process or first article has been validated.",
+      "canClosePhysicalTest": false
     }
   ]
 }
