@@ -104,6 +104,37 @@ def test_candidate_evaluator_blocks_unconfirmed_exact_fields():
     assert review["decision"] == "reject-for-now"
 
 
+def test_photometry_shortlist_requires_controlled_evidence_before_final_approval():
+    shortlist_path = ROOT / "fixtures/vx4800/photometry/qualification/shortlist-v1.json"
+    shortlist = json.loads(shortlist_path.read_text())
+    candidate_dir = ROOT / "fixtures/vx4800/photometry/candidates"
+
+    finalists = shortlist["finalists"]
+    assert [item["rank"] for item in finalists] == list(range(1, len(finalists) + 1))
+    assert len({item["candidateId"] for item in finalists}) == len(finalists)
+
+    candidates = {}
+    for path in candidate_dir.glob("*.json"):
+        if path.name.startswith("_"):
+            continue
+        candidate = json.loads(path.read_text())
+        candidates[candidate["candidateId"]] = candidate
+
+    for finalist in finalists:
+        assert finalist["candidateId"] in candidates
+        assert finalist["promotionGate"].strip()
+
+    if shortlist["finalApprovalGranted"]:
+        for finalist in finalists:
+            candidate = candidates[finalist["candidateId"]]
+            assert candidate["review"]["exactConfigurationConfirmed"] is True
+            assert candidate["review"]["officialPhotometryAvailable"] is True
+            for configuration in candidate["configurations"]:
+                assert configuration["photometryStatus"] == "verified"
+                assert configuration["iesSha256"] is not None
+                assert len(configuration["iesSha256"]) == 64
+
+
 def test_measured_browser_adapter_node_suite():
     subprocess.run([
         "node",
