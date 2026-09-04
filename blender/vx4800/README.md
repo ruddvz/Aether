@@ -32,6 +32,8 @@ blender --background blender/vx4800/VX4800_MASTER.blend \
   --python blender/vx4800/validate_scene.py
 ```
 
+The final 0.13 validator also exercises repeated master-refinement calls and sequential finish switching in one Blender session so local iterative work cannot silently compound the sculptural refinement or become stuck on the first finish override.
+
 ## Render by named shot
 
 Named shots are the preferred human and automation interface because each shot records its intended camera, aspect ratio, environment and production defaults.
@@ -106,7 +108,7 @@ Every butterfly instance carries its engineering element ID and source schedule 
 
 ## Optical and finish authority
 
-The optical butterfly shader is a visualization study. Its transmission, IOR, roughness and pale edge absorption exist to produce a plausible render and do not specify glass composition, PMMA grade, coating, thickness or supplier process. The 0.12 lookdev keeps thin-film/fantasy dispersion disabled and uses restrained visualization-only edge absorption.
+The optical butterfly shader is a visualization study. Its transmission, IOR, roughness and pale edge absorption exist to produce a plausible render and do not specify glass composition, PMMA grade, coating, thickness or supplier process. The final 0.13 baseline retains the restrained absorption introduced in 0.11, recentres the macro review and keeps thin-film/fantasy dispersion disabled.
 
 The four metal finish variants are appearance studies only. A convincing render does not approve PVD chemistry, plating stack, substrate, brushing process, colour tolerance, durability or supplier.
 
@@ -124,4 +126,6 @@ The 14 `RENDER_LIGHT_*` objects represent conceptual fixture-integrated lighting
 
 ## Generated binary and CI
 
-`VX4800_MASTER.blend` is generated from repository source data. The Blender GitHub workflow rebuilds it with Blender 5.2.1 LTS, validates it inside Blender, refreshes the generated binary when needed and renders the targeted visual-QA suite covering core framing, optics, installed environments and finish overrides.
+`VX4800_MASTER.blend` is generated from repository source data. The Blender GitHub workflow rebuilds it with Blender 5.2.1 LTS, validates it inside Blender, refreshes the generated binary when needed, distributes one validated master to independent parallel render jobs, and collects the targeted visual-QA outputs into one review artifact.
+
+The final 0.13 baseline passed both the dedicated Blender workflow and the ordinary repository validation workflow before integration.
