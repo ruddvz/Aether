@@ -56,11 +56,14 @@ jobs:
         run: |
           set -euo pipefail
           BLENDER="$GITHUB_WORKSPACE/.blender-cache/blender-5.2.1-linux-x64/blender"
+          export PYTHONPATH="$GITHUB_WORKSPACE/blender/vx4800${PYTHONPATH:+:$PYTHONPATH}"
           "$BLENDER" --background --factory-startup \
             --python blender/vx4800/build_scene.py -- \
             --repo-root "$GITHUB_WORKSPACE" \
             --output blender/vx4800/VX4800_MASTER.blend \
             --render-preview build/blender/VX4800_HERO_PREVIEW.png
+          test -s blender/vx4800/VX4800_MASTER.blend
+          test -s build/blender/VX4800_HERO_PREVIEW.png
 
       - name: Validate generated Blender scene
         shell: bash
@@ -70,6 +73,14 @@ jobs:
           "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
             --python blender/vx4800/validate_scene.py -- \
             --report build/blender/validation.json
+          test -s build/blender/validation.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('build/blender/validation.json').read_text())
+          if report.get('status') != 'pass':
+              raise SystemExit(f"Blender validation did not pass: {report}")
+          PY
 
       - name: Upload Blender validation outputs
         uses: actions/upload-artifact@v4
