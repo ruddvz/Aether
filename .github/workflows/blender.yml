@@ -5,18 +5,8 @@ on:
     branches:
       - "feat/vx4800-blender-*"
     paths:
-      - "blender/vx4800/aether_blender_lib.py"
-      - "blender/vx4800/lookdev_modes.py"
-      - "blender/vx4800/environment_library.py"
-      - "blender/vx4800/build_entrypoint.py"
-      - "blender/vx4800/build_scene.py"
-      - "blender/vx4800/validate_scene.py"
-      - "blender/vx4800/render_shot.py"
-      - "blender/vx4800/scene_manifest.json"
-      - "blender/vx4800/render_presets.json"
-      - "blender/vx4800/render_quality.json"
-      - "blender/vx4800/output_profiles.json"
-      - "blender/vx4800/shot_catalogue.json"
+      - "blender/vx4800/*.py"
+      - "blender/vx4800/*.json"
       - ".github/workflows/blender.yml"
       - "fixtures/vx4800/fixture.json"
       - "fixtures/vx4800/composition/engineering-v1.3.0.csv"
@@ -109,13 +99,15 @@ jobs:
             local shot="$1"
             local profile="$2"
             local output="$3"
+            shift 3
             "$BLENDER" --background blender/vx4800/VX4800_MASTER.blend \
               --python blender/vx4800/render_shot.py -- \
               --repo-root "$GITHUB_WORKSPACE" \
               --shot "$shot" \
               --quality lookdev \
               --output-profile "$profile" \
-              --output "build/blender/$output"
+              --output "build/blender/$output" \
+              "$@"
             test -s "build/blender/$output"
           }
 
@@ -128,6 +120,10 @@ jobs:
           render_shot residential_wide landscape_preview VX4800_RESIDENTIAL_WIDE_PREVIEW.png
           render_shot residential_medium landscape_preview VX4800_RESIDENTIAL_MEDIUM_PREVIEW.png
           render_shot vertical_marketing vertical_preview VX4800_VERTICAL_MARKETING_PREVIEW.png
+
+          render_shot canopy_detail square_preview VX4800_FINISH_BLACK_TITANIUM_PREVIEW.png --finish black_titanium
+          render_shot canopy_detail square_preview VX4800_FINISH_BRUSHED_BRASS_PREVIEW.png --finish brushed_brass
+          render_shot canopy_detail square_preview VX4800_FINISH_SATIN_NICKEL_PREVIEW.png --finish satin_nickel
 
       - name: Upload Blender validation outputs
         uses: actions/upload-artifact@v4
