@@ -9,7 +9,7 @@
       "rfqPackageId": "RFQ-KIN-BRG-01",
       "candidateTargets": [
         {"name": "Kaydon Bearings", "basis": "Repository manufacturer evidence exists for slewing-bearing mounting/installation requirements and a current official engineering-support route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRG-KAYDON-01"},
-        {"name": "Schaeffler", "basis": "Crossed-roller bearing family remains an approved study family; exact application-engineering target still requires contact qualification.", "targetStatus": "research-required", "contactEvidenceRef": null}
+        {"name": "Schaeffler Canada Inc.", "basis": "Crossed-roller bearing family remains an approved alternate study family and a current official Canadian contact route has now been verified; no Schaeffler variant is selected.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRG-SCHAEFFLER-01"}
       ],
       "dispatchStatus": "ready-to-issue",
       "issuedDate": null,
@@ -43,7 +43,7 @@
       "rfqPackageId": "RFQ-KIN-BRK-01",
       "candidateTargets": [
         {"name": "RINGSPANN Corporation / RINGSPANN GmbH", "basis": "Repository manufacturer evidence exists for spring-activated electromagnetically released brake-caliper architecture and a current official North American contact route has been verified.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRK-RINGSPANN-01"},
-        {"name": "Mayr", "basis": "Direct-carrier fail-safe brake families have been reviewed as architecture precedents; exact application-engineering contact and variant evidence remain to be qualified.", "targetStatus": "research-required", "contactEvidenceRef": null}
+        {"name": "Chr. Mayr GmbH + Co. KG", "basis": "Direct-carrier fail-safe brake families have been reviewed as architecture precedents and the current official safety-brake technical enquiry route is verified; no Mayr model or safety performance is selected.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-BRK-MAYR-01"}
       ],
       "dispatchStatus": "ready-to-issue",
       "issuedDate": null,
@@ -65,14 +65,14 @@
     {
       "rfqPackageId": "RFQ-KIN-FAB-01",
       "candidateTargets": [
-        {"name": "prototype precision fabricator target TBD", "basis": "Fabricator must demonstrate large-ring machining, distortion control, traceability, inspection and proof-test capability before becoming a dispatch target.", "targetStatus": "research-required", "contactEvidenceRef": null}
+        {"name": "Bormill Inc.", "basis": "Official capacity information shows large vertical turning, fabrication/welding and prototype machining with a current Ontario quote/contact route. This qualifies an RFQ enquiry only; distortion control, traceability, inspection/NDT and proof-load capability remain unanswered technical requirements.", "targetStatus": "contact-qualified", "contactEvidenceRef": "KRC-FAB-BORMILL-01"}
       ],
-      "dispatchStatus": "not-issued",
+      "dispatchStatus": "ready-to-issue",
       "issuedDate": null,
       "dispatchChannelReference": null,
       "responseRecord": null,
       "technicalDisposition": "not-reviewed"
     }
   ],
-  "releaseRule": "A candidate target is not an issued RFQ. Contact qualification proves only that a current public route exists. Dispatch status may move to issued only after an external channel/reference and issue date are recorded. A response may become comparable only through a validated RFQ response record; no dispatch state selects a component."
+  "releaseRule": "A candidate target is not an issued RFQ. Contact qualification proves only that a current public route exists, not technical approval. Dispatch status may move to issued only after an external channel/reference and issue date are recorded. A response may become comparable only through a validated RFQ response record; no dispatch state selects a component or fabricator."
 }
