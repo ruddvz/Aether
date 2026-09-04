@@ -74,6 +74,16 @@
       "reference": "fixtures/vx4800/manufacturing/quality-plan-v1.json",
       "claim": "Defines manufacturing quality, traceability, substitution, inspection, FAT and production-release gates; it does not prove the production process or first article has been validated.",
       "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-INSTALL-COMMISSION-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/installation/commissioning-plan-v1.json",
+      "claim": "Defines site receipt, installation, commissioning, handover and service-baseline evidence requirements; it does not prove any physical site stage has passed.",
+      "canClosePhysicalTest": false
     }
   ]
 }
