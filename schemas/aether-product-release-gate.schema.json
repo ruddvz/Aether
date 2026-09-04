@@ -160,6 +160,16 @@
           "status": {
             "type": "string",
             "enum": ["open", "in-progress", "passed", "not-applicable"]
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "deviationRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
           }
         }
       }
