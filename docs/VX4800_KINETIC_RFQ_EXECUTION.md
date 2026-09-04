@@ -7,23 +7,34 @@ Controlled product engineering revision: 1.3.0
 
 ## Purpose
 
-The RFQ requirements define what suppliers must answer. This execution layer controls contact qualification, actual dispatch evidence, response normalization, clarification, technical comparison and the firewall between supplier advice and final engineering selection.
+The RFQ requirements define what suppliers must answer. This execution layer controls contact qualification, outbound draft preparation, actual dispatch evidence, response normalization, clarification, technical comparison and the firewall between supplier advice and final engineering selection.
 
 Machine-readable controls:
 
 - `fixtures/vx4800/kinetics/qualification/rfq-requirements-v1.json`
 - `fixtures/vx4800/kinetics/qualification/rfq-contact-evidence-v1.json`
 - `fixtures/vx4800/kinetics/qualification/rfq-dispatch-register-v1.json`
+- `fixtures/vx4800/kinetics/qualification/rfq-outbound-manifest-v1.json`
 - `fixtures/vx4800/kinetics/qualification/rfq-response-template-v1.json`
 - `schemas/aether-kinetic-rfq-contact-evidence.schema.json`
 - `schemas/aether-kinetic-rfq-dispatch.schema.json`
+- `schemas/aether-kinetic-rfq-outbound.schema.json`
 - `schemas/aether-kinetic-rfq-response.schema.json`
+
+Prepared outbound drafts:
+
+- `docs/rfq/vx4800/RFQ-KIN-BRG-01-bearing.md`
+- `docs/rfq/vx4800/RFQ-KIN-DRV-01-drive.md`
+- `docs/rfq/vx4800/RFQ-KIN-BELT-01-transmission.md`
+- `docs/rfq/vx4800/RFQ-KIN-BRK-01-brake.md`
+- `docs/rfq/vx4800/RFQ-KIN-FBK-01-feedback.md`
+- `docs/rfq/vx4800/RFQ-KIN-FAB-01-fabrication.md`
 
 ## Current dispatch truth
 
 No kinetic RFQ is recorded as externally issued by the repository at this stage.
 
-All six controlled packages now have at least one verified current public route and are `ready-to-issue`:
+All six controlled packages now have at least one verified current public route and are `ready-to-issue`. All six supplier-specific RFQ documents are also prepared, but each remains explicitly `prepared-not-sent`:
 
 - bearing: Kaydon Bearings, with Schaeffler Canada as a contact-qualified alternate
 - drive: SEW-EURODRIVE Company of Canada Ltd.
@@ -34,7 +45,7 @@ All six controlled packages now have at least one verified current public route 
 
 `contact-qualified` proves only that a current public supplier route exists. It does not prove technical suitability, contact with the supplier, dispatch, supplier agreement or selection. In particular, Bormill's published large-turning, fabrication/welding and prototype-machining capabilities justify a capability enquiry only; post-weld flatness, distortion control, traceability, NDT, inspection and proof-load capability remain unanswered RFQ requirements.
 
-`ready-to-issue` is not proof of dispatch. `dispatchStatus=issued` requires both an actual issue date and an external channel/thread reference.
+`prepared-not-sent` and `ready-to-issue` are not proof of dispatch. `dispatchStatus=issued` requires both an actual issue date and an external channel/thread reference.
 
 ## Controlled RFQ packages
 
@@ -51,14 +62,15 @@ For each package:
 
 1. Confirm the supplier target is technically relevant enough to receive the enquiry.
 2. Verify and archive a current public application-engineering/support/quote route.
-3. Send the controlled RFQ without inventing rotating mass, CG, bearing loads, drive torque, brake torque, stopping energy or dynamic amplification.
-4. Record the actual issue date and external channel/thread reference.
-5. Preserve the exact enquiry material sent.
-6. On response, create a supplier-specific response JSON from the controlled template.
-7. Archive supplier evidence with revision, exact-variant identity and hash where practical.
-8. Complete the compliance matrix against the controlled RFQ requirements.
-9. Request clarification for missing assumptions, mixed variants, untied ratings, incomplete mating data or ambiguous duty conditions.
-10. Only after technical review may a response become `technically-comparable` and at most `shortlisted-not-selected`.
+3. Review the prepared supplier-specific outbound draft against the current controlled RFQ requirements.
+4. Send the controlled RFQ without inventing rotating mass, CG, bearing loads, drive torque, brake torque, stopping energy or dynamic amplification.
+5. Record the actual issue date and external channel/thread reference.
+6. Preserve the exact enquiry material sent.
+7. On response, create a supplier-specific response JSON from the controlled template.
+8. Archive supplier evidence with revision, exact-variant identity and hash where practical.
+9. Complete the compliance matrix against the controlled RFQ requirements.
+10. Request clarification for missing assumptions, mixed variants, untied ratings, incomplete mating data or ambiguous duty conditions.
+11. Only after technical review may a response become `technically-comparable` and at most `shortlisted-not-selected`.
 
 ## Supplier-response normalization
 
@@ -103,27 +115,27 @@ Final component or fabricator selection remains a separate controlled engineerin
 
 ### Bearing
 
-Kaydon is the primary contact-qualified route for the slewing/turntable family. Schaeffler Canada is now a contact-qualified alternate for the crossed-roller study family. Enquiries should request required axial/radial/moment inputs, mounting-face and support-rigidity requirements, exact mating data, fastening/preload procedure, running-torque method and combined-load/life methodology. Neither supplier should be asked to infer final VX4800 loads.
+Kaydon is the primary contact-qualified route for the slewing/turntable family. Schaeffler Canada is a contact-qualified alternate for the crossed-roller study family. The prepared enquiry requests required axial/radial/moment inputs, mounting-face and support-rigidity requirements, exact mating data, fastening/preload procedure, running-torque method and combined-load/life methodology. Neither supplier is asked to infer final VX4800 loads.
 
 ### Drive
 
-SEW-EURODRIVE Canada is contact-qualified. The enquiry should focus on candidate motor/reducer architecture for stable continuous very-low-speed operation, speed-control method, thermal behavior, output-load limits, backlash/compliance, mounting, service/manual movement and the data required for later torque-speed sizing. No exact SEW variant is selected.
+SEW-EURODRIVE Canada is contact-qualified. The prepared enquiry focuses on candidate motor/reducer architecture for stable continuous very-low-speed operation, speed-control method, thermal behavior, output-load limits, backlash/compliance, mounting, service/manual movement and the data required for later torque-speed sizing. No exact SEW variant is selected.
 
 ### Positive transmission
 
-Gates is contact-qualified. The enquiry should obtain the tooth-family/width/tension selection method, minimum engagement, large-ring fabrication tolerances, alignment/runout limits, tooth-jump avoidance and resulting bearing/support reactions after a controlled torque case becomes available.
+Gates is contact-qualified. The prepared enquiry requests the tooth-family/width/tension selection method, minimum engagement, large-ring fabrication tolerances, alignment/runout limits, tooth-jump avoidance and resulting bearing/support reactions after a controlled torque case becomes available.
 
 ### Direct-carrier brake
 
-RINGSPANN is the primary contact-qualified route and Mayr is a contact-qualified alternate. Both enquiries must distinguish static holding capability from dynamic stopping/energy duty and obtain exact disc/ring thickness, friction compatibility, runout/alignment, apply/release, manual-release, wear-state and mating requirements for any proposed variant. No brake model or safety performance is selected.
+RINGSPANN is the primary contact-qualified route and Mayr is a contact-qualified alternate. The prepared enquiry separates static holding capability from dynamic stopping/energy duty and requests exact disc/ring thickness, friction compatibility, runout/alignment, apply/release, manual-release, wear-state and mating requirements for any proposed variant. No brake model or safety performance is selected.
 
 ### Feedback
 
-HEIDENHAIN is contact-qualified. The enquiry should focus on fixed readhead plus passive rotating scale/target architecture, very-low-speed update behavior, reference/index recovery, runout/air-gap tolerance, contamination/environment limits and options for a sufficiently diverse second channel if later required by risk assessment.
+HEIDENHAIN is contact-qualified. The prepared enquiry focuses on fixed readhead plus passive rotating scale/target architecture, very-low-speed update behavior, reference/index recovery, runout/air-gap tolerance, contamination/environment limits and options for a sufficiently diverse second channel if later required by risk assessment.
 
 ### Prototype fabrication
 
-Bormill is contact-qualified for a capability enquiry because its official capacity information covers large vertical turning, fabrication/welding and prototype machining at a scale relevant to the VX4800 coordination envelope. The RFQ must still establish whether it can meet the actual project requirements for post-weld machining strategy, bearing-support flatness, distortion control, dimensional inspection, material traceability, NDT, controlled weld procedure documentation, representative proof work and engineering change traceability. `ready-to-issue` is not fabricator approval.
+Bormill is contact-qualified for a capability enquiry because its official capacity information covers large vertical turning, fabrication/welding and prototype machining at a scale relevant to the VX4800 coordination envelope. The prepared RFQ explicitly asks whether it can meet the project requirements for post-weld machining strategy, bearing-support flatness, distortion control, dimensional inspection, material traceability, NDT, weld-procedure documentation, representative proof work and engineering change traceability. `ready-to-issue` is not fabricator approval.
 
 ## Evidence dependencies that still block final sizing
 
