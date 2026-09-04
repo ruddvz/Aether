@@ -60,3 +60,16 @@ All notable repository and product presentation changes are recorded here.
 - Added staged T1 through T4 dynamic testing ending in a full 240-element factory pre-hang.
 - Added JSON Schema and regression gates that prevent final kinetic approval while required mass, component-selection, safety, clearance, test and maintenance gates remain open.
 - Preserved the 240-element engineering schedule, S66/M144/L30 allocation, 14 fixed LEDs, canopy envelope, manufacturing authority and fixed-side no-slip-ring electrical boundary.
+
+## 2026-09-04 - VX4800 kinetic safety hardening
+
+- Performed an adversarial common-cause review of the first rotating-carrier architecture instead of treating the first green CI run as engineering completion.
+- Identified the through-drive brake weakness and added a direct-carrier passive brake-ring/caliper architecture study so transmission failure cannot casually remove the only holding path.
+- Strengthened secondary retention with distributed capture/common-cause analysis requirements rather than a single local hub catch feature.
+- Added independent/diverse overspeed plausibility, separate brake-fails-to-release/apply handling, no-freewheel manual recovery and jerk-limited motion-profile studies.
+- Promoted bearing mounting flatness, support rigidity, fastener preload, post-mount torque/runout and transmission reactions to first-class qualification inputs.
+- Added a commissioning/service state model that distinguishes stopped, held, mechanically locked, fault-held and retention-engaged conditions.
+- Added a detailed T1-T4 dynamic test plan plus a physical-test record schema that forbids a `passed` result before controlled acceptance criteria exist.
+- Added a kinetic hazard/risk-assessment input register covering normal operation, service, fault, recovery and interface hazards without assigning unsupported PL, SIL or category values.
+- Added regression gates so future final kinetic release logic must also consume the hardening package, state model, physical-test gates and released risk assessment.
+- Preserved the fixed-side powered-system/no-slip-ring boundary and all controlled geometry/composition authority.
