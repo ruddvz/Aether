@@ -196,12 +196,17 @@ function pick(event) {
   return raycaster.intersectObjects(pickableMeshes, false)[0] || null;
 }
 
-function clearProximity() {
-  while (proximityLayer.children.length) {
-    const o = proximityLayer.children.pop();
+function removeObjectDeep(object) {
+  object.traverse?.((o) => {
     o.geometry?.dispose?.();
-    o.material?.dispose?.();
-  }
+    if (Array.isArray(o.material)) o.material.forEach((m) => m.dispose?.());
+    else o.material?.dispose?.();
+  });
+  object.removeFromParent();
+}
+
+function clearProximity() {
+  while (proximityLayer.children.length) removeObjectDeep(proximityLayer.children[0]);
   $('#nearestName').textContent = '—';
   $('#nearestDistance').textContent = '—';
 }
@@ -221,14 +226,19 @@ function nearestElement(mesh, reviewName) {
     .map((m) => {
       m.updateMatrixWorld(true);
       const s = worldSphere(m);
-      return { mesh: m, rough: Math.max(0, sourceSphere.center.distanceTo(s.center) - sourceSphere.radius - s.radius) };
+      return { mesh: m, lowerBound: Math.max(0, sourceSphere.center.distanceTo(s.center) - sourceSphere.radius - s.radius) };
     })
-    .sort((a, b) => a.rough - b.rough)
-    .slice(0, 18);
+    .sort((a, b) => a.lowerBound - b.lowerBound);
 
   let best = null;
   const inv = mesh.matrixWorld.clone().invert();
   for (const candidate of candidates) {
+    // Bounding-sphere separation is a conservative lower bound on surface
+    // distance. Once it cannot beat the current exact result, no later
+    // candidate can be closer. This preserves exact nearest-neighbour behavior
+    // without an arbitrary candidate-count cap.
+    if (best && candidate.lowerBound >= best.distance) break;
+
     const other = candidate.mesh;
     const geometryToBvh = inv.clone().multiply(other.matrixWorld);
     const onA = {};
@@ -278,15 +288,6 @@ function selectHit(hit) {
   $('#selectionType').textContent = classify(selectedReviewName);
   $('#selectionPoint').textContent = vectorMm(hit.point);
   nearestElement(selectedMesh, selectedReviewName);
-}
-
-function removeObjectDeep(object) {
-  object.traverse?.((o) => {
-    o.geometry?.dispose?.();
-    if (Array.isArray(o.material)) o.material.forEach((m) => m.dispose?.());
-    else o.material?.dispose?.();
-  });
-  object.removeFromParent();
 }
 
 function renderMeasurements() {
@@ -473,6 +474,7 @@ renderer.domElement.addEventListener('pointerdown', (e) => {
 });
 renderer.domElement.addEventListener('pointerup', (e) => {
   if (!pointerDown || Math.hypot(e.clientX - pointerDown[0], e.clientY - pointerDown[1]) > 5) return;
+  pointerDown = null;
   const hit = pick(e);
   if (!hit) return;
   selectHit(hit);
