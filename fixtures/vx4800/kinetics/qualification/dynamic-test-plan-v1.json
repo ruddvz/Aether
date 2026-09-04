@@ -7,216 +7,27 @@
   "authority": "engineering-development-input",
   "purpose": "Turn the conceptual T1-T4 dynamic programme into traceable test cases whose numeric acceptance criteria must be controlled before any pass result can close a promotion gate.",
   "testCases": [
-    {
-      "id": "KIN-T1-001",
-      "stage": "T1",
-      "purpose": "Characterise free pendulum period, damping, yaw/roll response and repeatability for representative production-intent S/M/L suspended assemblies and shortest/longest line conditions.",
-      "prerequisites": ["representative suspended assembly identified", "mass and line length recorded", "instrumentation method controlled"],
-      "stimulus": ["small controlled lateral/yaw disturbance", "release from repeatable initial condition"],
-      "measurements": ["period", "damping/settling response", "yaw/roll response", "orientation repeatability"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["suspendedFieldDynamicModelCorrelated", "restartSettlingLogicValidated"]
-    },
-    {
-      "id": "KIN-T1-002",
-      "stage": "T1",
-      "purpose": "Establish response to candidate jerk-limited acceleration/deceleration profiles without using visual animation as dynamic evidence.",
-      "prerequisites": ["T1 pendulum baseline available", "candidate motion profile defined as test input"],
-      "stimulus": ["controlled start", "steady low-speed carrier-equivalent motion", "controlled stop"],
-      "measurements": ["command acceleration/jerk", "cable angle", "pendulum lag", "settling time", "element orientation"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["restartSettlingLogicValidated", "dynamicClearanceValidated"]
-    },
-    {
-      "id": "KIN-T1-003",
-      "stage": "T1",
-      "purpose": "Characterise worst credible qualified-stop excitation for an individual long and short suspension assembly.",
-      "prerequisites": ["candidate stop profile mechanically safe on rig", "instrumented representative assembly"],
-      "stimulus": ["approved fault-stop profile", "power-loss-equivalent stop input where rig supports it"],
-      "measurements": ["peak cable angle", "pendulum lag", "settling time", "orientation excursion"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["faultHandlingValidated", "dynamicClearanceValidated"]
-    },
-    {
-      "id": "KIN-T1-004",
-      "stage": "T1",
-      "purpose": "Quantify air-drag and ambient-airflow sensitivity for representative suspended assemblies.",
-      "prerequisites": ["airflow measurement method identified", "representative suspended assembly"],
-      "stimulus": ["defined low-speed rotation-equivalent airflow", "representative ambient draft/HVAC study where project data exists"],
-      "measurements": ["steady angular offset", "oscillation", "orientation stability"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["suspendedFieldDynamicModelCorrelated", "dynamicClearanceValidated"]
-    },
-    {
-      "id": "KIN-T2-001",
-      "stage": "T2",
-      "purpose": "Measure neighbor interaction and local dynamic clearance in a mixed S/M/L cluster including representative line-length differences.",
-      "prerequisites": ["T1 safe test profile available", "cluster geometry traces to controlled engineering schedule"],
-      "stimulus": ["start/steady/stop cycles", "approved fault-stop cycle"],
-      "measurements": ["butterfly-to-butterfly clearance", "butterfly-to-cable clearance", "cable-to-cable clearance", "phase/lag propagation"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["dynamicClearanceValidated"]
-    },
-    {
-      "id": "KIN-T2-002",
-      "stage": "T2",
-      "purpose": "Develop abnormal-drag/sn ag detection evidence without damaging production authority geometry.",
-      "prerequisites": ["safe sacrificial/controlled obstruction method reviewed", "drive/load measurement available"],
-      "stimulus": ["repeatable added drag", "repeatable resisted motion below destructive threshold"],
-      "measurements": ["drive load/current estimate", "carrier-equivalent speed deviation", "time-to-detect", "stop response"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["faultHandlingValidated", "faultContainmentMatrixApproved"]
-    },
-    {
-      "id": "KIN-T2-003",
-      "stage": "T2",
-      "purpose": "Check replacement-element mass variation effect on local motion and cluster clearance.",
-      "prerequisites": ["controlled sample mass records", "approved replacement sample within measured production variation"],
-      "stimulus": ["replace one representative element", "repeat matched start/stop profile"],
-      "measurements": ["cluster lag", "local clearance", "orientation", "change from baseline"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["productionMassVariationControlled", "dynamicClearanceValidated"]
-    },
-    {
-      "id": "KIN-T3-001",
-      "stage": "T3",
-      "purpose": "Validate primary-bearing/support installation quality before full-field dynamics.",
-      "prerequisites": ["candidate bearing selected for prototype", "manufacturer mounting requirements controlled", "support ring/frame prototype complete"],
-      "stimulus": ["mount bearing using controlled procedure", "rotate unloaded and representative-load subfield"],
-      "measurements": ["mounting flatness/deflection evidence", "fastener preload/installation record", "running torque", "runout", "temperature", "noise/vibration"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["bearingLoadCalculationApproved", "bearingMountingJointValidated", "bearingSelected"]
-    },
-    {
-      "id": "KIN-T3-002",
-      "stage": "T3",
-      "purpose": "Prove that transmission failure does not remove the required carrier holding path.",
-      "prerequisites": ["direct-carrier or equivalent independent holding concept prototyped", "safe transmission-disconnect method", "approved test load case"],
-      "stimulus": ["disconnect or simulate loss of drive transmission", "command/apply independent carrier holding path"],
-      "measurements": ["carrier motion", "holding slip if any", "brake state", "reaction loads", "post-test inspection"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["directCarrierHoldingPathResolved", "transmissionFailureContainmentValidated", "brakingArchitectureResolved"]
-    },
-    {
-      "id": "KIN-T3-003",
-      "stage": "T3",
-      "purpose": "Validate primary feedback failure and overspeed/disagreement detection architecture.",
-      "prerequisites": ["feedback prototype installed", "fault-injection method reviewed"],
-      "stimulus": ["disconnect primary feedback", "freeze/plausibly corrupt primary value where test rig permits", "inject speed disagreement"],
-      "measurements": ["detection time", "independent channel response", "stop command", "actual stop outcome", "fault log"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["feedbackArchitectureValidated", "independentOverspeedMonitoringResolved", "faultHandlingValidated"]
-    },
-    {
-      "id": "KIN-T3-004",
-      "stage": "T3",
-      "purpose": "Validate positive service-lock alignment, full engagement, mis-engagement behavior and proof load.",
-      "prerequisites": ["prototype service lock and receiver complete", "service load case approved"],
-      "stimulus": ["engage at tolerance extremes", "attempt partial engagement", "apply approved bidirectional proof load", "repeat service cycles"],
-      "measurements": ["engagement depth/state", "permanent deformation", "clearance when disengaged", "lock/receiver wear", "interlock response if instrumented"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["serviceLockValidated", "physicalLockStateVerified"]
-    },
-    {
-      "id": "KIN-T3-005",
-      "stage": "T3",
-      "purpose": "Validate representative secondary-retention engagement and common-cause independence before full assembly proof work.",
-      "prerequisites": ["retention concept detailed", "abnormal load case approved", "representative fixed/rotating structural interfaces available"],
-      "stimulus": ["controlled abnormal axial/tilt engagement", "representative primary-fastener-path bypass demonstration"],
-      "measurements": ["engagement travel", "load/reaction", "contact distribution", "permanent deformation", "capture fastener condition"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["secondaryRetentionValidated", "faultContainmentMatrixApproved"]
-    },
-    {
-      "id": "KIN-T3-006",
-      "stage": "T3",
-      "purpose": "Validate manual recovery so no brake/drive release can create uncontrolled free rotation.",
-      "prerequisites": ["commissioning/service state model reviewed", "service lock prototype validated for test", "manual release mechanism known"],
-      "stimulus": ["execute released draft recovery sequence under representative imbalance", "attempt prohibited ordering in controlled test"],
-      "measurements": ["carrier motion", "lock state", "holding-path state", "operator sequence compliance", "recovery completion state"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["manualReleaseRecoveryValidated", "serviceStateModelValidated"]
-    },
-    {
-      "id": "KIN-T4-001",
-      "stage": "T4",
-      "purpose": "Run complete 240-element production-intent field at released minimum, nominal and maximum speeds with controlled start/steady/stop profiles.",
-      "prerequisites": ["full field traceable to engineering schedule", "component selections and lower-stage tests sufficiently mature", "controlled acceptance criteria"],
-      "stimulus": ["minimum-speed run", "nominal-speed run", "maximum-speed run", "normal starts/stops"],
-      "measurements": ["speed accuracy", "drive load", "bearing/brake/drive temperatures", "runout", "noise/vibration", "field lag/orientation"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["fullPreHangDynamicTestPassed", "driveTorqueCalculationApproved", "acousticAcceptanceControlled"]
-    },
-    {
-      "id": "KIN-T4-002",
-      "stage": "T4",
-      "purpose": "Validate stop, settling and deliberate restart behavior across representative operating conditions.",
-      "prerequisites": ["T1-T3 motion/stop criteria available", "full field balanced to controlled procedure"],
-      "stimulus": ["normal stop from released speeds", "test-derived settling dwell", "deliberate restart", "reversal study only if separately authorized"],
-      "measurements": ["stop travel/time", "peak lag/angle", "settling time", "restart transient", "wave propagation"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["restartSettlingLogicValidated", "fullPreHangDynamicTestPassed"]
-    },
-    {
-      "id": "KIN-T4-003",
-      "stage": "T4",
-      "purpose": "Validate power-loss, feedback, abnormal-drag and approved fault-stop behavior on the full production-intent field.",
-      "prerequisites": ["lower-stage fault cases passed", "safe full-field fault injection method approved"],
-      "stimulus": ["power interruption", "feedback disagreement", "representative added drag", "drive fault", "approved overspeed simulation"],
-      "measurements": ["detection time", "stop travel/time", "peak field transient", "drive/brake load", "restart inhibit", "fault record"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["faultHandlingValidated", "fullPreHangDynamicTestPassed", "faultCasesPassed"]
-    },
-    {
-      "id": "KIN-T4-004",
-      "stage": "T4",
-      "purpose": "Demonstrate all required dynamic-clearance categories under normal and approved fault transients.",
-      "prerequisites": ["clearance measurement method controlled", "full field and fixed heads/canopy service configuration production-intent"],
-      "stimulus": ["minimum/nominal/maximum speed", "normal start/stop", "approved worst credible stop transient", "representative imbalance/variation condition"],
-      "measurements": ["butterfly-to-butterfly", "cable-to-cable", "butterfly-to-cable", "field-to-fixed-head", "field-to-canopy", "carrier-to-fixed-canopy", "bearing/drive-to-service-component clearance"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["dynamicClearanceValidated", "fullPreHangDynamicTestPassed"]
-    },
-    {
-      "id": "KIN-T4-005",
-      "stage": "T4",
-      "purpose": "Validate factory balance/trim procedure and effect of a representative replacement suspended assembly.",
-      "prerequisites": ["production mass map available", "trim stations/procedure controlled"],
-      "stimulus": ["baseline full-field run", "approved trim adjustment", "replace representative element then reassess/retrim"],
-      "measurements": ["first-moment calculation", "drive-load variation", "vibration", "trim map", "residual imbalance evidence"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["productionMassVariationControlled", "fullPreHangDynamicTestPassed"]
-    },
-    {
-      "id": "KIN-T4-006",
-      "stage": "T4",
-      "purpose": "Establish controlled acoustic, vibration and thermal baselines in the production-intent canopy arrangement.",
-      "prerequisites": ["measurement positions/methods controlled", "background conditions recorded"],
-      "stimulus": ["held state", "minimum/nominal/maximum released motion", "representative start/stop cycles"],
-      "measurements": ["sound level/spectrum as defined by controlled method", "vibration", "bearing temperature", "motor/reducer temperature", "brake temperature", "canopy structure temperature where relevant"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["acousticAcceptanceControlled", "enduranceDutyControlled", "maintenancePlanReleased"]
-    },
-    {
-      "id": "KIN-T4-007",
-      "stage": "T4",
-      "purpose": "Execute the released endurance duty spectrum followed by teardown/inspection sufficient to inform maintenance intervals.",
-      "prerequisites": ["duty spectrum controlled from intended use", "wear/inspection acceptance criteria controlled"],
-      "stimulus": ["controlled accumulated rotations", "start/stop cycles", "fault/parking brake cycles as applicable", "service-lock cycles", "representative jog cycles"],
-      "measurements": ["bearing running torque/play/runout", "belt/gear wear/tension/backlash", "brake wear/air gap/state", "fastener witness condition", "sensor air gaps/drift", "retention contact evidence", "lubrication condition"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["enduranceDutyControlled", "maintenancePlanReleased", "fullPreHangDynamicTestPassed"]
-    },
-    {
-      "id": "KIN-T4-008",
-      "stage": "T4",
-      "purpose": "Demonstrate complete planned service workflow including index, lock, LOTO, representative replacement, balance review and return to service.",
-      "prerequisites": ["state model draft controlled", "service instructions draft available", "representative replacement part available"],
-      "stimulus": ["request service index", "stop/isolate/lock", "replace representative kinetic or suspension service item", "perform required balance/clearance review", "return to held then run-ready state"],
-      "measurements": ["state-transition compliance", "lock verification", "access path", "service time record", "post-service balance/clearance checks", "fault-free recommissioning"],
-      "acceptanceCriteriaStatus": "tbd-physical-baseline-required",
-      "blocksGates": ["serviceStateModelValidated", "maintenancePlanReleased", "fullPreHangDynamicTestPassed"]
-    }
+    {"id":"KIN-T1-001","stage":"T1","purpose":"Characterise free pendulum period, damping, yaw/roll response and repeatability for representative production-intent S/M/L suspended assemblies and shortest/longest line conditions.","prerequisites":["representative suspended assembly identified","mass and line length recorded","instrumentation method controlled"],"stimulus":["small controlled lateral/yaw disturbance","release from repeatable initial condition"],"measurements":["period","damping/settling response","yaw/roll response","orientation repeatability"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["suspendedFieldDynamicModelCorrelated","restartSettlingLogicValidated"]},
+    {"id":"KIN-T1-002","stage":"T1","purpose":"Establish response to candidate jerk-limited acceleration/deceleration profiles without using visual animation as dynamic evidence.","prerequisites":["T1 pendulum baseline available","candidate motion profile defined as test input"],"stimulus":["controlled start","steady low-speed carrier-equivalent motion","controlled stop"],"measurements":["command acceleration/jerk","cable angle","pendulum lag","settling time","element orientation"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["restartSettlingLogicValidated","dynamicClearanceValidated"]},
+    {"id":"KIN-T1-003","stage":"T1","purpose":"Characterise worst credible qualified-stop excitation for an individual long and short suspension assembly.","prerequisites":["candidate stop profile mechanically safe on rig","instrumented representative assembly"],"stimulus":["approved fault-stop profile","power-loss-equivalent stop input where rig supports it"],"measurements":["peak cable angle","pendulum lag","settling time","orientation excursion"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["faultHandlingValidated","dynamicClearanceValidated"]},
+    {"id":"KIN-T1-004","stage":"T1","purpose":"Quantify air-drag and ambient-airflow sensitivity for representative suspended assemblies.","prerequisites":["airflow measurement method identified","representative suspended assembly"],"stimulus":["defined low-speed rotation-equivalent airflow","representative ambient draft/HVAC study where project data exists"],"measurements":["steady angular offset","oscillation","orientation stability"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["suspendedFieldDynamicModelCorrelated","dynamicClearanceValidated"]},
+    {"id":"KIN-T2-001","stage":"T2","purpose":"Measure neighbour interaction and local dynamic clearance in a mixed S/M/L cluster including representative line-length differences.","prerequisites":["T1 safe test profile available","cluster geometry traces to controlled engineering schedule"],"stimulus":["start/steady/stop cycles","approved fault-stop cycle"],"measurements":["butterfly-to-butterfly clearance","butterfly-to-cable clearance","cable-to-cable clearance","phase/lag propagation"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["dynamicClearanceValidated"]},
+    {"id":"KIN-T2-002","stage":"T2","purpose":"Develop abnormal-drag/snag detection evidence without damaging production authority geometry.","prerequisites":["safe sacrificial/controlled obstruction method reviewed","drive/load measurement available"],"stimulus":["repeatable added drag","repeatable resisted motion below destructive threshold"],"measurements":["drive load/current estimate","carrier-equivalent speed deviation","time-to-detect","stop response"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["faultHandlingValidated","faultContainmentMatrixApproved"]},
+    {"id":"KIN-T2-003","stage":"T2","purpose":"Check replacement-element mass variation effect on local motion and cluster clearance.","prerequisites":["controlled sample mass records","approved replacement sample within measured production variation"],"stimulus":["replace one representative element","repeat matched start/stop profile"],"measurements":["cluster lag","local clearance","orientation","change from baseline"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["productionMassVariationControlled","dynamicClearanceValidated"]},
+    {"id":"KIN-T3-001","stage":"T3","purpose":"Validate primary-bearing/support installation quality before full-field dynamics.","prerequisites":["candidate bearing selected for prototype","manufacturer mounting requirements controlled","support ring/frame prototype complete"],"stimulus":["mount bearing using controlled procedure","rotate unloaded and representative-load subfield"],"measurements":["mounting flatness/deflection evidence","fastener preload/installation record","running torque","runout","temperature","noise/vibration"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["bearingLoadCalculationApproved","bearingMountingJointValidated","bearingSelected"]},
+    {"id":"KIN-T3-002","stage":"T3","purpose":"Prove that transmission failure does not remove the required carrier holding path.","prerequisites":["direct-carrier or equivalent independent holding concept prototyped","safe transmission-disconnect method","approved test load case"],"stimulus":["disconnect or simulate loss of drive transmission","command/apply independent carrier holding path"],"measurements":["carrier motion","holding slip if any","brake state","reaction loads","post-test inspection"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["directCarrierHoldingPathResolved","transmissionFailureContainmentValidated","brakingArchitectureResolved"]},
+    {"id":"KIN-T3-003","stage":"T3","purpose":"Validate primary feedback failure and overspeed/disagreement detection architecture.","prerequisites":["feedback prototype installed","fault-injection method reviewed"],"stimulus":["disconnect primary feedback","freeze/plausibly corrupt primary value where test rig permits","inject speed disagreement"],"measurements":["detection time","independent channel response","stop command","actual stop outcome","fault log"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["feedbackArchitectureValidated","independentOverspeedMonitoringResolved","faultHandlingValidated"]},
+    {"id":"KIN-T3-004","stage":"T3","purpose":"Validate positive service-lock alignment, full engagement, mis-engagement behaviour and proof load.","prerequisites":["prototype service lock and receiver complete","service load case approved"],"stimulus":["engage at tolerance extremes","attempt partial engagement","apply approved bidirectional proof load","repeat service cycles"],"measurements":["engagement depth/state","permanent deformation","clearance when disengaged","lock/receiver wear","interlock response if instrumented"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["serviceLockValidated","physicalLockStateVerified"]},
+    {"id":"KIN-T3-005","stage":"T3","purpose":"Validate representative secondary-retention engagement and common-cause independence before full assembly proof work.","prerequisites":["retention concept detailed","abnormal load case approved","representative fixed/rotating structural interfaces available"],"stimulus":["controlled abnormal axial/tilt engagement","representative primary-fastener-path bypass demonstration"],"measurements":["engagement travel","load/reaction","contact distribution","permanent deformation","capture fastener condition"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["secondaryRetentionValidated","faultContainmentMatrixApproved"]},
+    {"id":"KIN-T3-006","stage":"T3","purpose":"Validate manual recovery so no brake/drive release can create uncontrolled free rotation.","prerequisites":["commissioning/service state model reviewed","service lock prototype validated for test","manual release mechanism known"],"stimulus":["execute released draft recovery sequence under representative imbalance","attempt prohibited ordering in controlled test"],"measurements":["carrier motion","lock state","holding-path state","operator sequence compliance","recovery completion state"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["manualReleaseRecoveryValidated","serviceStateModelValidated"]},
+    {"id":"KIN-T4-001","stage":"T4","purpose":"Run complete 240-element production-intent field at released minimum, nominal and maximum speeds with controlled start/steady/stop profiles.","prerequisites":["full field traceable to engineering schedule","component selections and lower-stage tests sufficiently mature","controlled acceptance criteria"],"stimulus":["minimum-speed run","nominal-speed run","maximum-speed run","normal starts/stops"],"measurements":["speed accuracy","drive load","bearing/brake/drive temperatures","runout","noise/vibration","field lag/orientation"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["fullPreHangDynamicTestPassed","driveTorqueCalculationApproved","acousticAcceptanceControlled"]},
+    {"id":"KIN-T4-002","stage":"T4","purpose":"Validate stop, settling and deliberate restart behaviour across representative operating conditions.","prerequisites":["T1-T3 motion/stop criteria available","full field balanced to controlled procedure"],"stimulus":["normal stop from released speeds","test-derived settling dwell","deliberate restart","reversal study only if separately authorized"],"measurements":["stop travel/time","peak lag/angle","settling time","restart transient","wave propagation"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["restartSettlingLogicValidated","fullPreHangDynamicTestPassed"]},
+    {"id":"KIN-T4-003","stage":"T4","purpose":"Validate power-loss, feedback, abnormal-drag and approved fault-stop behaviour on the full production-intent field.","prerequisites":["lower-stage fault cases passed","safe full-field fault injection method approved"],"stimulus":["power interruption","feedback disagreement","representative added drag","drive fault","approved overspeed simulation"],"measurements":["detection time","stop travel/time","peak field transient","drive/brake load","restart inhibit","fault record"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["faultHandlingValidated","fullPreHangDynamicTestPassed","faultCasesPassed"]},
+    {"id":"KIN-T4-004","stage":"T4","purpose":"Demonstrate all required dynamic-clearance categories under normal and approved fault transients.","prerequisites":["clearance measurement method controlled","full field and fixed heads/canopy service configuration production-intent"],"stimulus":["minimum/nominal/maximum speed","normal start/stop","approved worst credible stop transient","representative imbalance/variation condition"],"measurements":["butterfly-to-butterfly","cable-to-cable","butterfly-to-cable","field-to-fixed-head","field-to-canopy","carrier-to-fixed-canopy","bearing/drive-to-service-component clearance"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["dynamicClearanceValidated","fullPreHangDynamicTestPassed"]},
+    {"id":"KIN-T4-005","stage":"T4","purpose":"Validate factory balance/trim procedure and effect of a representative replacement suspended assembly.","prerequisites":["production mass map available","trim stations/procedure controlled"],"stimulus":["baseline full-field run","approved trim adjustment","replace representative element then reassess/retrim"],"measurements":["first-moment calculation","drive-load variation","vibration","trim map","residual imbalance evidence"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["productionMassVariationControlled","fullPreHangDynamicTestPassed"]},
+    {"id":"KIN-T4-006","stage":"T4","purpose":"Establish controlled acoustic, vibration and thermal baselines in the production-intent canopy arrangement.","prerequisites":["measurement positions/methods controlled","background conditions recorded"],"stimulus":["held state","minimum/nominal/maximum released motion","representative start/stop cycles"],"measurements":["sound level/spectrum as defined by controlled method","vibration","bearing temperature","motor/reducer temperature","brake temperature","canopy structure temperature where relevant"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["acousticAcceptanceControlled","enduranceDutyControlled","maintenancePlanReleased"]},
+    {"id":"KIN-T4-007","stage":"T4","purpose":"Execute the released endurance duty spectrum followed by teardown/inspection sufficient to inform maintenance intervals.","prerequisites":["duty spectrum controlled from intended use","wear/inspection acceptance criteria controlled"],"stimulus":["controlled accumulated rotations","start/stop cycles","fault/parking brake cycles as applicable","service-lock cycles","representative jog cycles"],"measurements":["bearing running torque/play/runout","belt/gear wear/tension/backlash","brake wear/air gap/state","fastener witness condition","sensor air gaps/drift","retention contact evidence","lubrication condition"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["enduranceDutyControlled","maintenancePlanReleased","fullPreHangDynamicTestPassed"]},
+    {"id":"KIN-T4-008","stage":"T4","purpose":"Demonstrate complete planned service workflow including index, lock, LOTO, representative replacement, balance review and return to service.","prerequisites":["state model draft controlled","service instructions draft available","representative replacement part available"],"stimulus":["request service index","stop/isolate/lock","replace representative kinetic or suspension service item","perform required balance/clearance review","return to held then run-ready state"],"measurements":["state-transition compliance","lock verification","access path","service time record","post-service balance/clearance checks","fault-free recommissioning"],"acceptanceCriteriaStatus":"tbd-physical-baseline-required","blocksGates":["serviceStateModelValidated","maintenancePlanReleased","fullPreHangDynamicTestPassed"]}
   ],
   "stagePromotionRules": [
     "Do not mark a test passed until its numeric/qualitative acceptance criteria are controlled before result disposition.",
@@ -227,16 +38,5 @@
     "Any failed test or unexplained deviation keeps dependent gates false until controlled disposition and re-test are complete."
   ],
   "evidenceRecordSchema": "../../../../schemas/aether-kinetic-test-record.schema.json",
-  "promotionGate": {
-    "t1CriteriaControlled": false,
-    "t1Passed": false,
-    "t2CriteriaControlled": false,
-    "t2Passed": false,
-    "t3CriteriaControlled": false,
-    "t3Passed": false,
-    "t4CriteriaControlled": false,
-    "t4Passed": false,
-    "faultCasesPassed": false,
-    "endurancePassed": false
-  }
+  "promotionGate": {"t1CriteriaControlled":false,"t1Passed":false,"t2CriteriaControlled":false,"t2Passed":false,"t3CriteriaControlled":false,"t3Passed":false,"t4CriteriaControlled":false,"t4Passed":false,"faultCasesPassed":false,"endurancePassed":false}
 }
