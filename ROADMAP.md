@@ -104,7 +104,7 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [ ] Open Graph/share artwork
 
 ## Interchange
-- [ ] IfcOpenShell IFC export
+- [x] IfcOpenShell IFC coordination export
 - [ ] pyGDTF export for controllable products
 - [ ] pyMVR scene export
 - [x] Loss-reporting adapter framework
