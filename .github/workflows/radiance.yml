@@ -7,19 +7,27 @@ on:
       - ".github/workflows/radiance.yml"
       - "fixtures/vx4800/photometry/**"
       - "scripts/validate_radiance_photometry.py"
+      - "scripts/validate_vx4800_photometry_system.py"
       - "tools/photometry/**"
       - "schemas/aether-radiance-validation-report.schema.json"
+      - "schemas/aether-photometry-system-scene.schema.json"
+      - "schemas/aether-photometry-system-report.schema.json"
       - "tests/fixtures/photometry/**"
       - "tests/test_radiance_photometry.py"
+      - "tests/test_photometry_system_validation.py"
   pull_request:
     paths:
       - ".github/workflows/radiance.yml"
       - "fixtures/vx4800/photometry/**"
       - "scripts/validate_radiance_photometry.py"
+      - "scripts/validate_vx4800_photometry_system.py"
       - "tools/photometry/**"
       - "schemas/aether-radiance-validation-report.schema.json"
+      - "schemas/aether-photometry-system-scene.schema.json"
+      - "schemas/aether-photometry-system-report.schema.json"
       - "tests/fixtures/photometry/**"
       - "tests/test_radiance_photometry.py"
+      - "tests/test_photometry_system_validation.py"
   workflow_dispatch:
 
 permissions:
@@ -93,7 +101,7 @@ jobs:
             --out _radiance_validation \
             --provenance synthetic-test \
             --allow-synthetic-test
-      - name: Validate report authority boundary
+      - name: Validate per-source report authority boundary
         run: |
           python - <<'PY'
           import json
@@ -111,7 +119,44 @@ jobs:
           assert report['summary']['numericalCrossCheckPass'] is True
           assert report['summary']['productPhotometryEligibleForFurtherReview'] is False
           assert report['summary']['productPhotometryApproved'] is False
-          print('Radiance synthetic pipeline cross-check passed without promoting product authority.')
+          print('Radiance synthetic source cross-check passed without promoting product authority.')
+          PY
+      - name: Run synthetic 14-head direct system aggregation
+        run: |
+          python scripts/validate_vx4800_photometry_system.py \
+            tests/fixtures/photometry/vx4800-system-synthetic.json \
+            --output _radiance_validation/system-validation.report.json
+      - name: Validate 14-head report authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          import math
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          report=json.loads(Path('_radiance_validation/system-validation.report.json').read_text())
+          schema=json.loads(Path('schemas/aether-photometry-system-report.schema.json').read_text())
+          errors=list(Draft202012Validator(schema).iter_errors(report))
+          assert not errors, [e.message for e in errors]
+          assert report['status'] == 'pipeline-pass'
+          assert report['sourceClass'] == 'synthetic-test-only'
+          assert report['summary']['pipelinePass'] is True
+          assert report['summary']['headCount'] == 14
+          assert report['summary']['sensorCount'] == 9
+          assert report['summary']['controlledInputsReady'] is False
+          assert report['summary']['acceptanceCriteriaReleased'] is False
+          assert report['summary']['directDistributionValidated'] is False
+          assert report['summary']['occlusionAssessmentCompleted'] is False
+          assert report['summary']['reflectanceAssessmentCompletedWhereRequired'] is False
+          assert report['summary']['toleranceSensitivityValidated'] is False
+          assert report['summary']['full14HeadPhotometricValidationCompleted'] is False
+          assert report['summary']['applicationPerformanceValidated'] is False
+          assert report['summary']['productPhotometryApproved'] is False
+          sensors=report['directLayer']['sensors']
+          assert all(math.isfinite(row['totalIlluminanceLux']) and row['totalIlluminanceLux'] >= 0 for row in sensors)
+          assert any(row['totalIlluminanceLux'] > 0 for row in sensors)
+          assert all(len(row['contributions']) == 14 for row in sensors)
+          print('Synthetic 14-head aggregation passed without promoting product authority.')
           PY
       - uses: actions/upload-artifact@v4
         if: always()

@@ -1,0 +1,79 @@
+{
+  "$schema": "../../../schemas/aether-photometry-system-scene.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "designRevision": "1.3.0",
+  "authority": "synthetic-pipeline-test",
+  "status": "synthetic-test-only",
+  "coordinateSystem": "ceiling XY; z-positive-down",
+  "bindings": {
+    "ledSetoutPath": "fixtures/vx4800/photometry/led-setout-engineering-v1.3.0.csv",
+    "ledSetoutSha256": "5006690468fb93f2341cd760e651f52e30ee5739f9fee3bb3915d42031a7ee8b",
+    "roleSetPath": null,
+    "roleSetSha256": null
+  },
+  "controlState": {
+    "headPositions": "controlled",
+    "headRoles": "synthetic-test-only",
+    "headAiming": "synthetic-test-only",
+    "sensorDefinitions": "synthetic-test-only",
+    "acceptanceCriteria": "not-released"
+  },
+  "sources": [
+    {
+      "role": "deep-tail narrow",
+      "configurationId": "synthetic-narrow-role",
+      "iesPath": "tests/fixtures/photometry/synthetic-narrow.ies",
+      "iesSha256": "9ced87c0320a082aca89b09f04158b77f6513d65e3f2ac6670dafb1d32bbbf33",
+      "provenanceStatus": "synthetic-test",
+      "syntheticTest": true
+    },
+    {
+      "role": "mid-field spot",
+      "configurationId": "synthetic-spot-role",
+      "iesPath": "tests/fixtures/photometry/synthetic-narrow.ies",
+      "iesSha256": "9ced87c0320a082aca89b09f04158b77f6513d65e3f2ac6670dafb1d32bbbf33",
+      "provenanceStatus": "synthetic-test",
+      "syntheticTest": true
+    },
+    {
+      "role": "upper-field flood",
+      "configurationId": "synthetic-flood-role",
+      "iesPath": "tests/fixtures/photometry/synthetic-narrow.ies",
+      "iesSha256": "9ced87c0320a082aca89b09f04158b77f6513d65e3f2ac6670dafb1d32bbbf33",
+      "provenanceStatus": "synthetic-test",
+      "syntheticTest": true
+    }
+  ],
+  "heads": [
+    {"ledId": "LED-01", "role": "deep-tail narrow", "positionM": [1.081552, 0.199875, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-02", "role": "deep-tail narrow", "positionM": [0.832421, 0.466625, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-03", "role": "deep-tail narrow", "positionM": [0.418419, 0.640954, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-04", "role": "deep-tail narrow", "positionM": [-0.078456, 0.688335, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-05", "role": "mid-field spot", "positionM": [-0.559792, 0.599382, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-06", "role": "mid-field spot", "positionM": [-0.930254, 0.391715, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-07", "role": "mid-field spot", "positionM": [-1.116468, 0.106463, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-08", "role": "mid-field spot", "positionM": [-1.081552, -0.199875, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-09", "role": "mid-field spot", "positionM": [-0.832421, -0.466625, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-10", "role": "mid-field spot", "positionM": [-0.418419, -0.640954, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-11", "role": "upper-field flood", "positionM": [0.078456, -0.688335, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-12", "role": "upper-field flood", "positionM": [0.559792, -0.599382, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-13", "role": "upper-field flood", "positionM": [0.930254, -0.391715, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0},
+    {"ledId": "LED-14", "role": "upper-field flood", "positionM": [1.116468, -0.106463, 0.0], "aimDirection": [0.0, 0.0, 1.0], "rollDeg": 0.0, "outputScale": 1.0}
+  ],
+  "sensors": [
+    {"sensorId": "GRID-01", "category": "reference", "pointM": [-1.0, -1.0, 4.0], "normal": [0.0, 0.0, -1.0]},
+    {"sensorId": "GRID-02", "category": "reference", "pointM": [0.0, -1.0, 4.0], "normal": [0.0, 0.0, -1.0]},
+    {"sensorId": "GRID-03", "category": "reference", "pointM": [1.0, -1.0, 4.0], "normal": [0.0, 0.0, -1.0]},
+    {"sensorId": "GRID-04", "category": "reference", "pointM": [-1.0, 0.0, 4.0], "normal": [0.0, 0.0, -1.0]},
+    {"sensorId": "GRID-05", "category": "reference", "pointM": [0.0, 0.0, 4.0], "normal": [0.0, 0.0, -1.0]},
+    {"sensorId": "GRID-06", "category": "reference", "pointM": [1.0, 0.0, 4.0], "normal": [0.0, 0.0, -1.0]},
+    {"sensorId": "GRID-07", "category": "reference", "pointM": [-1.0, 1.0, 4.0], "normal": [0.0, 0.0, -1.0]},
+    {"sensorId": "GRID-08", "category": "reference", "pointM": [0.0, 1.0, 4.0], "normal": [0.0, 0.0, -1.0]},
+    {"sensorId": "GRID-09", "category": "reference", "pointM": [1.0, 1.0, 4.0], "normal": [0.0, 0.0, -1.0]}
+  ],
+  "acceptanceCriteria": {
+    "status": "not-released",
+    "sensorLimits": []
+  }
+}
