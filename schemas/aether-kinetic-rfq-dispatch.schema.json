@@ -26,13 +26,24 @@
             "minItems": 1,
             "items": {
               "type": "object",
-              "required": ["name", "basis", "targetStatus"],
+              "required": ["name", "basis", "targetStatus", "contactEvidenceRef"],
               "properties": {
                 "name": {"type": "string", "minLength": 1},
                 "basis": {"type": "string", "minLength": 1},
-                "targetStatus": {"enum": ["repository-evidence-target", "research-required", "contact-qualified"]}
+                "targetStatus": {"enum": ["repository-evidence-target", "research-required", "contact-qualified"]},
+                "contactEvidenceRef": {"type": ["string", "null"]}
               },
-              "additionalProperties": false
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {"properties": {"targetStatus": {"const": "contact-qualified"}}},
+                  "then": {"properties": {"contactEvidenceRef": {"type": "string", "minLength": 1}}}
+                },
+                {
+                  "if": {"properties": {"targetStatus": {"enum": ["repository-evidence-target", "research-required"]}}},
+                  "then": {"properties": {"contactEvidenceRef": {"const": null}}}
+                }
+              ]
             }
           },
           "dispatchStatus": {"enum": ["not-issued", "ready-to-issue", "issued", "response-received", "clarification-open", "closed"]},
@@ -43,6 +54,17 @@
         },
         "additionalProperties": false,
         "allOf": [
+          {
+            "if": {"properties": {"dispatchStatus": {"const": "ready-to-issue"}}},
+            "then": {
+              "properties": {
+                "candidateTargets": {
+                  "contains": {"properties": {"targetStatus": {"const": "contact-qualified"}}},
+                  "minContains": 1
+                }
+              }
+            }
+          },
           {
             "if": {"properties": {"dispatchStatus": {"enum": ["issued", "response-received", "clarification-open", "closed"]}}},
             "then": {
