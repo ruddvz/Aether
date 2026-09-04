@@ -73,6 +73,7 @@ This roadmap describes repository capabilities, not promised commercial release 
   - [x] Define machine-verifiable RFQ dispatch and supplier-response intake with exact-variant, assumption, evidence and provenance gates
   - [x] Create RFQ execution issue and dispatch register that distinguish research targets from actual external issue/response states
   - [x] Qualify current public routes for all six RFQ packages, including Schaeffler/Mayr alternates and an Ontario prototype-fabrication enquiry target, without claiming technical approval or dispatch
+  - [x] Prepare six supplier-specific outbound RFQ drafts and a fail-closed `prepared-not-sent` manifest
   - [ ] Issue the six ready-to-issue kinetic RFQ packages and record actual external issue references
   - [ ] Archive supplier responses/CAD in validated response records and disposition clarifications
   - [ ] Populate exact supplier mating data and close bearing/drive/brake/lock/retention/feedback tolerance loops
