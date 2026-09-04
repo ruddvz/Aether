@@ -73,3 +73,13 @@ All notable repository and product presentation changes are recorded here.
 - Added a kinetic hazard/risk-assessment input register covering normal operation, service, fault, recovery and interface hazards without assigning unsupported PL, SIL or category values.
 - Added regression gates so future final kinetic release logic must also consume the hardening package, state model, physical-test gates and released risk assessment.
 - Preserved the fixed-side powered-system/no-slip-ring boundary and all controlled geometry/composition authority.
+
+## 2026-09-04 - VX4800 kinetic pre-prototype / RFQ engineering
+
+- Added a machine-readable prototype interface package that separates primary bearing, positive drive, direct-carrier brake, service lock, secondary retention, feedback, trim and service-access zones without changing controlled setout.
+- Marked bearing section, support-ring stiffness, bolt/preload detail, drive-ring diameter, transmission width/tension, brake radius/ring section, lock section, retention gap/section, feedback air gap and trim capacity as explicit load- or selection-dependent TBDs.
+- Added six supplier RFQ packages for bearing, motor/reducer, synchronous transmission, direct-carrier brake, fixed-side feedback and prototype fabrication, with mandatory assumption disclosure and exact-variant documentation.
+- Recorded current manufacturer evidence from Kaydon, Gates, RINGSPANN and HEIDENHAIN as architecture/RFQ evidence only, not component selection.
+- Added a schedule-derived T1 single-suspension rig and T2 mixed-cluster rig architecture with controlled instrumentation, raw-data traceability, guarding and pre-build risk/structural gates.
+- Added schemas and regression tests that block prototype release while measured mass inputs, interface reviews, T1/T2 build releases and prototype drawings remain open.
+- Added a prototype/RFQ engineering document with P0/P1/P2 drawing progression and the recommended execution order from RFQ through T1/T2 evidence to later T3/T4 qualification.
