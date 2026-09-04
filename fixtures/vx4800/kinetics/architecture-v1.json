@@ -1,0 +1,360 @@
+{
+  "$schema": "../../../schemas/aether-kinetic-architecture.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "architectureRevision": "1.0.0",
+  "status": "engineering-development-input-not-approved",
+  "authority": "engineering-development-input",
+  "finalSystemApproved": false,
+  "designPrinciple": "Slow, quiet, predictable, serviceable and fail-safe rotation with a passive rotating field, positive service restraint, independent secondary retention and evidence-gated component selection.",
+  "controlledBaseline": {
+    "designRevision": "1.3.0",
+    "elementCount": 240,
+    "sizeAllocation": {"S": 66, "M": 144, "L": 30},
+    "canopyEnvelopeMm": [2400, 1500, 150],
+    "rotatingCarrierCoordinationMm": {"width": 2260, "depth": 1330, "thicknessParameter": 24},
+    "rotationAxis": "vertical",
+    "speedRpm": {"minimum": 0.08, "nominal": 0.36, "maximum": 0.65},
+    "fixedAccentHeadCount": 14,
+    "rotatingElectricalLoadStatus": "none-planned",
+    "slipRingStatus": "not-required-by-current-architecture",
+    "engineeringSchedule": "../composition/engineering-v1.3.0.csv",
+    "geometryParameters": "../geometry/parameters-v1.3.0.json",
+    "manufacturingGeometryAuthority": "external-controlled-vx4800-product-release-v1.3.0",
+    "repositoryGeometryAuthority": "coordination-only"
+  },
+  "authorityBoundaries": {
+    "mustNotChangeWithoutControlledDesignChange": [
+      "240 engineering elements",
+      "S66 / M144 / L30 allocation",
+      "controlled cable-exit coordinates",
+      "14 fixed LED positions",
+      "2400 x 1500 x 150 mm canopy envelope",
+      "manufacturing geometry authority",
+      "Blender visualization authority"
+    ],
+    "electricalBoundary": "Powered kinetic equipment remains fixed-side where practical; passive targets may rotate. Any powered rotating device requires controlled rotary power/data review.",
+    "notOwnedByThisTrack": [
+      "Blender / photoreal rendering",
+      "photometry supplier selection",
+      "butterfly material qualification",
+      "suspension supplier qualification",
+      "electrical lighting architecture"
+    ]
+  },
+  "unknownPhysicalInputs": [
+    {"id": "S_completeSuspendedAssemblyMass", "unit": "kg", "status": "unknown", "source": "Issue #9 physical mass records"},
+    {"id": "M_completeSuspendedAssemblyMass", "unit": "kg", "status": "unknown", "source": "Issue #9 physical mass records"},
+    {"id": "L_completeSuspendedAssemblyMass", "unit": "kg", "status": "unknown", "source": "Issue #9 physical mass records"},
+    {"id": "totalInstalledRotatingMass", "unit": "kg", "status": "unknown", "source": "production-intent rotating assembly"},
+    {"id": "rotatingAssemblyCenterOfGravity", "unit": "mm", "status": "unknown", "source": "production measurement/calculation"},
+    {"id": "productionMassVariation", "unit": "distribution by size family", "status": "unknown", "source": "Issue #9 production samples"},
+    {"id": "equivalentRotationalInertia", "unit": "kg*m^2", "status": "unknown", "source": "measured masses plus controlled setout"},
+    {"id": "dynamicAmplification", "unit": "load-case factor/envelope", "status": "unknown", "source": "Issue #7 physical dynamics"},
+    {"id": "pendulumLag", "unit": "angle/time response", "status": "unknown", "source": "Issue #7 physical dynamics"},
+    {"id": "transientCableAngles", "unit": "deg", "status": "unknown", "source": "Issue #7 physical dynamics"},
+    {"id": "bearingDesignLoads", "unit": "N and N*m", "status": "unknown", "source": "approved combined-load calculation"},
+    {"id": "driveTorque", "unit": "N*m", "status": "unknown", "source": "approved torque calculation"},
+    {"id": "brakingTorque", "unit": "N*m", "status": "unknown", "source": "approved stopping calculations"},
+    {"id": "imbalance", "unit": "kg*m", "status": "unknown", "source": "production mass map and balance test"},
+    {"id": "structuralReactions", "unit": "N and N*m", "status": "unknown", "source": "structural/site calculation"}
+  ],
+  "dependencies": [
+    {"issue": 7, "consumes": ["dynamic amplification", "pendulum lag", "transient cable angles", "line design load", "fatigue duty"]},
+    {"issue": 9, "consumes": ["S/M/L suspended-assembly masses", "center-of-gravity evidence", "production mass variation"]},
+    {"issue": 11, "providesOrConsumes": ["kinetic isolation", "motion safety-chain implementation", "power-loss/restart implementation", "drive/control service zones"]}
+  ],
+  "loadPathArchitecture": {
+    "primaryLoadPath": [
+      "building structure",
+      "engineered site interface zones",
+      "fixed canopy structural frame",
+      "primary bearing support structure",
+      "primary bearing rolling/race elements and bolted rings",
+      "rotating structural hub/carrier",
+      "240 positively retained gripper exits",
+      "240 suspension lines",
+      "lower bridles/yokes and terminals",
+      "240 butterfly assemblies"
+    ],
+    "secondaryRetentionPath": [
+      "rotating capture flange / retained hub feature",
+      "normally-clear independent annular catch structure",
+      "fixed secondary-retention brackets",
+      "fixed canopy structural frame",
+      "engineered site interfaces",
+      "building structure"
+    ],
+    "driveTorquePath": [
+      "fixed motor/gearmotor mount",
+      "drive output",
+      "positive belt or geared transmission under qualification",
+      "dedicated rotating drive ring/interface",
+      "rotating structural hub/carrier"
+    ],
+    "brakingPath": [
+      "fixed-side spring-applied or otherwise positively acting brake under qualification",
+      "drive shaft/geartrain",
+      "positive transmission",
+      "dedicated rotating drive interface",
+      "carrier",
+      "fixed brake reaction structure"
+    ],
+    "serviceLockPath": [
+      "rotating dedicated lock receiver",
+      "positive mechanical lock pin/bolt in double-shear style support or equivalent",
+      "fixed lock bracket",
+      "fixed canopy structural frame"
+    ],
+    "prohibitedAccidentalLoadPaths": [
+      "decorative canopy skin",
+      "false ceiling",
+      "motor gearbox as primary vertical structural support",
+      "bearing seals",
+      "electrical conduits or cable trays",
+      "lighting heads or service panels"
+    ]
+  },
+  "bearingArchitecture": {
+    "selectionStatus": "not-selected",
+    "preferredStudyFamilies": ["slewing-ring / turntable bearing", "crossed-roller bearing"],
+    "alternateStudyFamilies": [
+      "large thin-section bearing only with supplier combined-load proof",
+      "multi-roller turntable only with demonstrated load sharing/alignment/noise"
+    ],
+    "requirements": [
+      "combined axial/radial/overturning load capability",
+      "suspended/tension mounting review",
+      "starting/running torque evidence",
+      "runout and stiffness control",
+      "mounting flatness and bolt preload control",
+      "lubrication/corrosion/maintenance documentation",
+      "replaceable without destructive canopy work",
+      "secondary retention independent enough to arrest primary support failure"
+    ],
+    "selectionInputs": [
+      "approved axial/radial/moment load envelope",
+      "actual rotating mass and center of gravity",
+      "carrier/hub support stiffness",
+      "required runout/stiffness",
+      "starting/running torque",
+      "released duty cycle",
+      "canopy/service envelope",
+      "supplier maintenance documentation"
+    ],
+    "finalRatingStatus": "prohibited-until-load-calculation-approved"
+  },
+  "driveArchitecture": {
+    "selectionStatus": "not-selected",
+    "preferredStudy": "fixed-side gearmotor with positive synchronous-belt/toothed-ring transmission, mechanically separate from the primary bearing load path",
+    "alternateStudies": [
+      "fixed-side gearmotor with ring gear/pinion",
+      "central geared drive if demonstrably better",
+      "friction drive as non-preferred due slip/wear"
+    ],
+    "requirements": [
+      "0.08 to 0.65 rpm carrier control",
+      "smooth low-speed motion",
+      "load-case-derived torque reserve",
+      "low structure-borne noise",
+      "guarded serviceable pinch points",
+      "positive transmission preferred",
+      "motor/gearmotor not primary vertical support",
+      "manual/service movement procedure",
+      "Issue #11 thermal/service coordination"
+    ],
+    "torqueCalculationReference": "calculationFramework.driveTorque"
+  },
+  "motionProfile": {
+    "normalOperation": {
+      "softStart": "required; acceleration limit TBD by physical pendulum tests",
+      "steadySpeed": "within released 0.08 to 0.65 rpm envelope",
+      "softDeceleration": "required; tuned from physical testing",
+      "normalStop": "controlled deceleration to verified zero speed before holding state"
+    },
+    "directionReversal": {
+      "normalAutomaticReversal": "not-approved-at-this-stage",
+      "requirement": "if later enabled, stop to verified zero, wait test-derived settling dwell, then soft-start opposite direction; never command instantaneous reversal"
+    },
+    "commissioningJog": {
+      "allowed": true,
+      "requirements": ["restricted mode", "test-derived reduced speed/acceleration", "technician-controlled procedure", "lock disengaged for jog and re-engaged before access"]
+    },
+    "serviceMode": {
+      "motionEnabledDuringMechanicalAccess": false,
+      "requirements": ["lockout/tagout compatible", "positive service lock engaged", "stored energy addressed"]
+    }
+  },
+  "brakingArchitecture": {
+    "selectionStatus": "not-selected",
+    "normalControlledDeceleration": "healthy drive performs commanded ramp-down",
+    "parkingHolding": "fixed-side normally-engaged mechanical brake preferred study; rating unselected",
+    "faultStop": "controlled stop when drive/feedback trustworthy, otherwise remove propulsion and apply qualified mechanical brake per final risk assessment",
+    "emergencyStop": "final stop behavior/category depends on released risk assessment; no SIL/PL/category claim here",
+    "powerLossStop": "spring-applied or equivalent power-off brake preferred study; stopping and pendulum response require physical validation",
+    "serviceRestraint": "motor brake is never the sole service restraint; positive mechanical service lock is mandatory",
+    "requirements": ["separate stopping, holding and service restraint", "validate brake thermal/wear duty", "diagnose brake state where required", "do not assume gearbox self-locking is a safe service hold"]
+  },
+  "serviceLock": {
+    "concept": "fixed-frame positive lock pin/bolt engages a dedicated rotating receiver ring/bracket at defined service index positions; lock loads bypass precision bearing rolling elements and motor brake",
+    "status": "concept-to-prototype",
+    "normalState": "disengaged with positive rotating clearance",
+    "engagedState": "verified zero speed, aligned index, captive lock fully engaged and mechanically retained",
+    "requirements": [
+      "physically prevents carrier motion",
+      "visually obvious state",
+      "cannot depend on software or motor torque",
+      "padlockable/LOTO compatible",
+      "cannot damage bearing/encoder/drive precision features",
+      "technician can verify full engagement directly",
+      "transfers service loads to fixed structural frame",
+      "fixed sensor may supplement but not replace mechanical verification",
+      "final controls inhibit run while engaged"
+    ],
+    "validation": ["tolerance/runout engagement", "bidirectional static proof after load defined", "partial/mis-engagement test", "repeated service cycles", "Issue #11 interlock test"]
+  },
+  "secondaryRetention": {
+    "concept": "independent annular catch/capture structure around the primary bearing/hub; a rotating capture flange runs with normal clearance inside/below fixed catch sectors and engages only after abnormal separation",
+    "status": "concept-to-prototype",
+    "normalLoadSharingIntent": "non-load-sharing; no routine contact in normal operation",
+    "failureEngagement": "multiple circumferential catch sectors arrest abnormal axial fall/overturning into the fixed structural frame after primary support separation",
+    "requirements": [
+      "valid structural path to fixed frame/site interfaces",
+      "independence from relevant primary failure modes",
+      "continuous rotation without winding flexible tethers",
+      "clearance derived from runout/tolerance/dynamics",
+      "replaceable/inspectable engagement surfaces",
+      "rating from approved abnormal load case",
+      "non-destructive inspection access",
+      "proof test and controlled simulated engagement"
+    ],
+    "postEngagement": "fixture out of service until full inspection/disposition",
+    "finalRatingStatus": "unknown-until-abnormal-load-case-approved"
+  },
+  "balanceAndTrim": {
+    "status": "architecture-defined-inputs-pending",
+    "concept": "indexed trim-mass stations on rotating structural carrier/hub correct first-moment imbalance without moving controlled cable-exit coordinates",
+    "requirements": [
+      "record installed suspended-assembly mass by element ID where available",
+      "consume controlled S/M/L mass distributions from Issue #9",
+      "dedicated captive trim locations",
+      "positively locked and secondarily captured trim masses",
+      "record station/mass/fastener state",
+      "replacement butterfly triggers balance review",
+      "field re-trim does not alter controlled geometry"
+    ],
+    "procedure": ["verify axis/runout", "assemble full production-intent field", "record mass map and calculate first moments", "trim only approved stations", "low-speed balance/drive-load test", "lock/witness hardware", "archive trim map"],
+    "numericTrimRangeStatus": "TBD after production mass variation is measured"
+  },
+  "feedbackArchitecture": {
+    "status": "architecture-defined-component-not-selected",
+    "principle": "keep powered sensing electronics fixed-side and place only passive scale/targets/markers on the rotating hub/carrier",
+    "functions": ["rotation detection", "speed", "stall detection", "overspeed", "stop/reference support", "service index/home if required", "commissioning"],
+    "preferredStudies": ["fixed non-contact readhead plus passive rotary scale/ring", "fixed proximity/magnetic sensors plus passive multi-target ring and independent index"],
+    "requirements": [
+      "derive resolution/target count from fault-detection latency at 0.08 rpm",
+      "distinct index where service alignment needed",
+      "no powered rotating encoder electronics without formal rotary power/data architecture change",
+      "prove air-gap/runout/contamination tolerance",
+      "feedback disagreement creates defined fault state"
+    ]
+  },
+  "faultDetection": {
+    "status": "requirements-defined-final-thresholds-pending",
+    "signals": ["drive current/torque estimate", "measured speed", "position change over time", "command versus actual", "brake status if instrumented", "bearing/drive temperature if justified", "independent index events"],
+    "faults": {
+      "bearingSeizure": ["torque/current rise with insufficient motion"],
+      "foreignObjectOrSnag": ["torque/current rise", "speed/position deviation"],
+      "driveFault": ["drive diagnostic plus feedback"],
+      "overspeed": ["measured speed above released threshold"],
+      "feedbackDisagreement": ["implausible sensor/position state"],
+      "failedRestart": ["command but no movement in test-derived window"]
+    },
+    "requirements": ["thresholds from commissioning/dynamic tests and manufacturer evidence", "software fault detection never substitutes for secondary mechanical retention", "fault logs capture command, feedback, load estimate and stop outcome where available"]
+  },
+  "powerLossAndRestart": {
+    "powerLoss": {
+      "automaticRestart": false,
+      "behavior": "remove propulsion command; qualified power-off brake/holding function acts; verify zero speed after controls return",
+      "note": "if brake application excites unsafe pendulum motion, evaluate controlled energy reserve/ride-through formally rather than weakening holding"
+    },
+    "restartPermissives": ["controller self-check complete", "valid feedback", "verified zero speed", "service lock disengaged", "no jam/overspeed/drive fault", "brake/drive ready", "deliberate reset after fault/power interruption"],
+    "restartSequence": ["do not auto-resume previous motion command", "establish/reference position if required", "reduced-risk low-speed verification move where procedure requires", "then normal soft-start"]
+  },
+  "cableDynamicsValidation": {
+    "status": "physical-evidence-required",
+    "variables": ["pendulum lag", "transient cable angle", "steady-state offset", "torsional oscillation", "start/stop wave propagation", "S/M/L mass differences", "production mass variation", "neighbor interaction", "fault/emergency stop", "imbalance", "air drag", "shortest versus longest lines"],
+    "rules": ["Blender/kinematic animation is not dynamic evidence", "test acceleration and deceleration", "use production-intent assemblies when available", "record repeatability and worst credible transient"]
+  },
+  "clearanceValidation": {
+    "staticReviewTooling": "controlled engineering schedule plus Three.js/three-mesh-bvh may screen static geometry",
+    "categories": ["butterfly-to-butterfly", "cable-to-cable", "butterfly-to-cable", "field-to-fixed-head", "field-to-canopy", "carrier-to-fixed-canopy", "bearing/drive-to-service-components"],
+    "dynamicRequirement": "final authority requires physical swept-motion evidence including transients, mass variation, imbalance and longest/shortest lines",
+    "acceptanceMarginsStatus": "TBD from physical tests and tolerances"
+  },
+  "dynamicTestProgram": {
+    "status": "defined-not-executed",
+    "stages": [
+      {"id": "T1", "name": "single suspension assembly", "purpose": "pendulum/orientation/drag/fault-stop response"},
+      {"id": "T2", "name": "representative small cluster", "purpose": "neighbor interaction and local clearance with mixed S/M/L"},
+      {"id": "T3", "name": "representative quadrant or subfield", "purpose": "carrier/load/imbalance/drive/brake/clearance behavior at scale"},
+      {"id": "T4", "name": "full 240-element factory pre-hang", "purpose": "product-level dynamic clearance, balance, noise, stop, lock, retention, fault and endurance evidence"}
+    ],
+    "measurements": ["commanded and measured rotation speed", "acceleration/deceleration", "stopping time and angular travel", "motor/drive load or instrumented torque", "bearing/motor/gearbox/brake temperatures", "noise and vibration", "carrier runout", "cable angles and pendulum lag", "element orientation", "minimum observed dynamic clearances", "imbalance/trim state", "service-lock proof", "secondary-retention proof/engagement", "fault and restart response"],
+    "faultCases": ["commanded stall / resisted motion on rig", "feedback loss or implausible feedback", "power interruption", "drive fault", "overspeed simulation where safely implementable", "snag/drag increase simulation", "brake at approved worst-case speed", "failed restart"],
+    "releaseRule": "do not progress directly from CAD/visualization to occupied-space installation; close applicable findings before each higher-risk stage"
+  },
+  "maintenanceArchitecture": {
+    "status": "plan-defined-intervals-pending-manufacturer-and-test-evidence",
+    "inspect": ["bearing bolts/support/runout/play/lubrication", "belt/ring or gear condition/alignment/tension/backlash/guarding", "motor/gearmotor mount", "brake wear/function", "service lock", "secondary-retention clearance/fasteners/contact witness", "trim masses/witness marks", "carrier/gripper fasteners", "fixed sensors/passive targets/air gaps/index", "fault trends"],
+    "rules": ["no planned replacement requires destructive canopy removal", "intervals derive from exact manufacturer instructions plus endurance evidence", "retention engagement/unexplained contact triggers out-of-service inspection", "rotating-component replacement triggers balance/clearance review as applicable"]
+  },
+  "calculationFramework": {
+    "evidenceClasses": ["published-manufacturer-data", "engineering-calculation", "prototype-measurement", "controlled-production-measurement", "assumption", "design-target"],
+    "rotatingMassAndInertia": {
+      "inputs": ["controlled installed mass map/distribution", "engineering schedule XY", "measured carrier/hub/rotating-drive mass properties"],
+      "outputs": ["total rotating mass", "center of gravity", "polar inertia", "first-moment imbalance"],
+      "equationReference": "I_z = sum(m_i * r_i^2 + I_i,local) + I_carrier + I_rotating_drive_parts; use SI units and measured/controlled mass properties"
+    },
+    "bearingLoads": {
+      "inputs": ["gravity", "CG offsets", "radial disturbances", "dynamic load cases", "drive/brake reactions", "imbalance", "support geometry"],
+      "outputs": ["axial load envelope", "radial load envelope", "overturning moment", "bolt/support reactions"],
+      "rule": "supplier selection uses combined approved load cases and mounting conditions; catalog maxima are not product design loads"
+    },
+    "driveTorque": {
+      "inputs": ["equivalent inertia", "angular acceleration", "bearing starting/running torque", "aerodynamic/pendulum drag", "imbalance/disturbance torque", "transmission efficiency", "engineer-approved reserve"],
+      "outputs": ["steady/start/normal-stop/fault-stop demand", "candidate envelope"],
+      "equationReference": "T_drive,required = reserve * ((I_eq * alpha) + T_bearing + T_drag + T_imbalance + T_other), evaluated by signed load case; do not populate reserve or torques before evidence exists"
+    },
+    "braking": {
+      "inputs": ["I_eq", "initial speed", "approved stopping profile", "drag/friction bounds", "disturbance", "efficiency/thermal duty"],
+      "outputs": ["braking torque envelope", "stopping travel", "energy per stop", "thermal duty"],
+      "rule": "normal, fault, emergency and power-loss cases are separate"
+    },
+    "balanceTrim": {
+      "inputs": ["installed mass map", "carrier/component mass map", "axis", "trim stations"],
+      "outputs": ["first moments", "trim correction options", "residual imbalance"],
+      "equationReference": "M_x = sum(m_i*x_i); M_y = sum(m_i*y_i); verify correction by physical low-speed test"
+    }
+  },
+  "researchDiscipline": {
+    "rules": ["record exact manufacturer/family/variant when using published data", "separate manufacturer data/calculation/prototype/production evidence", "do not convert catalog maximum load into VX4800 design load", "do not mix incompatible variant ratings", "component certification does not certify VX4800", "physical tests control dynamics/clearance"]
+  },
+  "promotionGate": {
+    "actualRotatingMassControlled": false,
+    "centerOfGravityControlled": false,
+    "productionMassVariationControlled": false,
+    "bearingSelected": false,
+    "bearingLoadCalculationApproved": false,
+    "driveSelected": false,
+    "driveTorqueCalculationApproved": false,
+    "brakingArchitectureResolved": false,
+    "serviceLockValidated": false,
+    "secondaryRetentionValidated": false,
+    "feedbackArchitectureValidated": false,
+    "faultHandlingValidated": false,
+    "dynamicClearanceValidated": false,
+    "fullPreHangDynamicTestPassed": false,
+    "maintenancePlanReleased": false
+  }
+}
