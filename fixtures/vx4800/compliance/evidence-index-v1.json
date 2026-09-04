@@ -54,6 +54,16 @@
       "reference": "fixtures/vx4800/compliance/release-gate-v1.json",
       "claim": "Defines the qualification evidence matrix and promotion gates; it is not proof that those gates have been passed.",
       "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-STRUCTURAL-BRIEF-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "fixtures/vx4800/structural/interface-brief-v1.json",
+      "claim": "Defines structural/site-interface inputs, load-case requirements and unresolved promotion gates; it does not provide approved reactions, anchors or a project structural calculation.",
+      "canClosePhysicalTest": false
     }
   ]
 }
