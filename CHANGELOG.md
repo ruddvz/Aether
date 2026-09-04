@@ -83,3 +83,15 @@ All notable repository and product presentation changes are recorded here.
 - Added a schedule-derived T1 single-suspension rig and T2 mixed-cluster rig architecture with controlled instrumentation, raw-data traceability, guarding and pre-build risk/structural gates.
 - Added schemas and regression tests that block prototype release while measured mass inputs, interface reviews, T1/T2 build releases and prototype drawings remain open.
 - Added a prototype/RFQ engineering document with P0/P1/P2 drawing progression and the recommended execution order from RFQ through T1/T2 evidence to later T3/T4 qualification.
+
+## 2026-09-04 - VX4800 kinetic interface control and calculation readiness
+
+- Added a CAD-facing functional datum framework for fixed structure, rotation axis, service/index azimuth and carrier interface plane without converting coordination references into fabrication dimensions.
+- Split bearing, positive drive, direct-carrier brake, service lock, distributed secondary retention, primary/diverse feedback, balance/trim and service access into explicit mechanical interfaces with reaction paths and common-cause prohibitions.
+- Added a parameter ledger where all selection/load-dependent dimensions remain `null`/`tbd` and each field names the evidence permitted to close it.
+- Added closed-loop tolerance requirements for bearing mounting, drive alignment, brake runout, service-lock engagement, retention normal clearance, feedback air gap and component extraction.
+- Added explicit CAD failure-state configurations for transmission disconnect, brake application, service locking, primary-support separation, retention engagement, manual recovery and feedback faults.
+- Added thirteen traceable normal, fault and service calculation/load cases covering static bearing load, start, steady operation, maximum speed, normal stop, power-loss stop, safe overspeed validation, snag/drag, imbalance, transmission disconnect, service lock, retention engagement and manual recovery.
+- Kept all unresolved calculation outputs `null` and required physical T1/T2/T3/T4 correlation for suspended-field transients rather than treating rigid-body inertia as final transient truth.
+- Hardened schemas so final interface release requires released non-null parameters and closed tolerance loops, while final calculation release requires every case and output to be verified plus all evidence gates closed.
+- Added regression coverage for authority boundaries, no-slip-ring/fixed-side sensing, common-cause separation, failure-state geometry, traceable TBDs and fail-closed release behavior.
