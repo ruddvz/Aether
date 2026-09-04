@@ -1,0 +1,1 @@
+This placeholder exists only to reserve the controlled system-validation fixture directory alongside system-validation-plan-v1.json. It is not photometric evidence and may be removed when the first controlled system-validation input/output records are added.

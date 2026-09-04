@@ -114,6 +114,16 @@
       "reference": "docs/VX4800_EXACT_PHOTOMETRY_EVIDENCE_PACKAGE.md",
       "claim": "Defines the exact-configuration evidence binding between candidate identity, controlled angular photometry, Radiance cross-check, controlled SPD and current TM-30 primary evidence; it does not supply any missing supplier/laboratory evidence or approve product photometry.",
       "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-PHOTOMETRY-ROLE-SET-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "docs/VX4800_PHOTOMETRY_ROLE_SET_SYSTEM_VALIDATION.md",
+      "claim": "Defines the three-role 4/6/4 photometry system-input gate binding eligible exact configuration packages to the controlled 14-head setout; it does not perform full 14-head application validation or approve product photometry.",
+      "canClosePhysicalTest": false
     }
   ]
 }
