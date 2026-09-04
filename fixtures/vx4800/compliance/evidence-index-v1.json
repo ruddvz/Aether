@@ -104,6 +104,16 @@
       "reference": "fixtures/vx4800/photometry/spectral/validation-plan-v1.json",
       "claim": "Defines SPD provenance, colour-quality cross-check methods and promotion gates; it does not provide supplier/laboratory SPD evidence, a current TM-30-24 report, or product photometry approval.",
       "canClosePhysicalTest": false
+    },
+    {
+      "id": "EVID-REPO-PHOTOMETRY-EVIDENCE-PACKAGE-V1",
+      "evidenceClass": "REPOSITORY",
+      "authority": "controlled",
+      "status": "available",
+      "sourceType": "repository-file",
+      "reference": "docs/VX4800_EXACT_PHOTOMETRY_EVIDENCE_PACKAGE.md",
+      "claim": "Defines the exact-configuration evidence binding between candidate identity, controlled angular photometry, Radiance cross-check, controlled SPD and current TM-30 primary evidence; it does not supply any missing supplier/laboratory evidence or approve product photometry.",
+      "canClosePhysicalTest": false
     }
   ]
 }
