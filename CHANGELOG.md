@@ -70,3 +70,13 @@ All notable repository and product presentation changes are recorded here.
 - Corrected headless environment activation for saved `.blend` reloads and made final refinement/finish operations safe for repeated interactive use.
 - Corrected human documentation so local complete-master builds use the same `build_entrypoint.py` path and authority model as GitHub Actions.
 - Kept engineering revision 1.3.0, presentation revision 5.2.0, controlled coordinates, fixed head set-out and all unresolved physical qualification gates unchanged throughout the visualization work.
+
+## 2026-09-04 - VX4800 interchange loss-reporting framework
+
+- Added a machine-readable interchange loss-report schema and VX4800 target policy for IFC, GDTF and MVR.
+- Bound interchange review to canonical fixture SHA-256 plus the controlled 240-element, 66 S / 144 M / 30 L, 240-suspension and 14-head invariants.
+- Added deterministic target reports that classify mappings as preserved, approximated, external-reference or omitted and separate warnings from blocking losses.
+- Allowed IFC only at coordination-only authority while explicitly preserving manufacturing, structural, photometry, kinetic-safety and construction-release boundaries.
+- Kept GDTF blocked until exact head/optic and applicable control-personality data are released.
+- Kept lighting-authoritative MVR blocked until the GDTF dependency and controlled final head aiming are released.
+- Added regression tests that reject controlled-count drift and any interchange profile that attempts to claim engineering or release authority.
