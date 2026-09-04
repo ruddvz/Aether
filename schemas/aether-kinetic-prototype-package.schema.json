@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-prototype-package.schema.json",
+  "title": "AETHERIA VX4800 kinetic prototype engineering package",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "packageRevision",
+    "status",
+    "authority",
+    "finalPrototypePackageReleased",
+    "controlledBaseline",
+    "packageBoundary",
+    "interfaceZones",
+    "loadDependentDimensions",
+    "drawingAndCadRequirements",
+    "prototypePromotionGate"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"type": "string"},
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "packageRevision": {"type": "string"},
+    "status": {"type": "string"},
+    "authority": {"enum": ["engineering-development-input", "controlled"]},
+    "finalPrototypePackageReleased": {"type": "boolean"},
+    "controlledBaseline": {
+      "type": "object",
+      "required": ["elementCount", "sizeAllocation", "canopyEnvelopeMm", "rotatingCarrierCoordinationMm", "speedRpm", "fixedAccentHeadCount", "slipRingStatus"],
+      "properties": {
+        "elementCount": {"const": 240},
+        "sizeAllocation": {"const": {"S": 66, "M": 144, "L": 30}},
+        "canopyEnvelopeMm": {"const": [2400, 1500, 150]},
+        "rotatingCarrierCoordinationMm": {"const": {"width": 2260, "depth": 1330, "thicknessParameter": 24}},
+        "speedRpm": {"const": {"minimum": 0.08, "nominal": 0.36, "maximum": 0.65}},
+        "fixedAccentHeadCount": {"const": 14},
+        "slipRingStatus": {"const": "not-required-by-current-architecture"}
+      },
+      "additionalProperties": true
+    },
+    "packageBoundary": {
+      "type": "object",
+      "required": ["manufacturingGeometryAuthorityChanged", "controlledSetoutChanged", "poweredRotatingDeviceIntroduced"],
+      "properties": {
+        "manufacturingGeometryAuthorityChanged": {"const": false},
+        "controlledSetoutChanged": {"const": false},
+        "poweredRotatingDeviceIntroduced": {"const": false}
+      },
+      "additionalProperties": true
+    },
+    "interfaceZones": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "required": ["id", "purpose", "fixedSide", "rotatingSide", "envelopeStatus", "mustNotBecomeLoadPath", "requiredInputs"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "purpose": {"type": "string", "minLength": 1},
+          "fixedSide": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "rotatingSide": {"type": "array", "items": {"type": "string"}},
+          "envelopeStatus": {"enum": ["coordination-only-tbd", "prototype-controlled", "released"]},
+          "mustNotBecomeLoadPath": {"type": "array", "items": {"type": "string"}},
+          "requiredInputs": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+    "loadDependentDimensions": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "releaseDependency"],
+        "properties": {"status": {"enum": ["tbd", "controlled", "released"]}}
+      }
+    },
+    "drawingAndCadRequirements": {"type": "object"},
+    "prototypePromotionGate": {
+      "type": "object",
+      "required": [
+        "controlledMassInputsAvailable",
+        "carrierStructuralConceptReviewed",
+        "bearingInterfaceConceptReviewed",
+        "driveInterfaceConceptReviewed",
+        "directCarrierBrakeConceptReviewed",
+        "serviceLockDetailReviewed",
+        "secondaryRetentionDetailReviewed",
+        "feedbackTargetLayoutReviewed",
+        "t1RigReleasedForBuild",
+        "t2RigReleasedForBuild",
+        "prototypeDrawingSetReleased"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "controlledMassInputsAvailable": {"type": "boolean"},
+        "carrierStructuralConceptReviewed": {"type": "boolean"},
+        "bearingInterfaceConceptReviewed": {"type": "boolean"},
+        "driveInterfaceConceptReviewed": {"type": "boolean"},
+        "directCarrierBrakeConceptReviewed": {"type": "boolean"},
+        "serviceLockDetailReviewed": {"type": "boolean"},
+        "secondaryRetentionDetailReviewed": {"type": "boolean"},
+        "feedbackTargetLayoutReviewed": {"type": "boolean"},
+        "t1RigReleasedForBuild": {"type": "boolean"},
+        "t2RigReleasedForBuild": {"type": "boolean"},
+        "prototypeDrawingSetReleased": {"type": "boolean"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"finalPrototypePackageReleased": {"const": true}}, "required": ["finalPrototypePackageReleased"]},
+      "then": {
+        "properties": {
+          "authority": {"const": "controlled"},
+          "status": {"const": "released"},
+          "prototypePromotionGate": {
+            "properties": {
+              "controlledMassInputsAvailable": {"const": true},
+              "carrierStructuralConceptReviewed": {"const": true},
+              "bearingInterfaceConceptReviewed": {"const": true},
+              "driveInterfaceConceptReviewed": {"const": true},
+              "directCarrierBrakeConceptReviewed": {"const": true},
+              "serviceLockDetailReviewed": {"const": true},
+              "secondaryRetentionDetailReviewed": {"const": true},
+              "feedbackTargetLayoutReviewed": {"const": true},
+              "t1RigReleasedForBuild": {"const": true},
+              "t2RigReleasedForBuild": {"const": true},
+              "prototypeDrawingSetReleased": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": true
+}
