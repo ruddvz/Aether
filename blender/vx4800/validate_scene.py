@@ -77,7 +77,7 @@ def main() -> None:
         if obj.get("aetheria_authority") != "visualization-only":
             fail(errors, f"residential environment object lacks visualization-only authority: {obj.name}")
     env_lights = [o for o in env_objects if o.type == "LIGHT" and o.name.startswith("ENV_RES_")]
-    if len(env_lights) != 3: fail(errors, f"expected 3 residential photographic environment lights, found {len(env_lights)}")
+    if len(env_lights) != 4: fail(errors, f"expected 4 residential photographic environment lights, found {len(env_lights)}")
 
     source_sha_keys = [k for k in scene.keys() if str(k).startswith("source_sha256_")]
     if len(source_sha_keys) < 5: fail(errors, "source SHA-256 provenance is incomplete")
