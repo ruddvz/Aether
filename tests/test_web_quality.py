@@ -1,12 +1,16 @@
 from pathlib import Path
 import json
+import sys
 
 from jsonschema import Draft202012Validator
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from scripts.enforce_lighthouse import enforce
 from scripts.qa_site import validate_site
 
-ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "fixtures/platform/web-quality-v1.json"
 SCHEMA = ROOT / "schemas/aether-web-quality-budget.schema.json"
 
