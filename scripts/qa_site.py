@@ -5,8 +5,6 @@ import argparse
 from html.parser import HTMLParser
 import json
 from pathlib import Path
-import re
-import sys
 from urllib.parse import urlparse, unquote
 
 from jsonschema import Draft202012Validator
@@ -23,7 +21,10 @@ class SiteParser(HTMLParser):
         self.html_attrs: dict[str, str] = {}
         self.has_viewport = False
         self.title_text = ""
+        self.importmap_errors: list[str] = []
         self._in_title = False
+        self._in_importmap = False
+        self._importmap_data: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = {key: (value or "") for key, value in attrs}
@@ -33,6 +34,9 @@ class SiteParser(HTMLParser):
             self.has_viewport = True
         if tag == "title":
             self._in_title = True
+        if tag == "script" and values.get("type", "").lower() == "importmap":
+            self._in_importmap = True
+            self._importmap_data = []
         for key in ("href", "src"):
             value = values.get(key)
             if value:
@@ -41,10 +45,25 @@ class SiteParser(HTMLParser):
     def handle_endtag(self, tag: str) -> None:
         if tag == "title":
             self._in_title = False
+        if tag == "script" and self._in_importmap:
+            raw = "".join(self._importmap_data).strip()
+            try:
+                payload = json.loads(raw)
+                imports = payload.get("imports", {})
+                if not isinstance(imports, dict):
+                    raise ValueError("imports must be an object")
+                self.refs.extend(value for value in imports.values() if isinstance(value, str))
+            except (json.JSONDecodeError, ValueError) as exc:
+                self.importmap_errors.append(str(exc))
+            finally:
+                self._in_importmap = False
+                self._importmap_data = []
 
     def handle_data(self, data: str) -> None:
         if self._in_title:
             self.title_text += data
+        if self._in_importmap:
+            self._importmap_data.append(data)
 
 
 def load_json(path: Path) -> dict:
@@ -70,12 +89,12 @@ def local_target(site_root: Path, html_file: Path, ref: str) -> Path | None:
     return target
 
 
-def external_hosts(html_text: str) -> set[str]:
+def external_hosts(refs: list[str]) -> set[str]:
     hosts: set[str] = set()
-    for match in re.finditer(r"https?://[^\s\"'<>]+", html_text):
-        host = urlparse(match.group(0)).hostname
-        if host:
-            hosts.add(host.lower())
+    for ref in refs:
+        parsed = urlparse(ref.strip())
+        if parsed.scheme in {"http", "https"} and parsed.hostname:
+            hosts.add(parsed.hostname.lower())
     return hosts
 
 
@@ -130,16 +149,19 @@ def validate_site(site_root: Path, config_path: Path, schema_path: Path) -> dict
             errors.append(f"{route_id}: viewport meta tag is required")
         if not parser.title_text.strip():
             errors.append(f"{route_id}: non-empty <title> is required")
+        if parser.importmap_errors:
+            errors.append(f"{route_id}: invalid import map: {'; '.join(parser.importmap_errors)}")
 
         for forbidden in global_cfg["forbiddenUrlFragments"]:
-            if forbidden in text:
-                errors.append(f"{route_id}: published HTML contains forbidden URL fragment {forbidden!r}")
+            matching = [ref for ref in parser.refs if forbidden in ref]
+            if matching:
+                errors.append(f"{route_id}: runtime references contain forbidden fragment {forbidden!r}: {matching}")
 
-        hosts = external_hosts(text)
+        hosts = external_hosts(parser.refs)
         route_result["externalHosts"] = sorted(hosts)
         unexpected = sorted(hosts - allowed_hosts)
         if unexpected:
-            errors.append(f"{route_id}: external hosts not allowlisted: {', '.join(unexpected)}")
+            errors.append(f"{route_id}: external runtime hosts not allowlisted: {', '.join(unexpected)}")
 
         missing_refs: list[str] = []
         local_refs: list[str] = []
