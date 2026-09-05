@@ -10,6 +10,8 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
 const schema = JSON.parse(fs.readFileSync(path.join(root, "schemas/aether-fixture.schema.json"), "utf8"));
 const fixture = JSON.parse(fs.readFileSync(path.join(root, "fixtures/vx4800/fixture.json"), "utf8"));
+const editorHtml = fs.readFileSync(path.join(root, "site/tools/fixture-editor/index.html"), "utf8");
+const editorApp = fs.readFileSync(path.join(root, "site/tools/fixture-editor/app.js"), "utf8");
 
 assert.deepEqual(findUnsupportedSchemaKeywords(schema), [], "published fixture schema must stay within the browser validator subset");
 assert.deepEqual(validateSchemaValue(schema, fixture), [], "canonical VX4800 fixture must validate in the browser validator");
@@ -75,6 +77,14 @@ assert.ok(authorityWarnings(fixture, identityProposal).some((warning) => warning
 const massProposal = deepClone(fixture);
 massProposal.physical.massKg.status = "measured";
 assert.ok(authorityWarnings(fixture, massProposal).some((warning) => warning.code === "mass-value-missing"));
+
+assert.match(editorHtml, /Content-Security-Policy/);
+assert.match(editorHtml, /connect-src 'self'/);
+assert.match(editorHtml, /script-src 'self'/);
+assert.match(editorHtml, /referrer" content="no-referrer/);
+assert.doesNotMatch(editorHtml, /https?:\/\//, "editor HTML must not reference external origins");
+assert.doesNotMatch(editorApp, /api\.github\.com|github\.com\/api|https?:\/\//, "editor application must not embed external network endpoints");
+assert.doesNotMatch(editorApp, /method\s*:\s*["'](?:POST|PUT|PATCH|DELETE)["']/i, "editor application must not contain HTTP mutation requests");
 
 assert.equal(proposalFilename("vx4800", fixture), "vx4800-fixture-proposal-1.3.0.json");
 assert.equal(schemaNodeKind({ type: "object", properties: { name: { type: "string" } } }), "object-properties");
