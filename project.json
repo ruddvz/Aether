@@ -1,12 +1,46 @@
 {
-  "repositorySchema": 2,
+  "$schema": "schemas/aether-project.schema.json",
+  "repositorySchema": 3,
   "brand": "AETHERIA",
   "repository": "ruddvz/Aether",
   "defaultProduct": "vx4800",
   "schemas": {
+    "project": "schemas/aether-project.schema.json",
     "fixture": "schemas/aether-fixture.schema.json",
     "presentationStudy": "schemas/aether-presentation-study.schema.json",
     "photometry": "schemas/aether-photometry.schema.json"
+  },
+  "collections": {
+    "flight": {
+      "id": "FLIGHT",
+      "displayName": "FLIGHT",
+      "status": "active",
+      "sortOrder": 10
+    },
+    "ocean": {
+      "id": "OCEAN",
+      "displayName": "OCEAN",
+      "status": "planned",
+      "sortOrder": 20
+    },
+    "botanica": {
+      "id": "BOTANICA",
+      "displayName": "BOTANICA",
+      "status": "planned",
+      "sortOrder": 30
+    },
+    "celestial": {
+      "id": "CELESTIAL",
+      "displayName": "CELESTIAL",
+      "status": "planned",
+      "sortOrder": 40
+    },
+    "abstract-motion": {
+      "id": "ABSTRACT MOTION",
+      "displayName": "ABSTRACT MOTION",
+      "status": "planned",
+      "sortOrder": 50
+    }
   },
   "products": {
     "vx4800": {

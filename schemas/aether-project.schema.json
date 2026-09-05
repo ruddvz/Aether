@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-project.schema.json",
+  "title": "AETHERIA Project Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "repositorySchema", "brand", "repository", "defaultProduct", "schemas", "collections", "products"],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "repositorySchema": {"type": "integer", "minimum": 1},
+    "brand": {"type": "string", "minLength": 1},
+    "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
+    "defaultProduct": {"type": "string", "minLength": 1},
+    "schemas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project", "fixture", "presentationStudy", "photometry"],
+      "properties": {
+        "project": {"$ref": "#/$defs/repositoryPath"},
+        "fixture": {"$ref": "#/$defs/repositoryPath"},
+        "presentationStudy": {"$ref": "#/$defs/repositoryPath"},
+        "photometry": {"$ref": "#/$defs/repositoryPath"}
+      }
+    },
+    "collections": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+      "additionalProperties": {"$ref": "#/$defs/collection"}
+    },
+    "products": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+      "additionalProperties": {"$ref": "#/$defs/product"}
+    }
+  },
+  "$defs": {
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\.\\.)[A-Za-z0-9._/-]+$"
+    },
+    "collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "displayName", "status", "sortOrder"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "displayName": {"type": "string", "minLength": 1},
+        "status": {"enum": ["active", "planned", "retired"]},
+        "sortOrder": {"type": "integer", "minimum": 0}
+      }
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["displayName", "model", "designRevision", "currentPresentation", "fixtureManifest", "viewerTemplate", "presentationStudy", "photometry", "publicPath"],
+      "properties": {
+        "displayName": {"type": "string", "minLength": 1},
+        "model": {"type": "string", "minLength": 1},
+        "designRevision": {"type": "string", "minLength": 1},
+        "currentPresentation": {"type": "string", "minLength": 1},
+        "fixtureManifest": {"$ref": "#/$defs/repositoryPath"},
+        "viewerTemplate": {"$ref": "#/$defs/repositoryPath"},
+        "presentationStudy": {"$ref": "#/$defs/repositoryPath"},
+        "photometry": {"$ref": "#/$defs/repositoryPath"},
+        "publicPath": {"$ref": "#/$defs/repositoryPath"}
+      }
+    }
+  }
+}
