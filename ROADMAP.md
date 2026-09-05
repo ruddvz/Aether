@@ -116,4 +116,4 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [ ] Shared photometry library
 - [ ] Shared Blender material/render library
 - [x] Fixture editor driven by JSON Schema
-- [ ] Collection navigation for FLIGHT, OCEAN, BOTANICA, CELESTIAL and ABSTRACT MOTION
+- [x] Collection navigation for FLIGHT, OCEAN, BOTANICA, CELESTIAL and ABSTRACT MOTION

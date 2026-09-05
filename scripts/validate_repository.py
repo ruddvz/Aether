@@ -9,6 +9,44 @@ materialize_background()
 def req(c,m):
     if not c: errors.append(m)
 def load(p): return json.loads(Path(p).read_text())
+
+# Project/collection registry contract.
+project=load(ROOT/'project.json'); project_schema=load(ROOT/'schemas/aether-project.schema.json')
+for e in Draft202012Validator(project_schema).iter_errors(project): errors.append(f'project.json schema: {e.message}')
+req(project['repositorySchema']==3,'project repositorySchema must be 3')
+req(project['$schema']==project['schemas']['project'],'project schema path mismatch')
+req(project['defaultProduct'] in project['products'],'defaultProduct is not registered')
+for schema_ref in project['schemas'].values(): req((ROOT/schema_ref).exists(),f'missing registered schema {schema_ref}')
+collection_ids=[c['id'] for c in project['collections'].values()]
+req(len(collection_ids)==len(set(collection_ids)),'collection IDs must be unique')
+collection_by_id={c['id']:(slug,c) for slug,c in project['collections'].items()}
+fixture_ids=set(); product_codes=set(); public_paths=set(); collection_product_counts={cid:0 for cid in collection_ids}
+fixture_schema=load(ROOT/project['schemas']['fixture'])
+for slug,product in project['products'].items():
+    req(product['publicPath'] not in public_paths,f'duplicate product publicPath {product["publicPath"]}'); public_paths.add(product['publicPath'])
+    req(product['publicPath']==f'products/{slug}/',f'{slug}: publicPath must match product slug')
+    for key in ('fixtureManifest','viewerTemplate','presentationStudy','photometry'):
+        req((ROOT/product[key]).exists(),f'{slug}: missing {key} {product[key]}')
+    manifest=ROOT/product['fixtureManifest']
+    if not manifest.exists(): continue
+    registered_fixture=load(manifest)
+    for e in Draft202012Validator(fixture_schema).iter_errors(registered_fixture): errors.append(f'{manifest.relative_to(ROOT)} schema: {e.message}')
+    identity=registered_fixture['identity']
+    req(identity['fixtureId'] not in fixture_ids,f'duplicate fixtureId {identity["fixtureId"]}'); fixture_ids.add(identity['fixtureId'])
+    req(identity['productCode'] not in product_codes,f'duplicate productCode {identity["productCode"]}'); product_codes.add(identity['productCode'])
+    req(identity['brand']==project['brand'],f'{slug}: fixture brand mismatch')
+    req(identity['name']==product['displayName'],f'{slug}: displayName does not match fixture identity')
+    req(identity['productCode']==product['model'],f'{slug}: model does not match fixture productCode')
+    req(identity['designRevision']==product['designRevision'],f'{slug}: designRevision does not match fixture identity')
+    req(identity.get('presentationRevision')==product['currentPresentation'],f'{slug}: currentPresentation does not match fixture identity')
+    collection_id=identity.get('collection')
+    req(collection_id in collection_by_id,f'{slug}: fixture collection {collection_id!r} is not registered')
+    if collection_id in collection_product_counts: collection_product_counts[collection_id]+=1
+for collection_id,(collection_slug,collection) in collection_by_id.items():
+    count=collection_product_counts[collection_id]
+    if collection['status']=='active': req(count>0,f'{collection_slug}: active collection must contain a registered product')
+    if collection['status']=='planned': req(count==0,f'{collection_slug}: planned collection cannot already contain a registered product')
+
 for data_path,schema_path in [(F/'fixture.json',ROOT/'schemas/aether-fixture.schema.json'),(F/'presentation/v5.2.0/study.json',ROOT/'schemas/aether-presentation-study.schema.json'),(F/'photometry/concept-v5.2.0.json',ROOT/'schemas/aether-photometry.schema.json')]:
     data=load(data_path); schema=load(schema_path)
     for e in Draft202012Validator(schema).iter_errors(data): errors.append(f'{data_path.relative_to(ROOT)} schema: {e.message}')

@@ -105,3 +105,16 @@ All notable repository and product presentation changes are recorded here.
 - Added Node regression coverage against the real published fixture schema and canonical VX4800 fixture.
 - Added Pages CI checks for the editor entry point and required modules and enabled the existing browser-tool tests in ordinary repository validation.
 - Updated Pages and product-pipeline documentation to reflect the current no-ZIP build, completed IFC adapter and proposal-editor authority boundary.
+
+## 2026-09-04 - controlled collection navigation and project registry
+
+- Added a Draft 2020-12 schema for the top-level AETHERIA project/product/collection registry and bumped the registry contract to version 3.
+- Registered FLIGHT as active and OCEAN, BOTANICA, CELESTIAL and ABSTRACT MOTION as planned collection identities without creating placeholder products.
+- Kept product membership authoritative in canonical fixture `identity.collection` rather than duplicating collection membership in `project.json`.
+- Added repository validation that cross-checks project product metadata, source paths, fixture identity, revisions, collection registration, public paths and active/planned collection state.
+- Added generated `/collections.json` plus one Pages route for every registered collection.
+- Added root-catalog collection navigation and generated FLIGHT membership for VORTEX while planned collections remain explicit empty pages.
+- Removed the VX4800-specific viewer filename assumption from the catalog builder by discovering the single version-matched viewer artifact in each product build directory.
+- Added collection metadata to generated product records for downstream browser tooling.
+- Added regression tests and Pages gates that require FLIGHT to contain exactly `vx4800` and every planned collection to remain empty.
+- Kept collection navigation catalog-only; it does not imply production release, market availability, engineering approval or certification status.
