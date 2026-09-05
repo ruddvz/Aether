@@ -117,3 +117,16 @@ This roadmap describes repository capabilities, not promised commercial release 
 - [ ] Shared Blender material/render library
 - [x] Fixture editor driven by JSON Schema
 - [ ] Collection navigation for FLIGHT, OCEAN, BOTANICA, CELESTIAL and ABSTRACT MOTION
+
+## Collection design language and pilots
+- [x] Research material-as-optic, family-scaling and view-dependent-light principles from Laurids Gallée without adopting signature geometry
+- [x] Define AETHERIA design grammar: nature abstraction, optical/structural/service-body separation, dominant optical effect, frozen-vs-actual motion, daylight quality and family scalability
+- [x] Define first concept queue: BOTANICA 01 VEIN, OCEAN 01 CURRENT and CELESTIAL 01 OCCULTATION
+- [ ] Add non-authoritative concept-record format separate from released fixture manifests
+- [ ] Build low-resolution parametric geometry for the three pilot concepts
+- [ ] Add canonical five-viewpoint and paired off/on presentation QA
+- [ ] Add shared optical-body material studies and surface-zone representation
+- [ ] Prototype BOTANICA 01 VEIN internal light injection and graded extraction
+- [ ] Prototype OCEAN 01 CURRENT grazing-light / caustic behaviour
+- [ ] Prototype CELESTIAL 01 OCCULTATION mixed refractive / reflective occlusion
+- [ ] Select one pilot for controlled fixture-manifest development and engineering workstream
