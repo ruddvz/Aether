@@ -1,0 +1,13 @@
+{
+  "name": "aetheria-web-qa",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Cross-browser and Lighthouse QA for AETHERIA Pages outputs.",
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "lighthouse": "13.4.1"
+  },
+  "scripts": {
+    "test:e2e": "playwright test --config=playwright.config.mjs"
+  }
+}
