@@ -4,7 +4,6 @@ import {
   changedPaths,
   deepClone,
   deleteAtPath,
-  getAtPath,
   humanizeKey,
   prettyJson,
   proposalFilename,
@@ -45,6 +44,7 @@ const state = {
   unsupported: [],
   slug: null,
   baseline: null,
+  baselineText: "",
   proposal: null,
   rawParseError: null,
   renderToken: 0,
@@ -57,10 +57,6 @@ function setStatus(message, level = "neutral") {
 
 function resolvePublicPath(path) {
   return new URL(`../../${path.replace(/^\/+/, "")}`, window.location.href).href;
-}
-
-function currentMeta() {
-  return state.registry.find((item) => item.slug === state.slug);
 }
 
 function isRequired(parentSchema, key) {
@@ -102,7 +98,7 @@ function createFieldShell(label, pathText, schema, required) {
 function commitScalar(path, schema, required, rawValue) {
   if (rawValue === "" && !required) {
     deleteAtPath(state.proposal, path);
-    proposalChanged(false);
+    proposalChanged();
     return;
   }
 
@@ -114,17 +110,18 @@ function commitScalar(path, schema, required, rawValue) {
     value = Boolean(rawValue);
   }
   setAtPath(state.proposal, path, value);
-  proposalChanged(false);
+  proposalChanged();
 }
 
 function createScalarControl(schema, value, path, required) {
   const kind = schemaNodeKind(schema);
   if (kind === "enum") {
     const select = document.createElement("select");
-    if (!required && value === undefined) {
+    if (!required) {
       const blank = document.createElement("option");
       blank.value = "";
       blank.textContent = "Not set";
+      blank.selected = value === undefined;
       select.append(blank);
     }
     for (const optionValue of schema.enum) {
@@ -137,7 +134,7 @@ function createScalarControl(schema, value, path, required) {
     select.addEventListener("change", () => {
       if (select.value === "" && !required) deleteAtPath(state.proposal, path);
       else setAtPath(state.proposal, path, JSON.parse(select.value));
-      proposalChanged(false);
+      proposalChanged();
     });
     return select;
   }
@@ -170,13 +167,13 @@ function createJsonControl(schema, value, path, required) {
     if (!text && !required) {
       deleteAtPath(state.proposal, path);
       textarea.classList.remove("invalid");
-      proposalChanged(false);
+      proposalChanged();
       return;
     }
     try {
       setAtPath(state.proposal, path, JSON.parse(text));
       textarea.classList.remove("invalid");
-      proposalChanged(false);
+      proposalChanged();
     } catch (error) {
       textarea.classList.add("invalid");
       setStatus(`JSON field error at $.${path.join(".")}: ${error.message}`, "error");
@@ -185,26 +182,24 @@ function createJsonControl(schema, value, path, required) {
   return textarea;
 }
 
-function renderSchemaNode(schema, value, path = [], key = "Fixture", required = true) {
+function renderSchemaNode(schema, value, path, key, required) {
   const kind = schemaNodeKind(schema);
-  const pathText = path.length ? `$.${path.join(".")}` : "$";
+  const pathText = `$.${path.join(".")}`;
 
   if (kind === "object-properties") {
-    const section = document.createElement(path.length <= 1 ? "section" : "div");
-    section.className = path.length <= 1 ? "schema-section" : "schema-group";
-    if (path.length) {
-      const title = document.createElement(path.length === 1 ? "h2" : "h3");
-      title.textContent = humanizeKey(key);
-      section.append(title);
-      if (schema.description) {
-        const description = document.createElement("p");
-        description.className = "section-description";
-        description.textContent = schema.description;
-        section.append(description);
-      }
+    const section = document.createElement(path.length === 1 ? "section" : "div");
+    section.className = path.length === 1 ? "schema-section" : "schema-group";
+    const title = document.createElement(path.length === 1 ? "h2" : "h3");
+    title.textContent = humanizeKey(key);
+    section.append(title);
+    if (schema.description) {
+      const description = document.createElement("p");
+      description.className = "section-description";
+      description.textContent = schema.description;
+      section.append(description);
     }
     const grid = document.createElement("div");
-    grid.className = path.length <= 1 ? "field-grid" : "nested-grid";
+    grid.className = path.length === 1 ? "field-grid" : "nested-grid";
     for (const [childKey, childSchema] of Object.entries(schema.properties || {})) {
       const childPath = [...path, childKey];
       const childValue = value?.[childKey];
@@ -233,7 +228,12 @@ function renderForm() {
     ui.form.append(blocked);
     return;
   }
-  ui.form.append(renderSchemaNode(state.schema, state.proposal));
+
+  for (const [key, childSchema] of Object.entries(state.schema.properties || {})) {
+    ui.form.append(
+      renderSchemaNode(childSchema, state.proposal?.[key], [key], key, isRequired(state.schema, key)),
+    );
+  }
 }
 
 function renderList(container, items, emptyText, formatter) {
@@ -248,9 +248,7 @@ function renderList(container, items, emptyText, formatter) {
   const list = document.createElement("ul");
   for (const item of items) {
     const li = document.createElement("li");
-    const result = formatter(item);
-    if (result instanceof Node) li.append(result);
-    else li.textContent = result;
+    li.textContent = formatter(item);
     list.append(li);
   }
   container.append(list);
@@ -276,14 +274,13 @@ async function refreshDiagnostics() {
 
   ui.download.disabled = Boolean(parseError || issues.length || state.unsupported.length || !changes.length);
   if (token !== state.renderToken || !state.proposal) return;
-  const proposalText = prettyJson(state.proposal);
-  const proposalHash = await sha256Hex(proposalText);
+  const proposalHash = await sha256Hex(prettyJson(state.proposal));
   if (token === state.renderToken) ui.proposalHash.textContent = proposalHash;
 }
 
-function proposalChanged(syncRaw = true) {
+function proposalChanged() {
   state.rawParseError = null;
-  if (syncRaw) ui.raw.value = prettyJson(state.proposal);
+  ui.raw.value = prettyJson(state.proposal);
   refreshDiagnostics();
 }
 
@@ -291,19 +288,20 @@ async function loadProduct(slug) {
   const meta = state.registry.find((item) => item.slug === slug);
   if (!meta) throw new Error(`Unknown product ${slug}`);
   setStatus(`Loading ${meta.displayName}…`);
-  const fixtureUrl = resolvePublicPath(meta.fixtureDataPath);
-  const fixtureResponse = await fetch(fixtureUrl, { cache: "no-store" });
+  const fixtureResponse = await fetch(resolvePublicPath(meta.fixtureDataPath), { cache: "no-store" });
   if (!fixtureResponse.ok) throw new Error(`Fixture request failed with ${fixtureResponse.status}`);
-  const fixture = await fixtureResponse.json();
+  const fixtureText = await fixtureResponse.text();
+  const fixture = JSON.parse(fixtureText);
 
   state.slug = slug;
   state.baseline = deepClone(fixture);
+  state.baselineText = fixtureText;
   state.proposal = deepClone(fixture);
   state.rawParseError = null;
   ui.product.value = slug;
   ui.baselineLabel.textContent = `${meta.model} · design ${meta.designRevision}`;
   ui.raw.value = prettyJson(state.proposal);
-  ui.baselineHash.textContent = await sha256Hex(prettyJson(state.baseline));
+  ui.baselineHash.textContent = await sha256Hex(state.baselineText);
   renderForm();
   await refreshDiagnostics();
   setStatus("Loaded canonical public fixture. Changes remain local to this browser until you download a proposal.", "good");
@@ -376,8 +374,12 @@ ui.importInput.addEventListener("change", async () => {
 });
 ui.copy.addEventListener("click", async () => {
   if (!state.proposal) return;
-  await navigator.clipboard.writeText(prettyJson(state.proposal));
-  setStatus("Proposal JSON copied to clipboard.", "good");
+  try {
+    await navigator.clipboard.writeText(prettyJson(state.proposal));
+    setStatus("Proposal JSON copied to clipboard.", "good");
+  } catch (error) {
+    setStatus(`Clipboard copy failed: ${error.message}`, "error");
+  }
 });
 ui.download.addEventListener("click", () => {
   if (!state.proposal || ui.download.disabled) return;
