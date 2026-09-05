@@ -1,4 +1,6 @@
 const AUTHORITY_PREFIXES = [
+  "$.$schema",
+  "$.schemaVersion",
   "$.identity",
   "$.physical",
   "$.optical",
@@ -10,6 +12,7 @@ const AUTHORITY_PREFIXES = [
   "$.interchange",
   "$.manufacturing",
   "$.compliance",
+  "$.provenance",
 ];
 
 export function deepClone(value) {
@@ -48,23 +51,43 @@ export function setAtPath(root, path, value) {
 export function deleteAtPath(root, path) {
   if (path.length === 0) return root;
   const parent = getAtPath(root, path.slice(0, -1));
-  if (parent && typeof parent === "object") delete parent[path.at(-1)];
+  const key = path.at(-1);
+  if (Array.isArray(parent) && Number.isInteger(key)) parent.splice(key, 1);
+  else if (parent && typeof parent === "object") delete parent[key];
   return root;
 }
 
+function isPlainObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map((item) => canonicalJson(item)).join(",")}]`;
+  if (isPlainObject(value)) {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
 function sameJsonValue(left, right) {
-  return JSON.stringify(left) === JSON.stringify(right);
+  return canonicalJson(left) === canonicalJson(right);
 }
 
 function collectChanges(baseline, proposal, path, changes) {
   if (sameJsonValue(baseline, proposal)) return;
 
-  const baseObject = baseline !== null && typeof baseline === "object" && !Array.isArray(baseline);
-  const proposalObject = proposal !== null && typeof proposal === "object" && !Array.isArray(proposal);
-  if (baseObject && proposalObject) {
+  if (isPlainObject(baseline) && isPlainObject(proposal)) {
     const keys = new Set([...Object.keys(baseline), ...Object.keys(proposal)]);
     for (const key of [...keys].sort()) {
       collectChanges(baseline[key], proposal[key], `${path}.${key}`, changes);
+    }
+    return;
+  }
+
+  if (Array.isArray(baseline) && Array.isArray(proposal)) {
+    const maxLength = Math.max(baseline.length, proposal.length);
+    for (let index = 0; index < maxLength; index += 1) {
+      collectChanges(baseline[index], proposal[index], `${path}[${index}]`, changes);
     }
     return;
   }
@@ -84,7 +107,7 @@ export function authorityWarnings(baseline, proposal, paths = changedPaths(basel
   if (authorityPaths.length) {
     warnings.push({
       code: "authority-sensitive-change",
-      message: `${authorityPaths.length} changed path${authorityPaths.length === 1 ? " is" : "s are"} within engineering, product, asset or compliance domains. Schema validity does not approve these changes.`,
+      message: `${authorityPaths.length} changed path${authorityPaths.length === 1 ? " is" : "s are"} within schema, engineering, product, asset, compliance or provenance domains. Schema validity does not approve these changes.`,
     });
   }
 
@@ -95,8 +118,21 @@ export function authorityWarnings(baseline, proposal, paths = changedPaths(basel
     });
   }
 
-  const controlledAssetsChanged = paths.some((path) => path.startsWith("$.assets"));
-  if (controlledAssetsChanged) {
+  if (paths.length && baseline?.provenance?.updatedAt === proposal?.provenance?.updatedAt) {
+    warnings.push({
+      code: "provenance-date-unchanged",
+      message: "The proposal differs from the baseline but provenance.updatedAt is unchanged. Update provenance only when the proposed revision is intentionally prepared for repository review.",
+    });
+  }
+
+  if (baseline?.identity?.fixtureId !== proposal?.identity?.fixtureId || baseline?.identity?.productCode !== proposal?.identity?.productCode) {
+    warnings.push({
+      code: "registered-identity-change",
+      message: "fixtureId or productCode differs from the selected registered product. Treat this as a new identity/re-registration proposal and review registry, routes, assets and downstream references together.",
+    });
+  }
+
+  if (paths.some((path) => path.startsWith("$.assets"))) {
     warnings.push({
       code: "asset-integrity-review",
       message: "Asset records changed. Recompute and independently verify every affected SHA-256 before controlled repository acceptance.",
