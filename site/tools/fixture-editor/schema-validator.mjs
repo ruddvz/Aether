@@ -28,12 +28,22 @@ const SUPPORTED_KEYWORDS = new Set([
   "exclusiveMaximum",
 ]);
 
+const SUPPORTED_TYPES = new Set(["object", "array", "string", "number", "integer", "boolean", "null"]);
+
 function isPlainObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map((item) => canonicalJson(item)).join(",")}]`;
+  if (isPlainObject(value)) {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
 function sameJsonValue(left, right) {
-  return JSON.stringify(left) === JSON.stringify(right);
+  return canonicalJson(left) === canonicalJson(right);
 }
 
 function typeMatches(type, value) {
@@ -61,13 +71,46 @@ function issue(path, keyword, message) {
   return { path, keyword, message };
 }
 
+function unsupported(found, path, keyword, detail = null) {
+  found.push(detail ? { path, keyword, detail } : { path, keyword });
+}
+
 function visitUnsupported(schema, path, found) {
-  if (!isPlainObject(schema)) return;
+  if (!isPlainObject(schema)) {
+    unsupported(found, path, "schema-node", "schema nodes must be objects in the browser validator subset");
+    return;
+  }
+
   for (const key of Object.keys(schema)) {
-    if (!SUPPORTED_KEYWORDS.has(key)) {
-      found.push({ path, keyword: key });
+    if (!SUPPORTED_KEYWORDS.has(key)) unsupported(found, path, key);
+  }
+
+  if (schema.type !== undefined) {
+    const types = Array.isArray(schema.type) ? schema.type : [schema.type];
+    if (!types.length || types.some((type) => typeof type !== "string" || !SUPPORTED_TYPES.has(type))) {
+      unsupported(found, path, "type", "unsupported type declaration");
     }
   }
+
+  if (schema.properties !== undefined && !isPlainObject(schema.properties)) {
+    unsupported(found, path, "properties", "properties must be an object");
+  }
+  if (schema.required !== undefined && (!Array.isArray(schema.required) || schema.required.some((item) => typeof item !== "string"))) {
+    unsupported(found, path, "required", "required must be an array of strings");
+  }
+  if (schema.additionalProperties !== undefined && typeof schema.additionalProperties !== "boolean") {
+    unsupported(found, path, "additionalProperties", "schema-valued additionalProperties is not implemented");
+  }
+  if (schema.items !== undefined && !isPlainObject(schema.items)) {
+    unsupported(found, path, "items", "tuple/boolean items forms are not implemented");
+  }
+  if (schema.enum !== undefined && !Array.isArray(schema.enum)) {
+    unsupported(found, path, "enum", "enum must be an array");
+  }
+  if (schema.uniqueItems !== undefined && typeof schema.uniqueItems !== "boolean") {
+    unsupported(found, path, "uniqueItems", "uniqueItems must be boolean");
+  }
+
   if (isPlainObject(schema.properties)) {
     for (const [name, child] of Object.entries(schema.properties)) {
       visitUnsupported(child, `${path}.properties.${name}`, found);
@@ -122,9 +165,7 @@ export function validateSchemaValue(schema, value, path = "$") {
         issues.push(issue(path, "pattern", "schema contains an invalid regular expression"));
         return issues;
       }
-      if (!regex.test(value)) {
-        issues.push(issue(path, "pattern", `must match ${schema.pattern}`));
-      }
+      if (!regex.test(value)) issues.push(issue(path, "pattern", `must match ${schema.pattern}`));
     }
   }
 
@@ -151,10 +192,8 @@ export function validateSchemaValue(schema, value, path = "$") {
       issues.push(issue(path, "maxItems", `must contain at most ${schema.maxItems} items`));
     }
     if (schema.uniqueItems === true) {
-      const encoded = value.map((item) => JSON.stringify(item));
-      if (new Set(encoded).size !== encoded.length) {
-        issues.push(issue(path, "uniqueItems", "must not contain duplicate items"));
-      }
+      const encoded = value.map((item) => canonicalJson(item));
+      if (new Set(encoded).size !== encoded.length) issues.push(issue(path, "uniqueItems", "must not contain duplicate items"));
     }
     if (isPlainObject(schema.items)) {
       value.forEach((item, index) => {
@@ -168,9 +207,7 @@ export function validateSchemaValue(schema, value, path = "$") {
     const required = Array.isArray(schema.required) ? schema.required : [];
 
     for (const name of required) {
-      if (!Object.prototype.hasOwnProperty.call(value, name)) {
-        issues.push(issue(`${path}.${name}`, "required", "is required"));
-      }
+      if (!Object.prototype.hasOwnProperty.call(value, name)) issues.push(issue(`${path}.${name}`, "required", "is required"));
     }
 
     if (schema.additionalProperties === false) {
