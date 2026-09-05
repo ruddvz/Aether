@@ -1,0 +1,153 @@
+name: Validate AETHERIA web quality
+
+on:
+  push:
+    branches: [main, "feat/**"]
+    paths:
+      - ".github/workflows/web-quality.yml"
+      - "qa/**"
+      - "fixtures/platform/web-quality-v1.json"
+      - "schemas/aether-web-quality-budget.schema.json"
+      - "scripts/qa_site.py"
+      - "scripts/enforce_lighthouse.py"
+      - "scripts/build_site.py"
+      - "scripts/build_product.py"
+      - "scripts/build_viewer.py"
+      - "scripts/optimize_web_geometry.py"
+      - "scripts/generate_web_geometry.py"
+      - "site/**"
+      - "fixtures/vx4800/presentation/**"
+      - "project.json"
+      - "tests/test_web_quality.py"
+  pull_request:
+    paths:
+      - ".github/workflows/web-quality.yml"
+      - "qa/**"
+      - "fixtures/platform/web-quality-v1.json"
+      - "schemas/aether-web-quality-budget.schema.json"
+      - "scripts/qa_site.py"
+      - "scripts/enforce_lighthouse.py"
+      - "scripts/build_site.py"
+      - "scripts/build_product.py"
+      - "scripts/build_viewer.py"
+      - "scripts/optimize_web_geometry.py"
+      - "scripts/generate_web_geometry.py"
+      - "site/**"
+      - "fixtures/vx4800/presentation/**"
+      - "project.json"
+      - "tests/test_web_quality.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.txt
+            requirements-geometry.txt
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Install product build dependencies
+        run: pip install -r requirements-dev.txt -r requirements-geometry.txt
+
+      - name: Run web-quality unit gates
+        run: pytest -q tests/test_web_quality.py
+
+      - name: Build Pages tree
+        run: python scripts/build_site.py
+
+      - name: Enforce deterministic published-site budgets
+        run: |
+          mkdir -p qa/artifacts
+          python scripts/qa_site.py _site \
+            --report qa/artifacts/static-site-qa.report.json
+
+      - name: Install pinned browser QA toolchain
+        working-directory: qa
+        run: |
+          npm install --no-audit --no-fund
+          ./node_modules/.bin/playwright install --with-deps chromium firefox webkit
+          node -e "const p=require('./node_modules/@playwright/test/package.json'); if(p.version!=='1.62.1') process.exit(2); console.log('Playwright',p.version)"
+          node -e "const p=require('./node_modules/lighthouse/package.json'); if(p.version!=='13.4.1') process.exit(2); console.log('Lighthouse',p.version)"
+
+      - name: Start local Pages server
+        run: |
+          nohup python -m http.server 4173 --bind 127.0.0.1 --directory _site > qa/artifacts/http-server.log 2>&1 &
+          echo $! > qa/artifacts/http-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat qa/artifacts/http-server.log
+          exit 1
+
+      - name: Run Chromium Firefox WebKit and mobile smoke matrix
+        working-directory: qa
+        env:
+          AETHERIA_QA_BASE_URL: http://127.0.0.1:4173
+        run: ./node_modules/.bin/playwright test --config=playwright.config.mjs
+
+      - name: Resolve Playwright Chromium for Lighthouse
+        shell: bash
+        run: |
+          CHROME_PATH="$(find "$HOME/.cache/ms-playwright" -type f -name chrome -perm -111 -print -quit)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "Unable to resolve Playwright Chromium executable" >&2
+            exit 1
+          fi
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          "$CHROME_PATH" --version
+
+      - name: Run pinned Lighthouse mobile and desktop audits
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qa/artifacts/lighthouse
+          audit() {
+            local id="$1"
+            local url="$2"
+            local mode="$3"
+            local preset=()
+            if [ "$mode" = "desktop" ]; then preset=(--preset=desktop); fi
+            ./qa/node_modules/.bin/lighthouse "$url" \
+              --quiet \
+              --only-categories=performance,accessibility,best-practices,seo \
+              --output=json \
+              --output-path="qa/artifacts/lighthouse/${id}-${mode}.report.json" \
+              --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
+              --max-wait-for-load=45000 \
+              "${preset[@]}"
+          }
+          for mode in mobile desktop; do
+            audit catalog http://127.0.0.1:4173/ "$mode"
+            audit vx4800-viewer http://127.0.0.1:4173/products/vx4800/ "$mode"
+            audit vx4800-inspector http://127.0.0.1:4173/products/vx4800/inspect/ "$mode"
+          done
+
+      - name: Enforce Lighthouse budgets
+        run: |
+          python scripts/enforce_lighthouse.py qa/artifacts/lighthouse \
+            --output qa/artifacts/lighthouse-budget-summary.json
+
+      - name: Upload browser and performance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aetheria-web-quality
+          path: qa/artifacts/
+          if-no-files-found: warn
