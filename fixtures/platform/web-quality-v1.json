@@ -1,0 +1,73 @@
+{
+  "$schema": "../../schemas/aether-web-quality-budget.schema.json",
+  "schemaVersion": "1.0.0",
+  "status": "active",
+  "authority": "repository-quality-gate",
+  "purpose": "Define deterministic static-site, cross-browser smoke and Lighthouse quality gates for the published AETHERIA catalog, VX4800 viewer and VX4800 technical inspector without changing product engineering authority.",
+  "toolchain": {
+    "nodeMajor": 24,
+    "playwright": "1.62.1",
+    "lighthouse": "13.4.1"
+  },
+  "browserMatrix": [
+    "chromium-desktop",
+    "firefox-desktop",
+    "webkit-desktop",
+    "iphone-webkit-emulation",
+    "android-chromium-emulation"
+  ],
+  "global": {
+    "maxPublishedTreeBytes": 16777216,
+    "maxSinglePublishedFileBytes": 8388608,
+    "zipFilesPermitted": false,
+    "forbiddenUrlFragments": ["file://", "localhost:", "127.0.0.1:"],
+    "allowedExternalHosts": ["cdn.jsdelivr.net"]
+  },
+  "routes": [
+    {
+      "id": "catalog",
+      "path": "/",
+      "htmlFile": "index.html",
+      "requiredSelector": "main",
+      "maxHtmlBytes": 131072,
+      "lighthouseMinimum": {
+        "performance": 0.9,
+        "accessibility": 0.9,
+        "best-practices": 0.9,
+        "seo": 0.9
+      }
+    },
+    {
+      "id": "vx4800-viewer",
+      "path": "/products/vx4800/",
+      "htmlFile": "products/vx4800/index.html",
+      "requiredSelector": "#dock",
+      "maxHtmlBytes": 3145728,
+      "lighthouseMinimum": {
+        "performance": 0.55,
+        "accessibility": 0.75,
+        "best-practices": 0.75,
+        "seo": 0.7
+      }
+    },
+    {
+      "id": "vx4800-inspector",
+      "path": "/products/vx4800/inspect/",
+      "htmlFile": "products/vx4800/inspect/index.html",
+      "requiredSelector": ".toolbar",
+      "maxHtmlBytes": 262144,
+      "lighthouseMinimum": {
+        "performance": 0.55,
+        "accessibility": 0.8,
+        "best-practices": 0.75,
+        "seo": 0.7
+      }
+    }
+  ],
+  "notes": [
+    "Lighthouse score floors are regression gates, not marketing claims and not a substitute for physical-device review.",
+    "Playwright iPhone/Android projects are browser/device emulations; they do not prove behavior on every physical handset or OS build.",
+    "The immutable V5.2 presentation is audited as published and is not modified merely to improve a Lighthouse score.",
+    "Performance and browser QA are software-delivery evidence only and do not change VX4800 engineering, manufacturing, photometry or certification authority."
+  ]
+}
