@@ -92,3 +92,16 @@ All notable repository and product presentation changes are recorded here.
 - Added stable primary IFC GUID generation for repeatable identity across rebuilds without claiming byte-for-byte deterministic IFC serialization.
 - Added a dedicated IFC GitHub Actions workflow that generates, reopens and semantically validates the IFC4 model before uploading it with its companion loss report.
 - Kept the IFC body as coordination proxy geometry rather than fabricating 240 BIM parts or promoting repository geometry to manufacturing authority.
+
+## 2026-09-04 - JSON-Schema fixture proposal editor
+
+- Added a registry-driven browser fixture editor at `/tools/fixture-editor/` and published it through the normal Pages build.
+- Added schema-generated controls for declared fixture properties plus explicit JSON editing blocks for schema domains that do not define deeper field semantics.
+- Added synchronized structured and raw JSON editing, local JSON import, proposal copy and local proposal download.
+- Added browser-side fixture-schema validation with fail-closed detection of unsupported future schema keywords.
+- Added published-baseline and proposal SHA-256 display without treating hashes as engineering approval.
+- Added changed-path reporting and conservative authority warnings for engineering/product domains, unchanged design revision, asset hash changes and incomplete mass-status promotion.
+- Kept the editor browser-local with no GitHub token, repository write path, hidden persistence or automatic authority escalation.
+- Added Node regression coverage against the real published fixture schema and canonical VX4800 fixture.
+- Added Pages CI checks for the editor entry point and required modules and enabled the existing browser-tool tests in ordinary repository validation.
+- Updated Pages and product-pipeline documentation to reflect the current no-ZIP build, completed IFC adapter and proposal-editor authority boundary.

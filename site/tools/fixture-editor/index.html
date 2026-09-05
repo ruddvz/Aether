@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b0b0c">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+  <title>AETHERIA · Fixture proposal editor</title>
+  <link rel="stylesheet" href="./editor.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="brand">AETHERIA</div>
+      <div class="tool-name">Fixture proposal editor</div>
+    </div>
+    <a class="back-link" href="../../">Catalog</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Schema-driven · browser-local · review-only</div>
+        <h1>Edit a fixture without confusing a proposal with product truth.</h1>
+        <p class="lede">The editor loads the published canonical fixture and JSON Schema, validates changes in the browser, and downloads a proposed JSON revision. It never writes to GitHub or upgrades engineering authority.</p>
+      </div>
+      <div class="authority-card">
+        <div class="authority-title">Authority boundary</div>
+        <p>Schema valid does not mean engineering approved, manufacturing released, structurally verified, photometrically approved, or construction ready.</p>
+        <p>Repository review, controlled hashes, invariant checks, physical qualification, and applicable release gates remain authoritative.</p>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Fixture editor controls">
+      <label class="product-picker">
+        <span>Published product</span>
+        <select id="product-select"></select>
+      </label>
+      <div class="toolbar-actions">
+        <button id="reset-proposal" type="button" class="button secondary">Reset</button>
+        <button id="import-proposal" type="button" class="button secondary">Import local JSON</button>
+        <input id="import-file" type="file" accept="application/json,.json" hidden>
+        <button id="copy-json" type="button" class="button secondary">Copy JSON</button>
+        <button id="download-proposal" type="button" class="button primary" disabled>Download proposal</button>
+      </div>
+    </section>
+
+    <section class="status-strip" aria-live="polite">
+      <div><span class="status-label">Baseline</span><strong id="baseline-label">Loading…</strong></div>
+      <div class="badges">
+        <span id="schema-badge" class="badge">Schema loading</span>
+        <span id="validation-badge" class="badge">Validation loading</span>
+        <span id="changed-badge" class="badge">0 changed paths</span>
+      </div>
+    </section>
+
+    <div class="workspace">
+      <section class="editor-panel">
+        <div class="panel-heading">
+          <div>
+            <div class="panel-kicker">Structured editor</div>
+            <h2>Schema fields</h2>
+          </div>
+          <p>Typed controls are generated from the published fixture schema. Objects and arrays without field-level schema are edited as JSON blocks rather than guessed into fake form semantics.</p>
+        </div>
+        <div id="schema-form"></div>
+      </section>
+
+      <aside class="review-panel">
+        <section class="review-card raw-card">
+          <div class="review-head">
+            <div>
+              <div class="panel-kicker">Exact proposal</div>
+              <h2>Raw JSON</h2>
+            </div>
+          </div>
+          <textarea id="raw-json" class="raw-json" spellcheck="false" aria-label="Raw proposal JSON"></textarea>
+        </section>
+
+        <section class="review-card">
+          <div class="panel-kicker">Integrity</div>
+          <h2>SHA-256</h2>
+          <dl class="hash-list">
+            <div><dt>Published baseline</dt><dd><code id="baseline-hash">…</code></dd></div>
+            <div><dt>Current proposal</dt><dd><code id="proposal-hash">…</code></dd></div>
+          </dl>
+        </section>
+
+        <section class="review-card">
+          <div class="panel-kicker">Validation</div>
+          <h2>Issues</h2>
+          <div id="issues" class="diagnostic-list"></div>
+        </section>
+
+        <section class="review-card">
+          <div class="panel-kicker">Review scope</div>
+          <h2>Changed paths</h2>
+          <div id="changes" class="diagnostic-list mono-list"></div>
+        </section>
+
+        <section class="review-card warning-card">
+          <div class="panel-kicker">Authority review</div>
+          <h2>Warnings</h2>
+          <div id="warnings" class="diagnostic-list"></div>
+        </section>
+      </aside>
+    </div>
+
+    <div id="status-line" class="status-line" data-level="neutral">Loading published fixture and schema…</div>
+  </main>
+
+  <footer>
+    <span>AETHERIA fixture proposal editor</span>
+    <span>No direct repository writes. No automatic authority escalation.</span>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

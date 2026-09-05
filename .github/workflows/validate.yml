@@ -37,6 +37,12 @@ jobs:
         run: python scripts/qa_web_geometry.py
       - name: Optimized web geometry QA
         run: python scripts/qa_optimized_web_geometry.py
+      - name: Run browser tool tests
+        run: |
+          node --check site/tools/fixture-editor/app.js
+          node --check site/tools/fixture-editor/editor-core.mjs
+          node --check site/tools/fixture-editor/schema-validator.mjs
+          node --test tests/js/*.test.mjs
       - name: Run regression tests
         run: pytest -q
       - name: Build product artifacts
@@ -50,6 +56,10 @@ jobs:
           test -f _site/products/vx4800/versions/5.2.0/index.html
           test -f _site/products/vx4800/inspect/index.html
           test -f _site/products/vx4800/inspect/inspector.app.js
+          test -f _site/tools/fixture-editor/index.html
+          test -f _site/tools/fixture-editor/app.js
+          test -f _site/tools/fixture-editor/editor-core.mjs
+          test -f _site/tools/fixture-editor/schema-validator.mjs
           test -f _site/downloads/vx4800/1.3.0/vx4800-coordination-v1.3.0.glb
           test -f _site/downloads/vx4800/1.3.0/vx4800-coordination-v1.3.0.optimized.glb
           test -f _site/downloads/vx4800/1.3.0/optimization-manifest.json
