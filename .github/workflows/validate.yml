@@ -38,7 +38,11 @@ jobs:
       - name: Optimized web geometry QA
         run: python scripts/qa_optimized_web_geometry.py
       - name: Run browser tool tests
-        run: node --test tests/js/*.test.mjs
+        run: |
+          node --check site/tools/fixture-editor/app.js
+          node --check site/tools/fixture-editor/editor-core.mjs
+          node --check site/tools/fixture-editor/schema-validator.mjs
+          node --test tests/js/*.test.mjs
       - name: Run regression tests
         run: pytest -q
       - name: Build product artifacts
