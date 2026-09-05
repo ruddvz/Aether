@@ -27,9 +27,32 @@ const extra = deepClone(fixture);
 extra.uncontrolledEditorField = true;
 assert.ok(validateSchemaValue(schema, extra).some((issue) => issue.path === "$.uncontrolledEditorField" && issue.keyword === "additionalProperties"));
 
-const unsupported = deepClone(schema);
-unsupported.properties.identity.properties.name.oneOf = [{ type: "string" }];
-assert.deepEqual(findUnsupportedSchemaKeywords(unsupported), [{ path: "$.properties.identity.properties.name", keyword: "oneOf" }]);
+const unsupportedKeyword = deepClone(schema);
+unsupportedKeyword.properties.identity.properties.name.oneOf = [{ type: "string" }];
+assert.deepEqual(findUnsupportedSchemaKeywords(unsupportedKeyword), [{ path: "$.properties.identity.properties.name", keyword: "oneOf" }]);
+
+const unsupportedAdditionalSchema = deepClone(schema);
+unsupportedAdditionalSchema.properties.identity.additionalProperties = { type: "string" };
+assert.deepEqual(findUnsupportedSchemaKeywords(unsupportedAdditionalSchema), [{
+  path: "$.properties.identity",
+  keyword: "additionalProperties",
+  detail: "schema-valued additionalProperties is not implemented",
+}]);
+
+const unsupportedTupleItems = deepClone(schema);
+unsupportedTupleItems.properties.assets.items = [{ type: "string" }];
+assert.deepEqual(findUnsupportedSchemaKeywords(unsupportedTupleItems), [{
+  path: "$.properties.assets",
+  keyword: "items",
+  detail: "tuple/boolean items forms are not implemented",
+}]);
+
+const objectUniquenessSchema = { type: "array", uniqueItems: true, items: { type: "object" } };
+const duplicateObjectsDifferentKeyOrder = [{ a: 1, b: 2 }, { b: 2, a: 1 }];
+assert.ok(validateSchemaValue(objectUniquenessSchema, duplicateObjectsDifferentKeyOrder).some((issue) => issue.keyword === "uniqueItems"));
+
+const objectEnumSchema = { enum: [{ a: 1, b: 2 }] };
+assert.deepEqual(validateSchemaValue(objectEnumSchema, { b: 2, a: 1 }), [], "JSON object equality must ignore property ordering");
 
 const proposal = deepClone(fixture);
 proposal.physical.maximumDropMm = 4700;
