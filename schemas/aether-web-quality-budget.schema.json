@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-web-quality-budget.schema.json",
+  "title": "AETHERIA web quality budget",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "status", "authority", "purpose", "toolchain", "browserMatrix", "global", "routes", "notes"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"const": "1.0.0"},
+    "status": {"const": "active"},
+    "authority": {"const": "repository-quality-gate"},
+    "purpose": {"type": "string", "minLength": 20},
+    "toolchain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeMajor", "playwright", "lighthouse"],
+      "properties": {
+        "nodeMajor": {"type": "integer", "minimum": 22},
+        "playwright": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "lighthouse": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "browserMatrix": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 3}
+    },
+    "global": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxPublishedTreeBytes", "maxSinglePublishedFileBytes", "zipFilesPermitted", "forbiddenUrlFragments", "allowedExternalHosts"],
+      "properties": {
+        "maxPublishedTreeBytes": {"type": "integer", "minimum": 1},
+        "maxSinglePublishedFileBytes": {"type": "integer", "minimum": 1},
+        "zipFilesPermitted": {"const": false},
+        "forbiddenUrlFragments": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 2}},
+        "allowedExternalHosts": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 3}}
+      }
+    },
+    "routes": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "path", "htmlFile", "requiredSelector", "maxHtmlBytes", "lighthouseMinimum"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "path": {"type": "string", "pattern": "^/"},
+          "htmlFile": {"type": "string", "pattern": "\\.html$"},
+          "requiredSelector": {"type": "string", "minLength": 1},
+          "maxHtmlBytes": {"type": "integer", "minimum": 1024},
+          "lighthouseMinimum": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["performance", "accessibility", "best-practices", "seo"],
+            "properties": {
+              "performance": {"type": "number", "minimum": 0, "maximum": 1},
+              "accessibility": {"type": "number", "minimum": 0, "maximum": 1},
+              "best-practices": {"type": "number", "minimum": 0, "maximum": 1},
+              "seo": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        }
+      }
+    },
+    "notes": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 10}}
+  }
+}
