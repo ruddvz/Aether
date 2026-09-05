@@ -61,10 +61,16 @@ assert.deepEqual(changes, ["$.physical.maximumDropMm"]);
 const warnings = authorityWarnings(fixture, proposal, changes);
 assert.ok(warnings.some((warning) => warning.code === "authority-sensitive-change"));
 assert.ok(warnings.some((warning) => warning.code === "revision-unchanged"));
+assert.ok(warnings.some((warning) => warning.code === "provenance-date-unchanged"));
 
-const assetProposal = deepClone(fixture);
-assetProposal.assets[0].sha256 = "a".repeat(64);
-assert.ok(authorityWarnings(fixture, assetProposal).some((warning) => warning.code === "asset-integrity-review"));
+const arrayProposal = deepClone(fixture);
+arrayProposal.assets[0].sha256 = "a".repeat(64);
+assert.deepEqual(changedPaths(fixture, arrayProposal), ["$.assets[0].sha256"], "array edits must report their exact indexed path");
+assert.ok(authorityWarnings(fixture, arrayProposal).some((warning) => warning.code === "asset-integrity-review"));
+
+const identityProposal = deepClone(fixture);
+identityProposal.identity.productCode = "VX4800-BF-02";
+assert.ok(authorityWarnings(fixture, identityProposal).some((warning) => warning.code === "registered-identity-change"));
 
 const massProposal = deepClone(fixture);
 massProposal.physical.massKg.status = "measured";
