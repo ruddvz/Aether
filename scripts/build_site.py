@@ -81,14 +81,45 @@ for slug, product in P['products'].items():
 
 (OUT / 'products.json').write_text(json.dumps(registry, indent=2) + '\n')
 
-# Public brand site. This layer is intentionally separate from fixture authority:
-# concept imagery and marketing copy do not modify controlled fixture data.
+# Public brand site. This layer remains separate from fixture authority: concept
+# imagery and editorial copy do not modify controlled fixture data.
 brand_src = ROOT / 'site' / 'brand'
 if brand_src.exists():
     shutil.copytree(brand_src, OUT, dirs_exist_ok=True)
 
-# Binary brand imagery is stored as text-safe base64 sources so the repository
-# remains compatible with the existing text-oriented content workflow.
+    # Reconstruct web images from text-safe base64 chunks. Source filenames use
+    # <asset>.<chunk>.txt, which keeps binary concept imagery out of controlled
+    # fixture folders while producing normal WebP assets in the Pages artifact.
+    chunk_src = brand_src / 'assets-b64'
+    if chunk_src.exists():
+        grouped = {}
+        for src in sorted(chunk_src.glob('*.txt')):
+            stem = src.name[:-4]
+            target_name, chunk = stem.rsplit('.', 1)
+            if not chunk.isdigit():
+                raise ValueError(f'Invalid asset chunk name {src.name!r}')
+            grouped.setdefault(target_name, []).append((int(chunk), src))
+        assets_out = OUT / 'assets'
+        assets_out.mkdir(parents=True, exist_ok=True)
+        for target_name, chunks in grouped.items():
+            encoded = ''.join(''.join(src.read_text().split()) for _, src in sorted(chunks))
+            (assets_out / target_name).write_bytes(base64.b64decode(encoded))
+
+    # Generate clean collection URLs from one source template so all five
+    # collection pages share the same editorial and authority structure.
+    collection_data = brand_src / 'collections.json'
+    collection_template = brand_src / 'collection-template.html'
+    if collection_data.exists() and collection_template.exists():
+        collections = json.loads(collection_data.read_text())
+        template = collection_template.read_text()
+        for collection in collections:
+            target = OUT / 'collections' / collection['id']
+            target.mkdir(parents=True, exist_ok=True)
+            (target / 'index.html').write_text(
+                template.replace('__COLLECTION_ID__', collection['id'])
+            )
+
+# Legacy text-safe brand asset source support retained for repository history.
 brand_assets_src = ROOT / 'site' / 'brand-assets'
 if brand_assets_src.exists():
     brand_assets_out = OUT / 'assets'
