@@ -9,6 +9,14 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / '_site'
 P = json.loads((ROOT / 'project.json').read_text())
 
+
+def decode_base64_text(encoded: str) -> bytes:
+    """Decode text-safe base64 sources, restoring optional trailing padding."""
+    encoded = ''.join(encoded.split())
+    encoded += '=' * (-len(encoded) % 4)
+    return base64.b64decode(encoded)
+
+
 if OUT.exists():
     shutil.rmtree(OUT)
 OUT.mkdir()
@@ -103,7 +111,7 @@ if brand_src.exists():
         assets_out.mkdir(parents=True, exist_ok=True)
         for target_name, chunks in grouped.items():
             encoded = ''.join(''.join(src.read_text().split()) for _, src in sorted(chunks))
-            (assets_out / target_name).write_bytes(base64.b64decode(encoded))
+            (assets_out / target_name).write_bytes(decode_base64_text(encoded))
 
     # Generate clean collection URLs from one source template so all five
     # collection pages share the same editorial and authority structure.
@@ -127,7 +135,7 @@ if brand_assets_src.exists():
     for src in sorted(brand_assets_src.glob('*.b64')):
         target_name = src.name[:-4]
         encoded = ''.join(src.read_text().split())
-        (brand_assets_out / target_name).write_bytes(base64.b64decode(encoded))
+        (brand_assets_out / target_name).write_bytes(decode_base64_text(encoded))
     for pack in sorted(brand_assets_src.glob('*.b64pack')):
         for line_number, line in enumerate(pack.read_text().splitlines(), start=1):
             if not line.strip():
@@ -137,6 +145,6 @@ if brand_assets_src.exists():
             target_name, encoded = line.split('|', 1)
             if '/' in target_name or '\\' in target_name or target_name.startswith('.'):
                 raise ValueError(f'Invalid brand asset filename {target_name!r}')
-            (brand_assets_out / target_name).write_bytes(base64.b64decode(encoded))
+            (brand_assets_out / target_name).write_bytes(decode_base64_text(encoded))
 
 print(OUT)
