@@ -42,6 +42,9 @@ jobs:
           node --check site/tools/fixture-editor/app.js
           node --check site/tools/fixture-editor/editor-core.mjs
           node --check site/tools/fixture-editor/schema-validator.mjs
+          node --check site/brand/app.js
+          node --check site/brand/asset-loader.js
+          node --check site/brand/concept.js
           node --test tests/js/*.test.mjs
       - name: Run regression tests
         run: pytest -q
@@ -52,6 +55,17 @@ jobs:
       - name: Verify public entry points
         run: |
           test -f _site/index.html
+          test -f _site/styles.css
+          test -f _site/app.js
+          test -f _site/asset-loader.js
+          test -f _site/concepts.json
+          test -f _site/concept.html
+          test -f _site/lookbook/index.html
+          test -f _site/assets-b64/vortex-hero.webp.00.txt
+          test -f _site/assets-b64/current-hero.webp.00.txt
+          test -f _site/assets-b64/vein-hero.webp.00.txt
+          test -f _site/assets-b64/solara-hero.webp.00.txt
+          test -f _site/assets-b64/lumina-hero.webp.00.txt
           test -f _site/products/vx4800/index.html
           test -f _site/products/vx4800/versions/5.2.0/index.html
           test -f _site/products/vx4800/inspect/index.html
