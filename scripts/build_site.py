@@ -97,5 +97,15 @@ if brand_assets_src.exists():
         target_name = src.name[:-4]
         encoded = ''.join(src.read_text().split())
         (brand_assets_out / target_name).write_bytes(base64.b64decode(encoded))
+    for pack in sorted(brand_assets_src.glob('*.b64pack')):
+        for line_number, line in enumerate(pack.read_text().splitlines(), start=1):
+            if not line.strip():
+                continue
+            if '|' not in line:
+                raise ValueError(f'Invalid brand asset pack line {pack}:{line_number}')
+            target_name, encoded = line.split('|', 1)
+            if '/' in target_name or '\\' in target_name or target_name.startswith('.'):
+                raise ValueError(f'Invalid brand asset filename {target_name!r}')
+            (brand_assets_out / target_name).write_bytes(base64.b64decode(encoded))
 
 print(OUT)
