@@ -43,6 +43,7 @@ jobs:
           node --check site/tools/fixture-editor/editor-core.mjs
           node --check site/tools/fixture-editor/schema-validator.mjs
           node --check site/brand/app.js
+          node --check site/brand/nav.js
           node --check site/brand/asset-loader.js
           node --check site/brand/concept.js
           node --check site/brand/collection.js
@@ -59,6 +60,7 @@ jobs:
           test -f _site/styles.css
           test -f _site/expansion.css
           test -f _site/app.js
+          test -f _site/nav.js
           test -f _site/concepts.json
           test -f _site/collections.json
           test -f _site/concept.html
@@ -77,6 +79,14 @@ jobs:
           test -f _site/assets/vein-hero.webp
           test -f _site/assets/solara-hero.webp
           test -f _site/assets/lumina-hero.webp
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          for name in ('vortex-hero.webp','current-hero.webp','vein-hero.webp','solara-hero.webp','lumina-hero.webp'):
+              path = Path('_site/assets') / name
+              with Image.open(path) as image:
+                  image.verify()
+          PY
           test -f _site/products/vx4800/index.html
           test -f _site/products/vx4800/versions/5.2.0/index.html
           test -f _site/products/vx4800/inspect/index.html
