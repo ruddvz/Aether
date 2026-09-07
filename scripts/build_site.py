@@ -113,6 +113,13 @@ if brand_src.exists():
             encoded = ''.join(''.join(src.read_text().split()) for _, src in sorted(chunks))
             (assets_out / target_name).write_bytes(decode_base64_text(encoded))
 
+        # Source chunks are a repository transport detail, not public content.
+        # copytree() above brings them across temporarily, so remove the duplicate
+        # payload after materializing the deployable image files.
+        public_chunk_dir = OUT / 'assets-b64'
+        if public_chunk_dir.exists():
+            shutil.rmtree(public_chunk_dir)
+
     # Generate clean collection URLs from one source template so all five
     # collection pages share the same editorial and authority structure.
     collection_data = brand_src / 'collections.json'
