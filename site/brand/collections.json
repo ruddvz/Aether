@@ -1,0 +1,57 @@
+[
+  {
+    "id": "flight",
+    "index": "01",
+    "name": "FLIGHT",
+    "subtitle": "Direction becomes form.",
+    "hero": "assets/vortex-hero.webp",
+    "lead": "FLIGHT studies collective movement, lift, migration and radial flow. The butterfly is not used as decoration; its directional logic becomes a field that can occupy an atrium, orbit a table, climb a stair or mark an arrival.",
+    "principles": ["Readable motion", "Hierarchy through scale and density", "Optical modules rather than literal figures", "Architectural suspension as part of the composition"],
+    "concepts": ["vortex", "eclipse", "strata", "portal"],
+    "status": "VORTEX is the implemented engineering programme. Other FLIGHT works are concept studies."
+  },
+  {
+    "id": "ocean",
+    "index": "02",
+    "name": "OCEAN",
+    "subtitle": "Movement without machinery.",
+    "hero": "assets/current-hero.webp",
+    "lead": "OCEAN translates current, eddy, schooling and caustic behaviour into optical bodies. The ambition is to make a static object feel continuously in motion because light changes as it passes through thickness, curvature and the viewer's position.",
+    "principles": ["Frozen fluid motion", "Light carried through material", "Caustic and grazing behaviour", "Long architectural proportions"],
+    "concepts": ["current"],
+    "status": "CURRENT 01 is an exploratory optical-body study, not a construction-release fixture."
+  },
+  {
+    "id": "botanica",
+    "index": "03",
+    "name": "BOTANICA",
+    "subtitle": "Growth becomes illumination.",
+    "hero": "assets/vein-hero.webp",
+    "lead": "BOTANICA looks at the intelligence inside living structures: venation, branching, overlapping growth and transport networks. Instead of copying a leaf or flower silhouette, the collection turns those systems into internal paths of light.",
+    "principles": ["Branching light networks", "Organic logic without literal ornament", "Strong off-state material presence", "Scalable wall, pendant and object typologies"],
+    "concepts": ["vein"],
+    "status": "VEIN 01 is an optical and typology study. Material and extraction behaviour require physical prototyping."
+  },
+  {
+    "id": "celestial",
+    "index": "04",
+    "name": "CELESTIAL",
+    "subtitle": "Light organised by orbit and occlusion.",
+    "hero": "assets/solara-hero.webp",
+    "lead": "CELESTIAL studies orbit, eclipse, alignment and apparent depth. Rings, arcs and translucent bodies overlap to create compositions that change from one viewpoint to the next without relying on decorative complexity.",
+    "principles": ["Occlusion as geometry", "Layered orbit", "View-dependent alignment", "Warm reflection balanced with optical transparency"],
+    "concepts": ["solara"],
+    "status": "SOLARA 02 is used here as an exploratory orbit study while the CELESTIAL collection language is being defined."
+  },
+  {
+    "id": "abstract-motion",
+    "index": "05",
+    "name": "ABSTRACT MOTION",
+    "subtitle": "Perception becomes movement.",
+    "hero": "assets/lumina-hero.webp",
+    "lead": "ABSTRACT MOTION is the collection for phenomena that do not need a biological motif: phase shift, tension, layered fields, falling rhythm and optical interference. Movement can be physical, perceptual or simply implied by geometry.",
+    "principles": ["Optical motion before mechanical complexity", "Layering and interference", "Tension and force as form generators", "Large spatial fields rather than conventional chandeliers"],
+    "concepts": ["lumina"],
+    "status": "The collection remains exploratory. LUMINA 03 is presented as a spatial-field study rather than a released product."
+  }
+]
