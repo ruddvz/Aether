@@ -1,8 +1,9 @@
 {
-  "name": "AETHERIA VORTEX",
-  "short_name": "VORTEX",
+  "name": "AETHERIA",
+  "short_name": "AETHERIA",
+  "description": "Architectural sculptural lighting by AETHERIA.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#080808",
-  "theme_color": "#080808"
+  "background_color": "#0a0908",
+  "theme_color": "#0a0908"
 }

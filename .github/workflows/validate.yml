@@ -42,6 +42,11 @@ jobs:
           node --check site/tools/fixture-editor/app.js
           node --check site/tools/fixture-editor/editor-core.mjs
           node --check site/tools/fixture-editor/schema-validator.mjs
+          node --check site/brand/app.js
+          node --check site/brand/nav.js
+          node --check site/brand/asset-loader.js
+          node --check site/brand/concept.js
+          node --check site/brand/collection.js
           node --test tests/js/*.test.mjs
       - name: Run regression tests
         run: pytest -q
@@ -52,6 +57,45 @@ jobs:
       - name: Verify public entry points
         run: |
           test -f _site/index.html
+          test -f _site/styles.css
+          test -f _site/expansion.css
+          test -f _site/app.js
+          test -f _site/nav.js
+          test -f _site/concepts.json
+          test -f _site/collections.json
+          test -f _site/concept.html
+          test -f _site/lookbook/index.html
+          test -f _site/collections/index.html
+          test -f _site/collections/flight/index.html
+          test -f _site/collections/ocean/index.html
+          test -f _site/collections/botanica/index.html
+          test -f _site/collections/celestial/index.html
+          test -f _site/collections/abstract-motion/index.html
+          test -f _site/vortex/index.html
+          test -f _site/applications/index.html
+          test -f _site/studio/index.html
+          test -f _site/assets/vortex-hero.webp
+          test -f _site/assets/current-hero.webp
+          test -f _site/assets/vein-hero.webp
+          test -f _site/assets/solara-hero.webp
+          test -f _site/assets/lumina-hero.webp
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          failures = []
+          for name in ('vortex-hero.webp','current-hero.webp','vein-hero.webp','solara-hero.webp','lumina-hero.webp'):
+              path = Path('_site/assets') / name
+              try:
+                  with Image.open(path) as image:
+                      image.verify()
+                  print(f'VALID IMAGE: {name} ({path.stat().st_size} bytes)')
+              except Exception as exc:
+                  failures.append(f'{name}: {type(exc).__name__}: {exc}')
+                  print(f'INVALID IMAGE: {name}: {type(exc).__name__}: {exc}')
+          if failures:
+              raise SystemExit('Invalid public images:\n' + '\n'.join(failures))
+          PY
           test -f _site/products/vx4800/index.html
           test -f _site/products/vx4800/versions/5.2.0/index.html
           test -f _site/products/vx4800/inspect/index.html
