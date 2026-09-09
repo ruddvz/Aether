@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "principle": "Use the smallest amount of context, tooling and validation that can prove the requested outcome without weakening engineering authority. Budgets are ceilings, never targets.",
+  "authority_surfaces": [
+    "documentation",
+    "presentation",
+    "public-inspector",
+    "builder-validator",
+    "canonical-fixture",
+    "schema",
+    "source-geometry",
+    "photometry-evidence",
+    "release-manufacturing"
+  ],
+  "tiers": {
+    "fast": {
+      "max_sources": 4,
+      "context_chars": 12000,
+      "tool_calls_before_reevaluation": 8,
+      "parallel_read_only_agents": 1,
+      "parallel_mutation_lanes": 1,
+      "repair_rounds": 2
+    },
+    "standard": {
+      "max_sources": 10,
+      "context_chars": 35000,
+      "tool_calls_before_reevaluation": 20,
+      "parallel_read_only_agents": 2,
+      "parallel_mutation_lanes": 1,
+      "repair_rounds": 3
+    },
+    "deep": {
+      "max_sources": 20,
+      "context_chars": 75000,
+      "tool_calls_before_reevaluation": 40,
+      "parallel_read_only_agents": 3,
+      "parallel_mutation_lanes": 1,
+      "repair_rounds": 5
+    },
+    "critical": {
+      "max_sources": 30,
+      "soft_context_chars": 100000,
+      "tool_calls_before_reevaluation": 50,
+      "parallel_read_only_agents": 3,
+      "parallel_mutation_lanes": 1,
+      "repair_rounds": 5,
+      "requires_expansion_reason": true
+    }
+  },
+  "value_of_information": {
+    "required_before_expansion": true,
+    "question": "Can this additional source, tool, agent or validation step plausibly change canonical authority, affected outputs, engineering evidence, verification requirements or release decision?",
+    "protected_proof_overrides_ordinary_ceiling": true
+  },
+  "context_order": [
+    "exact canonical fixture, schema, engineering asset or changed file",
+    "declared revision and authority source",
+    "bounded repository-intelligence slice when available",
+    "affected deterministic builder or validator",
+    "broader repository search",
+    "full long engineering document only when necessary"
+  ],
+  "capability_classes": [
+    "deterministic-builder-validator",
+    "routine-code-document-edit",
+    "geometry-engineering-reasoning",
+    "independent-review",
+    "visual-browser-verification",
+    "qualified-engineering-evidence-review"
+  ],
+  "telemetry": {
+    "raw_prompt": false,
+    "hidden_reasoning": false,
+    "private_data": false,
+    "aggregate_only": true
+  }
+}
