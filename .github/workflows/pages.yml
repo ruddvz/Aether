@@ -44,6 +44,8 @@ jobs:
         run: pytest -q
       - name: Build site
         run: python scripts/build_site.py
+      - name: Prepare repository-aware Pages URLs
+        run: python scripts/prepare_pages_repo_urls.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
