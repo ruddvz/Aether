@@ -40,15 +40,13 @@ Do not turn a focused request into an unsolicited redesign.
 
 Do not preload every module.
 
-| When the task involves | Load |
-| --- | --- |
-| product direction, hierarchy, visual language, heuristics, design-system decisions | `references/FOUNDATIONS.md` |
-| accessibility, keyboard, screen reader, focus, contrast, zoom, multimodal input | `references/ACCESSIBILITY.md` |
-| mobile, tablet, desktop, PWA, safe areas, orientation, foldables, resizing, offline | `references/ADAPTIVE-PWA.md` |
-| controls, gestures, motion, search, forms, navigation, dialogs, feedback, content | `references/INTERACTION-CONTENT.md` |
-| tokens, components, dense data, perceived performance, AI, privacy, trust | `references/SYSTEMS-PERFORMANCE-AI.md` |
-| audit evidence, browser/device matrix, visual regression, severity, completion | `references/VALIDATION.md` |
-| source provenance and research maintenance | `SOURCES.md` |
+- For product direction, hierarchy, visual language, heuristics, or design-system decisions, load `references/FOUNDATIONS.md`.
+- For accessibility, keyboard, screen readers, focus, contrast, zoom, or multimodal input, load `references/ACCESSIBILITY.md`.
+- For mobile, tablet, desktop, PWA, safe areas, orientation, foldables, resizing, or offline behaviour, load `references/ADAPTIVE-PWA.md`.
+- For controls, gestures, motion, search, forms, navigation, dialogs, feedback, or content, load `references/INTERACTION-CONTENT.md`.
+- For tokens, components, dense data, perceived performance, AI, privacy, or trust, load `references/SYSTEMS-PERFORMANCE-AI.md`.
+- For audit evidence, browser/device matrices, visual regression, severity, or completion, load `references/VALIDATION.md`.
+- For source provenance and research maintenance, load `SOURCES.md`.
 
 ## 4. Operating sequence
 
