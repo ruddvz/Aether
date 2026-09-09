@@ -6,7 +6,7 @@ import argparse
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / ".aether" / "agent-cto.json"
@@ -36,6 +36,10 @@ def load_config() -> dict[str, Any]:
 def _validate_choice(name: str, value: str, allowed: list[str]) -> None:
     if value not in allowed:
         raise ValueError(f"Unknown {name}: {value}; expected one of {', '.join(allowed)}")
+
+
+def _normalise(value: object) -> str:
+    return " ".join(str(value or "").lower().split())
 
 
 def select_tier(classification: Classification, config: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -187,6 +191,130 @@ def advise_expansion(
         "reevaluate": False,
         "reason_required": False,
         "reason": "positive expected decision value and below the tier ceiling",
+    }
+
+
+def operation_fingerprint(*, kind: str, target: str = "", source_fingerprint: str = "", purpose: str = "") -> str:
+    return "|".join(_normalise(item) for item in (kind, target, source_fingerprint, purpose))
+
+
+def should_reuse_operation(
+    *, seen: Iterable[str], key: str, protected_evidence: bool = False, state_changed: bool = False
+) -> dict[str, Any]:
+    if not key:
+        raise ValueError("operation key is required")
+    if protected_evidence:
+        return {"reuse": False, "reason": "protected engineering evidence requires current proof"}
+    if state_changed:
+        return {"reuse": False, "reason": "canonical source or repository fingerprint changed"}
+    if key in set(seen):
+        return {"reuse": True, "reason": "identical fingerprint-valid operation already produced reusable evidence"}
+    return {"reuse": False, "reason": "no current reusable operation found"}
+
+
+def select_capability_class(
+    classification: Classification,
+    *,
+    deterministic: bool = False,
+    independent_review: bool = False,
+    visual_acceptance: bool = False,
+) -> str:
+    if deterministic:
+        return "deterministic-builder-validator"
+    if independent_review:
+        return "independent-review"
+    if visual_acceptance:
+        return "visual-browser-verification"
+    if classification.authority_surface in {"photometry-evidence", "release-manufacturing"}:
+        return "qualified-engineering-evidence-review"
+    if classification.authority_surface in {"canonical-fixture", "schema", "source-geometry"} or classification.risk in {"high", "critical"}:
+        return "geometry-engineering-reasoning"
+    return "routine-code-document-edit"
+
+
+def should_parallelize(
+    *,
+    independent: bool,
+    shared_authority_decision: bool = False,
+    shared_canonical_mutation: bool = False,
+    duplicated_context: bool = False,
+    decisive_evidence_already_found: bool = False,
+) -> dict[str, Any]:
+    if decisive_evidence_already_found:
+        return {"parallel": False, "reason": "cancel redundant lane because decisive evidence already exists"}
+    if not independent:
+        return {"parallel": False, "reason": "work is not independently verifiable"}
+    if shared_authority_decision:
+        return {"parallel": False, "reason": "one unresolved authority decision controls both lanes"}
+    if shared_canonical_mutation:
+        return {"parallel": False, "reason": "canonical mutation remains one owned lane"}
+    if duplicated_context:
+        return {"parallel": False, "reason": "parallelism would duplicate engineering context discovery"}
+    return {"parallel": True, "reason": "independent bounded evidence or implementation work can converge safely"}
+
+
+def evaluate_run_efficiency(
+    classification: Classification,
+    usage: dict[str, Any],
+    config: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    config = config or load_config()
+    tier_result = select_tier(classification, config)
+    budget = tier_result["budget"]
+    limits = {
+        "sources": budget.get("max_sources", float("inf")),
+        "context_chars": budget.get("context_chars", budget.get("soft_context_chars", float("inf"))),
+        "tool_calls": budget.get("tool_calls_before_reevaluation", float("inf")),
+        "read_only_agents": budget.get("parallel_read_only_agents", float("inf")),
+        "mutation_lanes": budget.get("parallel_mutation_lanes", 1),
+        "repair_rounds": budget.get("repair_rounds", float("inf")),
+    }
+    actual = {
+        "sources": int(usage.get("sources", 0)),
+        "context_chars": int(usage.get("context_chars", 0)),
+        "tool_calls": int(usage.get("tool_calls", 0)),
+        "read_only_agents": int(usage.get("read_only_agents", 0)),
+        "mutation_lanes": int(usage.get("mutation_lanes", 0)),
+        "repair_rounds": int(usage.get("repair_rounds", 0)),
+        "duplicate_operations_suppressed": int(usage.get("duplicate_operations_suppressed", 0)),
+        "duplicate_operations_executed": int(usage.get("duplicate_operations_executed", 0)),
+    }
+    exceeded = [key for key, limit in limits.items() if actual[key] > limit]
+
+    required_frontier = set(tier_result["verification_frontier"])
+    engineering_review_required = bool(
+        required_frontier
+        & {"independent-engineering-review", "qualified-photometry-evidence-review", "owner-release-review"}
+    )
+    current_head_required = "release-current-head-verification" in required_frontier
+    quality_green = (
+        usage.get("required_verification_passed") is True
+        and not usage.get("authority_violation", False)
+        and not usage.get("evidence_claim_overstated", False)
+        and (not engineering_review_required or usage.get("required_engineering_review_passed") is True)
+        and (not current_head_required or usage.get("current_head_proof_passed") is True)
+    )
+    duplicate_waste = actual["duplicate_operations_executed"] > 0
+    acceptance_proven = usage.get("acceptance_proven") is True
+
+    return {
+        "tier": tier_result["tier"],
+        "limits": limits,
+        "actual": actual,
+        "exceeded": exceeded,
+        "within_budget": not exceeded,
+        "quality_green": quality_green,
+        "duplicate_waste_detected": duplicate_waste,
+        "efficient": quality_green and not exceeded and not duplicate_waste,
+        "decision": (
+            "stop-success"
+            if acceptance_proven and quality_green
+            else "re-evaluate-tier-or-evidence-plan"
+            if exceeded
+            else "continue-only-if-acceptance-not-yet-proven"
+            if quality_green
+            else "repair-review-or-block"
+        ),
     }
 
 
