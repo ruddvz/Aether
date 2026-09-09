@@ -1,15 +1,22 @@
-from scripts.agent_cto import (
-    Classification,
-    advise_expansion,
-    evaluate_run_efficiency,
-    load_config,
-    operation_fingerprint,
-    select_capability_class,
-    select_tier,
-    should_parallelize,
-    should_reuse_operation,
-    validate_config,
-)
+import importlib.util
+from pathlib import Path
+
+MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "agent_cto.py"
+SPEC = importlib.util.spec_from_file_location("aether_agent_cto", MODULE_PATH)
+assert SPEC and SPEC.loader
+agent_cto = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(agent_cto)
+
+Classification = agent_cto.Classification
+advise_expansion = agent_cto.advise_expansion
+evaluate_run_efficiency = agent_cto.evaluate_run_efficiency
+load_config = agent_cto.load_config
+operation_fingerprint = agent_cto.operation_fingerprint
+select_capability_class = agent_cto.select_capability_class
+select_tier = agent_cto.select_tier
+should_parallelize = agent_cto.should_parallelize
+should_reuse_operation = agent_cto.should_reuse_operation
+validate_config = agent_cto.validate_config
 
 
 def test_config_is_valid():
