@@ -24,6 +24,7 @@ evaluate_run_efficiency = _base.evaluate_run_efficiency
 load_config = _base.load_config
 select_capability_class = _base.select_capability_class
 select_tier = _base.select_tier
+should_reuse_operation = _base.should_reuse_operation
 
 SCHEMA_VERSION = "aether-cto-runtime/v1"
 VERIFICATION_STATES = {"passed", "failed", "not-executed", "skipped", "not-required"}
@@ -41,6 +42,10 @@ REVIEW_CHECKS = {
     "owner-release-review",
 }
 CURRENT_HEAD_CHECK = "release-current-head-verification"
+BLOCKING_EXPANSION_CODES = {
+    "protected-expansion-reason-missing",
+    "expansion-not-authorised",
+}
 
 
 def _classification_from_dict(data: dict[str, Any]) -> Classification:
@@ -108,12 +113,38 @@ def _normalise_verification(
 def _limits_from_budget(budget: dict[str, Any]) -> dict[str, int | float]:
     return {
         "sources": budget.get("max_sources", float("inf")),
-        "context_chars": budget.get("context_chars", budget.get("soft_context_chars", float("inf"))),
+        "context_chars": budget.get(
+            "context_chars", budget.get("soft_context_chars", float("inf"))
+        ),
         "tool_calls": budget.get("tool_calls_before_reevaluation", float("inf")),
         "read_only_agents": budget.get("parallel_read_only_agents", float("inf")),
         "mutation_lanes": budget.get("parallel_mutation_lanes", 1),
         "repair_rounds": budget.get("repair_rounds", float("inf")),
     }
+
+
+def reuse_decision(
+    *,
+    seen: set[str],
+    key: str,
+    protected_evidence: bool = False,
+    state_changed: bool = False,
+) -> dict[str, Any]:
+    base = should_reuse_operation(
+        seen=seen,
+        key=key,
+        protected_evidence=protected_evidence,
+        state_changed=state_changed,
+    )
+    if protected_evidence:
+        reason_code = "protected-current-proof-required"
+    elif state_changed:
+        reason_code = "fingerprint-changed"
+    elif base["reuse"]:
+        reason_code = "fingerprint-valid-reuse"
+    else:
+        reason_code = "no-reusable-operation"
+    return {**base, "reason_code": reason_code}
 
 
 def start_receipt(
@@ -181,7 +212,9 @@ def _expansion_decision(
     payload = {
         "category": str(expansion["category"]),
         "used": int(expansion["used"]),
-        "expected_decision_value": bool(expansion.get("expected_decision_value", False)),
+        "expected_decision_value": bool(
+            expansion.get("expected_decision_value", False)
+        ),
         "protected_proof": bool(expansion.get("protected_proof", False)),
         "reason": reason or None,
         "allowed_by_base": bool(result["allowed"]),
@@ -251,7 +284,8 @@ def runtime_receipt(
         {
             "required_verification_passed": required_verification_passed,
             "required_engineering_review_passed": (not review_required) or review_passed,
-            "current_head_proof_passed": (not current_head_required) or current_head_passed,
+            "current_head_proof_passed": (not current_head_required)
+            or current_head_passed,
             "authority_violation": authority_violation,
             "evidence_claim_overstated": evidence_claim_overstated,
             "acceptance_proven": acceptance_proven,
@@ -260,6 +294,9 @@ def runtime_receipt(
     efficiency = evaluate_run_efficiency(classification, usage_for_base, config)
     expansion_receipt, expansion_codes = _expansion_decision(
         tier=tier, expansion=expansion, config=config
+    )
+    blocking_expansion = any(
+        code in BLOCKING_EXPANSION_CODES for code in expansion_codes
     )
 
     duplicate_executed = int(usage.get("duplicate_operations_executed", 0))
@@ -287,7 +324,7 @@ def runtime_receipt(
         decision = "repair"
     elif unavailable:
         decision = "block-external-evidence"
-    elif expansion_codes:
+    elif blocking_expansion:
         decision = "re-evaluate-tier-or-evidence-plan"
     elif efficiency["exceeded"] or duplicate_executed:
         decision = "re-evaluate-tier-or-evidence-plan"
@@ -338,8 +375,12 @@ def _load_payload(path: str | None) -> dict[str, Any]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="AETHERIA CTO closed-loop runtime controller")
-    parser.add_argument("--phase", choices=["start", "checkpoint", "finish"], required=True)
+    parser = argparse.ArgumentParser(
+        description="AETHERIA CTO closed-loop runtime controller"
+    )
+    parser.add_argument(
+        "--phase", choices=["start", "checkpoint", "finish"], required=True
+    )
     parser.add_argument("--input", help="JSON input file; reads stdin when omitted")
     args = parser.parse_args()
 
@@ -361,7 +402,9 @@ def main() -> int:
             verification=payload.get("verification", {}),
             acceptance_proven=bool(payload.get("acceptance_proven", False)),
             authority_violation=bool(payload.get("authority_violation", False)),
-            evidence_claim_overstated=bool(payload.get("evidence_claim_overstated", False)),
+            evidence_claim_overstated=bool(
+                payload.get("evidence_claim_overstated", False)
+            ),
             expansion=payload.get("expansion"),
             **common,
         )
