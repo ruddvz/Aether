@@ -1,0 +1,220 @@
+{
+  "$schema": "../../../../schemas/aether-kinetic-qualification.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "qualificationRevision": "1.0.0",
+  "status": "qualification-shortlist-not-approved",
+  "authority": "research-and-rfq-input",
+  "finalKineticComponentSetApproved": false,
+  "reviewedAt": "2026-09-04",
+  "selectionRule": "No candidate may be selected from catalog data alone. Actual rotating mass, CG, approved bearing loads, drive/brake torque demand, mounting structure, dynamic test evidence and service-clearance evidence must exist first.",
+  "bearingCandidates": [
+    {
+      "candidateId": "kaydon-slewing-ring-family",
+      "manufacturer": "Kaydon Bearings",
+      "role": "primary large-diameter bearing family reference",
+      "status": "shortlisted-for-application-review-not-selected",
+      "familiesOfInterest": ["RK light-profile slewing ring", "KH precision slewing ring", "XR cross-roller slewing ring"],
+      "publishedManufacturerData": [
+        "Kaydon publishes slewing-ring families selected using static load parameters and bearing type/gear/envelope inputs.",
+        "Kaydon describes RK as a low-velocity/intermittent turntable family and XR cross-roller as high stiffness with low rotational torque within a minimal envelope.",
+        "Kaydon publishes KH as a precision-positioning slewing-ring family."
+      ],
+      "whyRelevant": [
+        "VX4800 is a low-speed suspended rotating structure requiring combined-load and moment evaluation.",
+        "Family breadth allows application review without prematurely selecting a catalog rating.",
+        "Low-speed turntable and high-stiffness cross-roller families are credible comparison points for the canopy envelope."
+      ],
+      "blockers": [
+        "actual rotating mass and CG unknown",
+        "approved axial/radial/moment load envelope absent",
+        "mounting ring stiffness/flatness and bolt-load calculation absent",
+        "starting/running torque in actual mounted condition unknown",
+        "required runout/accuracy from dynamic clearance not established",
+        "secondary-retention integration not validated"
+      ],
+      "sources": [
+        {"url": "https://www.kaydonbearings.com/turntables.htm", "scope": "manufacturer family overview including RK/XR characteristics"},
+        {"url": "https://www.kaydonbearings.com/XR_turntable_bearings.htm", "scope": "manufacturer XR cross-roller design/features page"},
+        {"url": "https://www.kaydonbearings.com/KH_turntable_bearings.htm", "scope": "manufacturer KH precision-family page"},
+        {"url": "https://www.kaydonbearings.com/slewing_ring_bearing_selector.htm", "scope": "manufacturer selector; exact selection requires load and envelope inputs"}
+      ]
+    },
+    {
+      "candidateId": "schaeffler-crossed-roller-family",
+      "manufacturer": "Schaeffler",
+      "role": "compact high-rigidity bearing architecture reference",
+      "status": "shortlisted-for-envelope-and-application-review-not-selected",
+      "familiesOfInterest": ["crossed roller bearing family"],
+      "publishedManufacturerData": [
+        "Schaeffler states crossed-roller bearings can support axial force in both directions, radial force and tilting moment loads in one bearing position.",
+        "Schaeffler describes the family as very rigid with high running accuracy, with clearance/preload options."
+      ],
+      "whyRelevant": [
+        "Single-position combined-load support and stiffness are attractive for a shallow canopy.",
+        "High running accuracy may benefit carrier runout and sensor air-gap control."
+      ],
+      "blockers": [
+        "available diameter/envelope and exact series suitability for VX4800 not established",
+        "suspended axial mounting condition and bolt/support design require manufacturer review",
+        "starting torque/preload/lubrication tradeoffs not quantified",
+        "replaceability and secondary-retention packaging not validated"
+      ],
+      "sources": [
+        {"url": "https://www.schaeffler.com/remotemedien/media/_shared_media/08_media_library/01_publications/schaeffler_2/catalogue_1/downloads_6/stt_de_en.pdf", "scope": "manufacturer technical pocket guide; crossed-roller combined-load, rigidity and running-accuracy reference"}
+      ]
+    },
+    {
+      "candidateId": "multi-roller-turntable-custom",
+      "manufacturer": null,
+      "role": "fallback architecture study",
+      "status": "deprioritized-unless-single-bearing-packaging-fails",
+      "familiesOfInterest": ["multiple support rollers on circular rail with dedicated axial capture"],
+      "publishedManufacturerData": [],
+      "whyRelevant": ["Can distribute support around a large diameter and make individual rollers serviceable."],
+      "blockers": [
+        "load sharing and rail flatness become system-level engineering problems",
+        "more rolling interfaces increase alignment, noise, wear and inspection burden",
+        "separate axial/overturning retention is required",
+        "no single supplier calculation closes the complete support architecture"
+      ],
+      "sources": []
+    },
+    {
+      "candidateId": "single-thin-section-bearing-architecture",
+      "manufacturer": null,
+      "role": "envelope-driven alternate only",
+      "status": "not-preferred-without-supplier-proof",
+      "familiesOfInterest": ["large thin-section bearing"],
+      "publishedManufacturerData": [],
+      "whyRelevant": ["Low axial height may be attractive inside the 150 mm canopy."],
+      "blockers": [
+        "low section height alone does not prove sufficient moment stiffness or suspended-load bolt behavior",
+        "may require paired/support architecture that removes the apparent packaging benefit",
+        "secondary retention and runout requirements remain unresolved"
+      ],
+      "sources": []
+    }
+  ],
+  "driveCandidates": [
+    {
+      "candidateId": "fixed-gearmotor-synchronous-ring-drive",
+      "status": "preferred-study-not-selected",
+      "architecture": "fixed gearmotor/reducer drives a positive synchronous belt engaging a dedicated concentric toothed ring/pulley on the rotating hub/carrier",
+      "referenceManufacturers": ["Gates", "SEW-EURODRIVE or equivalent industrial gearmotor supplier"],
+      "publishedManufacturerData": [
+        "Gates Poly Chain GT Carbon is a synchronous positive-drive belt system and is published as a clean drive requiring no lubrication; exact belt/pulley sizing remains application-specific.",
+        "SEW-EURODRIVE publishes spring-loaded brake families that are electrically released and apply when power is interrupted."
+      ],
+      "strengths": [
+        "positive engagement supports deterministic motion without friction-wheel slip",
+        "belt can mechanically isolate some gearmesh noise and avoids lubricated open ring teeth",
+        "motor/reducer remains fixed and serviceable",
+        "drive ring can remain structurally separate from primary bearing load path"
+      ],
+      "blockers": [
+        "required torque and reduction ratio cannot be selected before inertia/friction/drag load cases exist",
+        "custom ring/pulley diameter, belt length, tooth engagement, pretension and guard layout unresolved",
+        "belt resonance/tooth excitation at ultra-low carrier speed and reducer input speed must be tested",
+        "brake torque and stopping profile unselected"
+      ],
+      "sources": [
+        {"url": "https://www.gates.com/us/en/power-transmission/synchronous-belts/poly-chain-synchronous-belts.p.9268-000000-000045.html", "scope": "manufacturer synchronous-belt family reference; exact size and rating not selected"},
+        {"url": "https://download.sew-eurodrive.com/download/html/31989101/en-EN/3323363303533236088971.html", "scope": "manufacturer 2026 spring-loaded brake operating-principle reference; exact brake/gearmotor not selected"}
+      ]
+    },
+    {
+      "candidateId": "fixed-gearmotor-ring-pinion",
+      "status": "shortlisted-alternate-not-selected",
+      "architecture": "fixed gearmotor/reducer and pinion drive a dedicated internal or external gear ring on the rotating assembly",
+      "referenceManufacturers": [],
+      "publishedManufacturerData": [],
+      "strengths": ["positive industrial drive", "compact tangential torque path", "high torque capability possible"],
+      "blockers": ["gear mesh noise/backlash/lubrication", "alignment depends on carrier/bearing runout", "guarding and service access", "bearing-integral gear requires exact bearing and gear review"],
+      "sources": []
+    },
+    {
+      "candidateId": "friction-wheel-drive",
+      "status": "not-preferred-primary-drive",
+      "architecture": "fixed friction wheel drives a rotating track",
+      "referenceManufacturers": [],
+      "publishedManufacturerData": [],
+      "strengths": ["potentially quiet and mechanically simple"],
+      "blockers": ["slip undermines deterministic feedback", "normal force adds radial reaction", "wear/contamination affect torque", "holding cannot rely on friction alone"],
+      "sources": []
+    },
+    {
+      "candidateId": "central-geared-drive",
+      "status": "reserve-study-not-selected",
+      "architecture": "coaxial or central reducer couples directly to rotating hub",
+      "referenceManufacturers": [],
+      "publishedManufacturerData": [],
+      "strengths": ["compact torque path if a suitable reducer fits the structural hub"],
+      "blockers": ["crowds bearing/service zone", "backlash/stiction at extreme reduction", "manual release and retention packaging harder"],
+      "sources": []
+    }
+  ],
+  "brakeReferenceCandidates": [
+    {
+      "candidateId": "spring-applied-electrically-released-fixed-side-brake",
+      "manufacturerReference": "SEW-EURODRIVE BR/BY/BZ family principle",
+      "status": "architecture-reference-not-selected",
+      "publishedManufacturerData": [
+        "SEW-EURODRIVE describes BR/BY/BZ brakes as spring-loaded, electrically opened brakes.",
+        "The manufacturer states the brake applies when power is interrupted."
+      ],
+      "useBoundary": "Useful reference for parking/power-loss architecture only. Exact stopping/holding torque, thermal duty and any functional-safety option require exact selected variant and system risk assessment.",
+      "source": "https://download.sew-eurodrive.com/download/html/31989101/en-EN/3323363303533236088971.html"
+    }
+  ],
+  "feedbackCandidates": [
+    {
+      "candidateId": "fixed-readhead-passive-optical-ring",
+      "manufacturer": "Renishaw",
+      "status": "shortlisted-reference-not-selected",
+      "architecture": "powered readhead fixed to canopy/hub support reads passive rotary scale ring on rotating hub",
+      "publishedManufacturerData": [
+        "Renishaw publishes rotary optical encoder systems using steel ring scales with readheads.",
+        "Published family combinations include rotary scale diameters from 52 mm to 550 mm depending on readhead/scale family."
+      ],
+      "strengths": ["no powered rotating electronics", "high resolution supports slow-speed verification and controlled stop positioning"],
+      "blockers": ["air-gap/runout/contamination tolerance not derived", "may be over-specified versus simpler proximity targets"],
+      "source": "https://www.renishaw.com/en/rotary-optical-encoders--48559"
+    },
+    {
+      "candidateId": "fixed-readhead-passive-magnetic-ring",
+      "manufacturer": "RLS",
+      "status": "shortlisted-reference-not-selected",
+      "architecture": "fixed readhead reads axially magnetised passive ring on rotating hub",
+      "publishedManufacturerData": ["RLS AksIM-4 is a non-contact off-axis absolute magnetic encoder for larger-diameter systems and consists of an axially magnetised ring plus readhead."],
+      "strengths": ["absolute reference possible", "non-contact", "no powered rotating electronics"],
+      "blockers": ["exact ring size, mounting tolerances, interface and environmental suitability for VX4800 not selected"],
+      "source": "https://www.rls.si/eng/aksim-4-rotary-absolute-magnetic-encoder"
+    },
+    {
+      "candidateId": "dual-fixed-proximity-multitarget-ring",
+      "manufacturer": null,
+      "status": "robust-baseline-study",
+      "architecture": "two fixed non-contact sensors read passive ferrous/magnetic multi-target ring; separate passive index target provides reference",
+      "publishedManufacturerData": [],
+      "strengths": ["simple passive rotor", "easy fixed-side service", "supports independent index and motion plausibility"],
+      "blockers": ["target count/response must derive from 0.08 rpm fault-detection latency", "not continuous absolute angle unless target coding added"],
+      "source": null
+    }
+  ],
+  "selectionGates": {
+    "bearingCandidateCanBeSelectedOnlyAfter": ["actualRotatingMassControlled", "centerOfGravityControlled", "bearingLoadCalculationApproved", "mounting/support review", "supplier suspended-load application review", "secondary-retention packaging review"],
+    "driveCandidateCanBeSelectedOnlyAfter": ["equivalent inertia from controlled masses", "bearing torque characterised", "drag/imbalance/acceleration cases established", "driveTorqueCalculationApproved", "heat/service/guarding review"],
+    "feedbackCandidateCanBeSelectedOnlyAfter": ["fault-detection latency defined", "resolution defined", "runout/air-gap/tolerance stack known", "service-index requirement frozen"]
+  },
+  "promotionGate": {
+    "bearingSelected": false,
+    "driveSelected": false,
+    "brakeSelected": false,
+    "feedbackSelected": false,
+    "manufacturerApplicationReviewsAccepted": false,
+    "exactVariantDataControlled": false,
+    "prototypeEvidenceAccepted": false,
+    "finalKineticComponentSetApproved": false
+  }
+}
