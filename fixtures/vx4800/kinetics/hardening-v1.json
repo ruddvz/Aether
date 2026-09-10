@@ -1,0 +1,278 @@
+{
+  "$schema": "../../../schemas/aether-kinetic-hardening.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "reviewRevision": "1.0.0",
+  "status": "engineering-development-input-not-approved",
+  "authority": "engineering-development-input",
+  "finalHardeningApproved": false,
+  "reviewPurpose": "Adversarial design review of kinetic architecture v1.0.0, focused on common-cause failures, failure containment, service human factors, dynamic-test evidence and conditions that must remain open before a released kinetic mechanism is possible.",
+  "designReviewFindings": [
+    {
+      "id": "KHR-001",
+      "severity": "critical",
+      "finding": "A holding or fault brake acting only through the gearbox and belt/gear transmission can share the same failure path as the drive transmission. A broken or disengaged transmission can therefore remove both propulsion and the through-drive holding path.",
+      "requiredDisposition": "Evaluate and qualify a fixed-side brake acting directly on a passive carrier brake ring/disc, or another demonstrably independent carrier holding path. A motor/gearbox brake may remain supplemental but cannot by itself close transmission-failure containment.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-002",
+      "severity": "critical",
+      "finding": "The annular secondary-retention concept can still have a common-cause weakness if its rotating capture feature depends on the same local hub, fasteners or fractured carrier region whose failure it is intended to contain.",
+      "requiredDisposition": "Develop a fault-coverage matrix and distributed carrier capture attachments that bypass relevant primary-bearing rings/bolts and do not rely on one local hub feature. State explicitly which carrier structural failures are and are not contained.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-003",
+      "severity": "major",
+      "finding": "Using one motion feedback source for closed-loop control, stall detection and overspeed creates a common-mode blind spot if that source fails plausibly.",
+      "requiredDisposition": "Define an independent or sufficiently diverse speed/overspeed plausibility channel if required by risk assessment. Passive rotating targets remain preferred so no rotating power is introduced.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-004",
+      "severity": "major",
+      "finding": "Brake-fails-to-release and brake-fails-to-apply are materially different faults but were not separately controlled.",
+      "requiredDisposition": "Require brake-state verification where practical, distinguish release/apply failure diagnostics, and prohibit access based only on a brake command without verified zero motion and mechanical lock.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-005",
+      "severity": "major",
+      "finding": "Manual brake or gearbox release can create unintended free motion from residual imbalance, suspended-field restoring effects or external disturbance.",
+      "requiredDisposition": "Manual recovery must require verified zero speed, positive service lock engagement before release of the normal holding path, controlled two-action release and a procedure that never creates an uncontrolled freewheel condition.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-006",
+      "severity": "major",
+      "finding": "Soft start and soft stop are necessary but not specific enough for a 240-pendulum field. Acceleration discontinuities and jerk can excite the field even when peak acceleration is low.",
+      "requiredDisposition": "Use a jerk-limited or equivalently smooth command profile as the preferred control study and derive acceleration, jerk and settling dwell from T1-T4 physical measurements.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-007",
+      "severity": "major",
+      "finding": "The rigid-body polar-inertia calculation is useful for screening but does not represent the full transient coupling of long suspended masses that lag the carrier during acceleration and braking.",
+      "requiredDisposition": "Treat rigid-body inertia as a calculation bound/input only and correlate drive/brake demand against measured suspended-field response. Do not close torque sizing solely from m*r^2 mass mapping.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-008",
+      "severity": "major",
+      "finding": "Bearing selection requirements did not make the mounting-structure flatness, circumferential rigidity, fastener preload verification and post-assembly running-torque check explicit enough.",
+      "requiredDisposition": "Make manufacturer mounting tolerances and bolt/preload procedure controlled selection inputs and verify mounted running torque/runout before dynamic field testing.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-009",
+      "severity": "major",
+      "finding": "Belt pretension or gear mesh reactions can add radial load and local frame distortion even at very low carrier speed.",
+      "requiredDisposition": "Feed transmission pretension, tangential force and tensioner reactions into bearing/support calculations and verify that the drive mount does not distort the bearing support ring.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-010",
+      "severity": "moderate",
+      "finding": "Stopped, held, mechanically locked and safe-to-access states were not encoded as distinct operator states.",
+      "requiredDisposition": "Release a commissioning/service state model with explicit transitions, permissives and direct physical lock verification. Fault reset must never itself command motion.",
+      "status": "architecture-corrected-evidence-pending"
+    },
+    {
+      "id": "KHR-011",
+      "severity": "moderate",
+      "finding": "Noise is a primary product goal but no controlled acoustic acceptance method or acceptance criterion exists yet.",
+      "requiredDisposition": "Define measurement positions, background-noise method, operating states and acceptance criterion only after prototype baseline and project/product requirements are available.",
+      "status": "open"
+    },
+    {
+      "id": "KHR-012",
+      "severity": "major",
+      "finding": "An endurance duty and re-inspection interval cannot be inferred from slow rpm alone. Brake cycles, starts/stops, bearing rotations, belt/gear cycles, service-lock cycles and sensor drift have different duty measures.",
+      "requiredDisposition": "Define an evidence-based duty spectrum and endurance plan before release, followed by teardown/inspection criteria that can inform maintenance intervals.",
+      "status": "open"
+    }
+  ],
+  "faultContainmentMatrix": [
+    {
+      "faultId": "FC-001",
+      "initiatingFailure": "primary bearing rolling-element/race/internal support failure causing abnormal axial separation or tilt",
+      "detectionRequirements": ["abnormal motion/runout or speed response where detectable", "post-event retention-contact evidence"],
+      "requiredMechanicalContainment": ["normally-clear fixed catch sectors engage distributed rotating capture features", "load transfers to fixed structural frame and valid site interfaces", "system remains out of service after any engagement"],
+      "evidenceRequired": ["approved abnormal load case", "secondary-retention structural calculation", "controlled simulated engagement/proof test", "post-test inspection"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-002",
+      "initiatingFailure": "primary bearing mounting fastener/joint failure",
+      "detectionRequirements": ["inspection/preload records", "runout/play or contact anomaly where detectable"],
+      "requiredMechanicalContainment": ["secondary retention must bypass the failed bearing fastener load path", "capture brackets must load the fixed structural frame through independent attachment regions"],
+      "evidenceRequired": ["joint calculation", "fault-tree/common-cause review", "retention engagement proof case"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-003",
+      "initiatingFailure": "local rotating hub/carrier fracture",
+      "detectionRequirements": ["inspection", "unexpected runout/vibration/contact if developed during operation"],
+      "requiredMechanicalContainment": ["distributed capture attachments must not all depend on the same fractured local hub feature", "uncontained structural failure modes must be explicitly listed and controlled by primary structural design"],
+      "evidenceRequired": ["carrier structural FMEA", "capture attachment calculation", "representative proof test or justified analysis"],
+      "status": "open"
+    },
+    {
+      "faultId": "FC-004",
+      "initiatingFailure": "positive belt tooth/belt body/ring interface or gear transmission failure",
+      "detectionRequirements": ["command-versus-motion disagreement", "drive speed/load versus carrier speed", "inspection evidence"],
+      "requiredMechanicalContainment": ["carrier holding/fault-stop capability cannot rely only on the failed transmission", "evaluate fixed-side spring-applied brake acting directly on passive carrier brake ring/disc or justified equivalent"],
+      "evidenceRequired": ["transmission-disconnect fault test", "direct-carrier holding/stopping calculation", "physical stop/hold test"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-005",
+      "initiatingFailure": "motor/reducer/control runaway producing unintended rotation",
+      "detectionRequirements": ["carrier speed feedback", "independent/diverse overspeed plausibility where required", "command-versus-actual comparison"],
+      "requiredMechanicalContainment": ["remove propulsion", "qualified carrier stop/holding path", "no automatic restart"],
+      "evidenceRequired": ["safely simulated overspeed/runaway test", "brake energy/travel evidence", "risk-assessment disposition"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-006",
+      "initiatingFailure": "holding/fault brake fails to release",
+      "detectionRequirements": ["brake state feedback if instrumented", "drive load rise with no carrier motion", "time-to-move plausibility"],
+      "requiredMechanicalContainment": ["abort start without escalating drive torque indefinitely", "remain stopped", "require fault disposition before restart"],
+      "evidenceRequired": ["brake-stuck simulation", "drive current/torque limiting verification", "fault log"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-007",
+      "initiatingFailure": "holding/fault brake fails to apply or loses holding force",
+      "detectionRequirements": ["measured motion after stop/hold command", "brake state feedback if available"],
+      "requiredMechanicalContainment": ["do not permit mechanical access", "service lock may engage only after independently verified zero speed", "maintenance procedure treats failed brake as unreleased stored-motion hazard"],
+      "evidenceRequired": ["failed-apply simulation", "zero-speed verification test", "manual recovery procedure validation"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-008",
+      "initiatingFailure": "primary position/speed feedback loss, frozen value or plausible corruption",
+      "detectionRequirements": ["independent/diverse motion plausibility channel where required", "index-event plausibility", "command/load versus feedback consistency"],
+      "requiredMechanicalContainment": ["transition to defined fault stop", "no automatic motion restart"],
+      "evidenceRequired": ["sensor disconnect/frozen-value/implausible-value tests", "fault response log"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-009",
+      "initiatingFailure": "service lock partial engagement, false indication or attempted motion while engaged",
+      "detectionRequirements": ["direct physical engagement verification", "optional fixed lock-state sensor", "run inhibit"],
+      "requiredMechanicalContainment": ["captive lock geometry prevents inadvertent withdrawal", "drive cannot intentionally run with lock engaged", "lock receiver designed for defined proof loads without using bearing rolling elements as the restraint"],
+      "evidenceRequired": ["partial-engagement test", "interlock test", "bidirectional proof test", "service cycle test"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-010",
+      "initiatingFailure": "secondary retention contacts during normal operation due runout, tolerance stack, frame deflection or loosened component",
+      "detectionRequirements": ["contact witness/inspection", "noise/vibration anomaly where detectable"],
+      "requiredMechanicalContainment": ["stop and remove from service", "no intentional rubbing or load sharing in normal operation"],
+      "evidenceRequired": ["normal-clearance tolerance stack", "full-speed/runout validation", "inspection acceptance procedure"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-011",
+      "initiatingFailure": "trim mass or rotating service hardware loosens",
+      "detectionRequirements": ["witness marks/inspection", "imbalance/drive-load/vibration change where detectable"],
+      "requiredMechanicalContainment": ["trim masses positively locked and secondarily captured", "no loose hardware can enter field or fixed/rotating interface"],
+      "evidenceRequired": ["fastener retention method qualification", "endurance inspection", "balance recheck"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-012",
+      "initiatingFailure": "butterfly/cable snag or foreign-object interference",
+      "detectionRequirements": ["torque/current rise", "speed/position deviation", "time-to-move"],
+      "requiredMechanicalContainment": ["controlled or fault stop according to validated condition", "do not repeatedly auto-retry into the obstruction"],
+      "evidenceRequired": ["representative snag/drag simulation on rig", "clearance inspection", "fault reset procedure"],
+      "status": "architecture-defined-evidence-pending"
+    },
+    {
+      "faultId": "FC-013",
+      "initiatingFailure": "site power loss or kinetic-domain isolation while rotating",
+      "detectionRequirements": ["loss of drive power/control", "carrier speed verification after control power returns"],
+      "requiredMechanicalContainment": ["propulsion removed", "power-off holding/stopping function acts without requiring rotating electrical power", "no automatic restart after power returns"],
+      "evidenceRequired": ["power interruption tests across released speeds/load cases", "stop travel and pendulum response", "restart-permissive validation"],
+      "status": "architecture-defined-evidence-pending"
+    }
+  ],
+  "architectureCorrections": {
+    "braking": {
+      "preferredStudy": "fixed-side spring-applied, electrically released caliper or equivalent acts directly on a passive carrier brake ring/disc so parking/fault holding need not pass through the drive belt/gear transmission",
+      "motorOrGearboxBrakeRole": "supplemental drive/normal-stop support only until an approved failure analysis proves otherwise",
+      "serviceLockRole": "still mandatory for mechanical access; direct carrier brake does not replace the positive service lock",
+      "selectionStatus": "architecture-study-only-no-final-brake-selected"
+    },
+    "secondaryRetention": {
+      "preferredStudy": "multiple fixed catch sectors and multiple distributed rotating capture attachments connected to carrier structural regions independent of relevant primary-bearing fasteners/rings",
+      "requiredCommonCauseReview": ["bearing ring fracture", "bearing mounting fastener failure", "hub local fracture", "fixed support local fracture", "capture fastener failure"],
+      "selectionStatus": "concept-refined-loads-and-proof-evidence-pending"
+    },
+    "feedback": {
+      "primaryChannel": "fixed non-contact carrier position/speed readhead with passive rotating target",
+      "overspeedStudy": "evaluate an independent or sufficiently diverse fixed-side speed plausibility channel; exact architecture follows risk assessment and fault-detection latency",
+      "noSlipRing": true
+    },
+    "motionProfile": {
+      "preferredCommandShape": "jerk-limited S-curve or physically equivalent smooth profile",
+      "numericAccelerationJerkAndDwell": "TBD from physical testing",
+      "restartAfterStop": "test-derived settling dwell or other validated settled-state criterion before reversal/restart where needed"
+    },
+    "bearingMounting": {
+      "requirements": ["supplier-controlled mounting flatness and support rigidity", "full-circumference support where required by selected family", "controlled fastener grade/count/preload procedure", "calibrated assembly method", "post-mount running torque and runout verification", "lubrication containment and service access"],
+      "driveInterfaceRule": "belt/gear/tensioner reactions and frame distortion are included in bearing/support load cases"
+    },
+    "manualRecovery": {
+      "rule": "no manual release creates an uncontrolled freewheel condition",
+      "sequencePrinciple": ["verify zero speed", "engage and directly verify positive service lock", "apply LOTO/isolation", "only then use controlled manual brake/drive release if procedure requires", "restore normal holding path before removing service lock"]
+    },
+    "dynamicCalculation": {
+      "rigidBodyMassMapUse": "screening/inertia input only",
+      "requiredCorrelation": "physical drive/brake load and suspended-field lag measurements at T1-T4 must correlate or correct the calculation model before torque selection approval"
+    }
+  },
+  "manufacturerResearch": [
+    {
+      "manufacturer": "mayr power transmission",
+      "family": "ROBA-diskstop",
+      "status": "direct-carrier-disc-brake architecture reference-not-selected",
+      "publishedManufacturerData": "Current manufacturer page describes an electromagnetic safety caliper brake for brake discs using the fail-safe principle and positions the family for applications including elevator and stage/event technology.",
+      "source": "https://www.mayr.com/en/products/safety-brakes/elevator-and-stage-brakes/roba-diskstop~486",
+      "useBoundary": "Architecture reference only. No VX4800 torque, brake diameter, module count, stop category or certification claim is derived from this page."
+    },
+    {
+      "manufacturer": "RINGSPANN",
+      "family": "FEM spring-activated electromagnetically released brake calipers",
+      "status": "direct-carrier-disc-brake architecture reference-not-selected",
+      "publishedManufacturerData": "RINGSPANN currently publishes multiple spring-activated, electromagnetically released industrial brake-caliper families for brake discs, including EV/EH and MV FEM ranges.",
+      "source": "https://www.ringspann.com/en/products/brakes/electrical-brake-calipers/spring-activated-electromagnetically-released/ev-024-fem",
+      "useBoundary": "Architecture reference only. Catalog clamping forces, disc thicknesses and supply options are not VX4800 design values."
+    },
+    {
+      "manufacturer": "Kaydon Bearings",
+      "family": "slewing-ring mounting guidance",
+      "status": "bearing-interface engineering reference",
+      "publishedManufacturerData": "Kaydon mounting guidance emphasizes rigid/flat mounting structures, controlled fastener preload and the effect of mounting distortion on frictional torque and bearing life.",
+      "source": "https://www.kaydonbearings.com/white_papers_11.htm",
+      "useBoundary": "General manufacturer mounting guidance only; final tolerances and fasteners come from the exact selected bearing and application review."
+    }
+  ],
+  "promotionGate": {
+    "faultContainmentMatrixApproved": false,
+    "directCarrierHoldingPathResolved": false,
+    "transmissionFailureContainmentValidated": false,
+    "independentOverspeedMonitoringResolved": false,
+    "brakeStateMonitoringResolved": false,
+    "manualReleaseRecoveryValidated": false,
+    "serviceStateModelValidated": false,
+    "restartSettlingLogicValidated": false,
+    "suspendedFieldDynamicModelCorrelated": false,
+    "bearingMountingJointValidated": false,
+    "acousticAcceptanceControlled": false,
+    "enduranceDutyControlled": false,
+    "configurationChangeImpactMatrixReleased": false
+  }
+}
