@@ -11,13 +11,16 @@ Completed:
 - third-party license policy proposed.
 - draft JSON Schema created.
 - canonical-model ADR recorded.
+- VORTEX migrated into the canonical AETHERIA fixture schema.
+- IFC coordination export implemented with its own validation workflow.
 
-Not yet implemented:
+Still not implemented or still evidence-gated:
 
-- no third-party runtime dependency has been added by this research branch.
+- no third-party runtime dependency has been added solely by this original research slice.
 - no GPL code has been copied.
-- VORTEX has not yet been migrated into the new canonical fixture schema.
-- IFC/GDTF/MVR adapters do not exist yet.
-- real IES photometry has not yet replaced conceptual viewer lighting.
+- GDTF and MVR adapters remain future interchange work.
+- real controlled IES photometry has not yet replaced conceptual viewer lighting as product evidence.
 
-The next engineering action is documented in `NEXT_IMPLEMENTATION_SLICE.md`.
+This file records the research programme status, not a complete inventory of every feature now present in the repository. Current implementation and release state should be read from the canonical fixture, repository validators, roadmap and current engineering documentation.
+
+The original next engineering action is documented in `NEXT_IMPLEMENTATION_SLICE.md`; its VORTEX canonical-schema migration step has since been completed.
