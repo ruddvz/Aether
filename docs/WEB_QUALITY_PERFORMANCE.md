@@ -16,9 +16,11 @@ Blocking checks include required routes, document language, viewport and title, 
 
 The browser toolchain pins `@playwright/test` 1.62.1 and exercises Chromium desktop, Firefox desktop, WebKit desktop, iPhone 15 WebKit emulation and Pixel 7 Chromium emulation.
 
-For the catalog, viewer and inspector, the smoke suite verifies an HTTP response, the primary shell, expected control navigation where applicable, no unintended document-level horizontal overflow and no unexpected uncaught page error.
+Catalog and inspector smoke coverage verifies an HTTP response, document metadata, the primary shell, expected control navigation, no unintended document-level horizontal overflow and no unexpected uncaught page error. Screenshots are captured for those non-realtime shells.
 
-Screenshots are captured for the non-realtime catalog and inspector shells. The immutable V5.2 viewer is a continuous WebGL route, so screenshot production is deliberately kept outside its blocking smoke assertion. Retained CI traces showed Chromium compositor capture taking roughly 20 seconds after the viewer shell and controls had already passed, which could exhaust the test-wide timeout without identifying a product failure. Viewer failures still retain Playwright traces and error-context snapshots.
+The immutable V5.2 viewer uses a narrower browser contract because it starts a continuous WebGL render loop. Static QA already owns its document language, title, local references, external-runtime hosts and size budgets. The browser matrix therefore proves that the viewer route responds and that the first-party `#dock`, `#lightBtn` and `#motionBtn` shell controls actually attach, checks for uncaught page errors during that shell window, and then explicitly closes the page target. It deliberately does not run layout evaluation, accessibility-tree snapshots or compositor screenshots against the hot renderer in the blocking shell gate.
+
+Retained CI traces showed those renderer-adjacent operations taking many seconds on shared Chromium runners after the viewer shell was already present. In one failed run, title access took roughly 14 seconds, layout evaluation roughly 7 seconds, accessibility queries several seconds each and compositor capture roughly 16 seconds, pushing an otherwise successful shell test beyond its 60-second deadline. Viewer failures still retain Playwright traces and error-context snapshots.
 
 Browser/device emulation is regression coverage. It is not proof for every physical handset, operating-system build, browser version or GPU.
 
