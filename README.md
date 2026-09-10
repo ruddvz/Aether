@@ -17,7 +17,7 @@ The technical inspector uses a derived Meshopt-compressed coordination GLB plus 
 
 ## Validate locally
 
-Python 3.12 and Node.js 24 are the controlled CI targets for the current repository tooling.
+Python 3.12 and Node.js 24 are the controlled targets for the primary repository validation tooling. The isolated spectral colour-quality workflow currently pins Python 3.13 and should be treated as a workflow-specific target unless that workflow is deliberately aligned with the primary toolchain.
 
 ```bash
 pip install -r requirements-dev.txt -r requirements-geometry.txt
