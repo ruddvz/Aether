@@ -1,10 +1,20 @@
 import base64
 import hashlib
+import importlib.util
 import json
+from pathlib import Path
+import sys
 
 import pytest
 
-import scripts.materialize_assets as materialize
+
+ROOT = Path(__file__).resolve().parents[1]
+MODULE_PATH = ROOT / "scripts" / "materialize_assets.py"
+SPEC = importlib.util.spec_from_file_location("aether_materialize_assets", MODULE_PATH)
+assert SPEC and SPEC.loader
+materialize = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = materialize
+SPEC.loader.exec_module(materialize)
 
 
 def _configure(monkeypatch, tmp_path, data: bytes):
