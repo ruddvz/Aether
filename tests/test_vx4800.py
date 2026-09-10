@@ -1,4 +1,5 @@
 from pathlib import Path
+import copy
 import hashlib
 import json
 import subprocess
@@ -6,7 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
-from generate_vx4800_presentation import build, canonical_sha
+from generate_vx4800_presentation import _apply_v52_release_derived, build, canonical_sha
 
 
 def test_generated_presentation_regression():
@@ -15,6 +16,33 @@ def test_generated_presentation_regression():
     assert len(data['elements']) == 240
     assert data['counts'] == {'S': 54, 'M': 132, 'L': 54}
     assert canonical_sha(data) == study['expectedViewerDataSha256']
+
+
+def test_v52_release_freeze_restores_all_presentation_derived_pose_fields():
+    reference = build()
+    study = json.loads((ROOT / 'fixtures/vx4800/presentation/v5.2.0/study.json').read_text())
+    drifted = copy.deepcopy(reference['elements'])
+    for index, element in enumerate(drifted):
+        element['size'] = ('S', 'M', 'L')[index % 3]
+        element['span'] = -1.0
+        element['length'] = -1.0
+        for field in ('yaw', 'foldL', 'foldR', 'roll', 'pitch', 'depthNorm', 'clearance'):
+            element[field] = float(element[field]) + 0.125
+
+    _apply_v52_release_derived(drifted, study)
+    for actual, expected in zip(drifted, reference['elements']):
+        assert actual['id'] == expected['id']
+        for field in ('size', 'span', 'length', 'yaw', 'foldL', 'foldR', 'roll', 'pitch', 'depthNorm', 'clearance'):
+            assert actual[field] == expected[field]
+
+
+def test_v52_release_snapshot_covers_exact_engineering_schedule_order():
+    import pandas as pd
+
+    data = build()
+    schedule = pd.read_csv(ROOT / 'fixtures/vx4800/composition/engineering-v1.3.0.csv')
+    assert [element['id'] for element in data['elements']] == schedule['element_id'].tolist()
+    assert len({element['id'] for element in data['elements']}) == 240
 
 
 def test_engineering_and_presentation_are_separate():
