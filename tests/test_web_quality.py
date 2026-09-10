@@ -75,3 +75,34 @@ def test_static_site_gate_rejects_zip_and_broken_local_reference(tmp_path):
     text = " ".join(failing["errors"])
     assert "ZIP files are not permitted" in text
     assert "missing.js" in text
+
+
+def test_external_navigation_is_not_treated_as_runtime_dependency(tmp_path):
+    write_minimal_site(tmp_path)
+    catalog = tmp_path / "index.html"
+    catalog.write_text(
+        catalog.read_text().replace(
+            "</body>",
+            "<a href='https://github.com/ruddvz/Aether'>Source</a></body>",
+        )
+    )
+
+    report = validate_site(tmp_path, CONFIG, SCHEMA)
+    assert report["status"] == "pass", report["errors"]
+    assert report["measurements"]["routes"]["catalog"]["externalHosts"] == []
+
+
+def test_external_runtime_resource_must_be_allowlisted(tmp_path):
+    write_minimal_site(tmp_path)
+    catalog = tmp_path / "index.html"
+    catalog.write_text(
+        catalog.read_text().replace(
+            "</body>",
+            "<script src='https://example.invalid/runtime.js'></script></body>",
+        )
+    )
+
+    report = validate_site(tmp_path, CONFIG, SCHEMA)
+    assert report["status"] == "fail"
+    assert report["measurements"]["routes"]["catalog"]["externalHosts"] == ["example.invalid"]
+    assert any("external runtime hosts not allowlisted: example.invalid" in error for error in report["errors"])
