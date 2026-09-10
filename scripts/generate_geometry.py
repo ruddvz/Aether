@@ -84,14 +84,20 @@ def build():
     m.add_text('AETHERIA VX4800 COORDINATION SETOUT - NOT MANUFACTURING AUTHORITY',dxfattribs={'height':24,'layer':'TEXT'}).set_placement((-1150,-850))
     dxf_path=OUT/'setout-coordination-v1.3.0.dxf'; doc.saveas(dxf_path)
     txt=dxf_path.read_text()
-    for pattern, replacement, label in [
-        (r'(\$TDCREATE\s+40\s+)\S+', r'\g<1>2461287.5', 'DXF TDCREATE timestamp'),
-        (r'(\$TDUPDATE\s+40\s+)\S+', r'\g<1>2461287.5', 'DXF TDUPDATE timestamp'),
-        (r'(\$TDUCREATE\s+40\s+)\S+', r'\g<1>0.0', 'DXF TDUCREATE timestamp'),
-        (r'(\$TDUUPDATE\s+40\s+)\S+', r'\g<1>0.0', 'DXF TDUUPDATE timestamp'),
-        (r'1\.4\.4 @ [^\r\n]+', '1.4.4 @ 2026-09-03T00:00:00+00:00', 'ezdxf version timestamp'),
-    ]:
-        txt=_sub_exactly_once(pattern, replacement, txt, label=label)
+    # These header variables vary by DXF dialect/version and may be absent in R12.
+    # Preserve the existing best-effort normalization without treating absence as corruption.
+    txt=re.sub(r'(\$TDCREATE\s+40\s+)\S+',r'\g<1>2461287.5',txt)
+    txt=re.sub(r'(\$TDUPDATE\s+40\s+)\S+',r'\g<1>2461287.5',txt)
+    txt=re.sub(r'(\$TDUCREATE\s+40\s+)\S+',r'\g<1>0.0',txt)
+    txt=re.sub(r'(\$TDUUPDATE\s+40\s+)\S+',r'\g<1>0.0',txt)
+    # ezdxf's banner carries the wall-clock value that issue #50 identified.
+    # It is expected exactly once; drift must fail loudly rather than leak nondeterminism.
+    txt=_sub_exactly_once(
+        r'1\.4\.4 @ [^\r\n]+',
+        '1.4.4 @ 2026-09-03T00:00:00+00:00',
+        txt,
+        label='ezdxf version timestamp',
+    )
     dxf_path.write_text(txt)
     return OUT
 
