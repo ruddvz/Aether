@@ -2,7 +2,7 @@
 
 ## Core rule
 
-Keep `main` deployable. Do not overwrite an immutable released viewer in place.
+Keep `main` deployable. Treat canonical fixture data and controlled engineering assets as source authority; generated build and Pages outputs are derivatives.
 
 ## Branch names
 
@@ -15,16 +15,19 @@ Use short scoped names such as:
 
 ## Product changes
 
-For a VORTEX viewer change:
+For a VORTEX product or viewer change:
 
-1. Create a new version folder under `products/vx4800/viewer/`.
-2. Keep prior released folders unchanged.
-3. Update `project.json` only when the new version becomes current.
-4. Add or replace the matching immutable release artifact in `releases/vx4800/<version>/`.
-5. Update `CHANGELOG.md`.
-6. Run `python scripts/validate_repository.py`.
-7. Run `python scripts/build_site.py` and inspect `_site` locally.
-8. Open a pull request.
+1. Edit the authoritative source under `fixtures/vx4800/` and, where registry metadata changes, `project.json`.
+2. Version controlled product or presentation data deliberately; do not edit generated `build/` or `_site/` files as source.
+3. Update `CHANGELOG.md` when the change is user-, product-, or engineering-visible.
+4. Run `python scripts/validate_repository.py`.
+5. Run the affected geometry, web-geometry, interchange, photometry or other domain QA required by the change.
+6. Run `pytest -q`.
+7. Run `python scripts/build_product.py` for product-artifact changes.
+8. Run `python scripts/build_site.py` and inspect `_site` locally for public-surface changes.
+9. Open a pull request and require the relevant CI gates to pass before merge.
+
+The retired `products/<slug>/viewer/` and `releases/<product>/<version>/` source layouts are not part of the current workflow. Public product routes are generated from `project.json` and `fixtures/`, and `scripts/build_product.py` emits ordinary build artifacts without an archive package.
 
 ## Design data
 
