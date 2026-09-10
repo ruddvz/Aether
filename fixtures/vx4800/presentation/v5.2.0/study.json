@@ -5,7 +5,7 @@
   "designRevision": "1.3.0",
   "presentationRevision": "5.2.0",
   "authority": "presentation-only",
-  "sourceViewer": "VX4800_VORTEX_Viewer_v5.2.0.html",
+  "sourceViewer": "viewer.template.html",
   "expectedViewerDataSha256": "bb6014386e9422b7bf87969c28533e8e67645fb0afdc36965bac418be6865b4c",
   "sizeAllocation": {
     "S": 54,
