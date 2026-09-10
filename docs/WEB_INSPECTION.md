@@ -73,7 +73,7 @@ This is still a coordination-model clearance measurement. It is not a final engi
 
 Measurement mode records two surface hits and displays their straight-line 3D distance in millimetres.
 
-Measurements exist only in the current browser review session. They do not modify fixture JSON, CAD, schedules, or release packages.
+Measurements exist only in the current browser review session. They do not modify fixture JSON, CAD, schedules, or controlled product records.
 
 ## Annotation mode
 
@@ -83,19 +83,11 @@ Annotations are intentionally local and non-authoritative. Clearing browser stor
 
 A future controlled review workflow may export annotations into a separate review-record schema, but that must remain distinct from product authority.
 
-## V5.2 historical release authority
+## Presentation and generated-output integrity
 
-The verified historical V5.2 ZIP is guarded by `releases/vx4800/5.2.0/authority.json`.
+The current repository does not generate a release ZIP or `releases/vx4800/...` authority file. V5.2 presentation stability is enforced by canonical repository validation, including regeneration of the 240-element presentation and comparison with `expectedViewerDataSha256` in `fixtures/vx4800/presentation/v5.2.0/study.json`.
 
-During repository recovery, live `fixture.json` formatting was compacted without changing the parsed JSON object. The original V5.2 ZIP had serialized that same object with two-space indentation and one trailing newline. `scripts/build_release.py` reproduces that historical member serialization only inside the frozen V5.2 package, then verifies:
-
-- exact archive SHA-256,
-- exact archive byte length,
-- member order,
-- every member byte length,
-- every member SHA-256.
-
-Live fixture formatting remains non-authoritative. A semantic fixture change would alter the reconstructed member SHA and fail the release gate.
+Coordination downloads are ordinary generated Pages artefacts. Their source/optimized SHA-256 values and byte lengths are recorded by the optimization manifest and checked by the geometry/web QA pipeline. None of these generated outputs becomes manufacturing authority.
 
 ## Public routes
 
@@ -107,6 +99,8 @@ After the Pages build:
 - optimized coordination GLB: `/downloads/vx4800/1.3.0/vx4800-coordination-v1.3.0.optimized.glb`
 - optimization manifest: `/downloads/vx4800/1.3.0/optimization-manifest.json`
 
+On GitHub project Pages these paths are served below the repository prefix. The build and deployment tooling derives that prefix from the live repository identity.
+
 ## Validation gates
 
 The feature must not merge unless:
@@ -116,5 +110,5 @@ The feature must not merge unless:
 - source web geometry QA passes,
 - optimized web geometry QA passes,
 - the complete pytest suite passes,
-- V5.2 release SHA-256 remains `4cffd5a003a718d359811bf6f3b406d8ad197a92cc3632f9321c6859dca48f79`,
+- the regenerated V5.2 presentation matches the controlled `expectedViewerDataSha256` fingerprint,
 - Pages builds the technical inspector and both coordination GLBs.
