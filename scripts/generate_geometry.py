@@ -9,7 +9,7 @@ FIX=ROOT/'fixtures/vx4800'
 OUT=ROOT/'build/vx4800/geometry'
 
 def sub_exactly_once(pattern, replacement, text, label):
-    scrubbed, count = re.subn(pattern, replacement, text, count=1)
+    scrubbed, count = re.subn(pattern, replacement, text)
     if count != 1:
         raise RuntimeError(f"Expected exactly one {label} timestamp marker, found {count}; dependency output format may have changed")
     return scrubbed
