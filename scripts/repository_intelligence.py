@@ -803,9 +803,9 @@ def impact_slice(
 ) -> dict:
     downstream: dict[str, list[tuple[str, Edge]]] = {}
     for edge in edges:
-        if edge.relation in {"DEPENDS_ON", "GENERATED_FROM", "BUILT_BY"}:
+        if edge.relation in {"DEPENDS_ON", "GENERATED_FROM", "BUILT_BY", "PRESENTS"}:
             downstream.setdefault(edge.target, []).append((edge.source, edge))
-        elif edge.relation in {"VALIDATED_BY", "TESTED_BY", "PRESENTS", "RELEASES_TO", "OBSERVED_IN"}:
+        elif edge.relation in {"VALIDATED_BY", "TESTED_BY", "RELEASES_TO", "OBSERVED_IN"}:
             downstream.setdefault(edge.source, []).append((edge.target, edge))
         elif edge.relation == "DECLARES_DIVERGENCE_FROM":
             downstream.setdefault(edge.target, []).append((edge.source, edge))

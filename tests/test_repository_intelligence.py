@@ -482,3 +482,20 @@ def test_declared_edge_must_reference_existing_node(tmp_path: Path):
     write(declaration_path, json.dumps(declarations, indent=2) + "\n")
     with pytest.raises(ValueError, match="missing node"):
         ri.build_graph(repo, config)
+
+
+def test_product_identity_impact_reaches_derived_surfaces(tmp_path: Path):
+    repo, config = make_repo(tmp_path)
+    nodes, edges = graph(repo, config)
+    result = ri.impact_slice(
+        nodes,
+        edges,
+        ["product:vx4800-bf-01"],
+        max_nodes=32,
+        max_depth=4,
+    )
+    impacted = {item["id"] for item in result["nodes"]}
+    assert "output:build/vx4800" in impacted
+    assert "output:_site" in impacted
+    assert nodes["product:vx4800-bf-01"].authority == "canonical"
+    assert nodes["output:build/vx4800"].authority == "derived"
