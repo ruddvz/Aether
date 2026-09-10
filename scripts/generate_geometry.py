@@ -8,10 +8,21 @@ ROOT=Path(__file__).resolve().parents[1]
 FIX=ROOT/'fixtures/vx4800'
 OUT=ROOT/'build/vx4800/geometry'
 
+def sub_exactly_once(pattern, replacement, text, label):
+    scrubbed, count = re.subn(pattern, replacement, text, count=1)
+    if count != 1:
+        raise RuntimeError(f"Expected exactly one {label} timestamp marker, found {count}; dependency output format may have changed")
+    return scrubbed
+
 def export_step_deterministic(obj,path):
     cq.exporters.export(obj,str(path))
     txt=Path(path).read_text(errors='strict')
-    txt=re.sub(r"(FILE_NAME\('Open CASCADE Shape Model',)'[^']+'",r"\1'2026-09-03T00:00:00'",txt,count=1)
+    txt=sub_exactly_once(
+        r"(FILE_NAME\('Open CASCADE Shape Model',)'[^']+'",
+        r"\1'2026-09-03T00:00:00'",
+        txt,
+        "STEP FILE_NAME",
+    )
     Path(path).write_text(txt)
 
 def rounded_box(width, depth, height, radius):
@@ -67,11 +78,16 @@ def build():
     m.add_text('AETHERIA VX4800 COORDINATION SETOUT - NOT MANUFACTURING AUTHORITY',dxfattribs={'height':24,'layer':'TEXT'}).set_placement((-1150,-850))
     dxf_path=OUT/'setout-coordination-v1.3.0.dxf'; doc.saveas(dxf_path)
     txt=dxf_path.read_text()
-    txt=re.sub(r'(\$TDCREATE\s+40\s+)\S+',r'\g<1>2461287.5',txt)
-    txt=re.sub(r'(\$TDUPDATE\s+40\s+)\S+',r'\g<1>2461287.5',txt)
-    txt=re.sub(r'(\$TDUCREATE\s+40\s+)\S+',r'\g<1>0.0',txt)
-    txt=re.sub(r'(\$TDUUPDATE\s+40\s+)\S+',r'\g<1>0.0',txt)
-    txt=re.sub(r'1\.4\.4 @ [^\r\n]+', '1.4.4 @ 2026-09-03T00:00:00+00:00', txt)
+    txt=sub_exactly_once(r'(\$TDCREATE\s+40\s+)\S+',r'\g<1>2461287.5',txt,'DXF $TDCREATE')
+    txt=sub_exactly_once(r'(\$TDUPDATE\s+40\s+)\S+',r'\g<1>2461287.5',txt,'DXF $TDUPDATE')
+    txt=sub_exactly_once(r'(\$TDUCREATE\s+40\s+)\S+',r'\g<1>0.0',txt,'DXF $TDUCREATE')
+    txt=sub_exactly_once(r'(\$TDUUPDATE\s+40\s+)\S+',r'\g<1>0.0',txt,'DXF $TDUUPDATE')
+    txt=sub_exactly_once(
+        r'1\.4\.4 @ [^\r\n]+',
+        '1.4.4 @ 2026-09-03T00:00:00+00:00',
+        txt,
+        'ezdxf version banner',
+    )
     dxf_path.write_text(txt)
     return OUT
 
