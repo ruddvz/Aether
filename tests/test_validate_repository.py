@@ -9,6 +9,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts/validate_repository.py"
 FIXTURE = ROOT / "fixtures/vx4800/fixture.json"
+STUDY = ROOT / "fixtures/vx4800/presentation/v5.2.0/study.json"
 VIEWER_TEMPLATE = ROOT / "fixtures/vx4800/presentation/v5.2.0/viewer.template.html"
 
 
@@ -36,6 +37,11 @@ def test_validate_repository_current_tree_passes():
             VIEWER_TEMPLATE,
             lambda text: text.replace("__VIEWER_DATA__", "VIEWER_DATA_REMOVED", 1),
             "viewer data placeholder missing",
+        ),
+        (
+            STUDY,
+            lambda text: text.replace('"sourceViewer": "viewer.template.html"', '"sourceViewer": "missing-source.html"', 1),
+            "missing presentation sourceViewer missing-source.html",
         ),
     ],
 )

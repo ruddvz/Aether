@@ -22,6 +22,22 @@ for a in fixture['assets']:
     p=F/a['path']; req(p.exists(),f'missing asset {a["path"]}')
     if p.exists(): req(hashlib.sha256(p.read_bytes()).hexdigest()==a['sha256'],f'hash mismatch {a["path"]}')
 
+# Presentation source provenance must resolve to a registered repository source.
+presentation_dir=F/'presentation/v5.2.0'
+source_viewer=study.get('sourceViewer')
+req(isinstance(source_viewer,str) and bool(source_viewer.strip()),'presentation sourceViewer must be a non-empty relative path')
+if isinstance(source_viewer,str) and source_viewer.strip():
+    source_rel=Path(source_viewer)
+    req(not source_rel.is_absolute() and '..' not in source_rel.parts,'presentation sourceViewer must stay inside the presentation directory')
+    source_path=presentation_dir/source_rel
+    req(source_path.is_file(),f'missing presentation sourceViewer {source_viewer}')
+    if source_path.is_file() and not source_rel.is_absolute() and '..' not in source_rel.parts:
+        fixture_source_path=source_path.relative_to(F).as_posix()
+        source_asset=next((a for a in fixture['assets'] if a['path']==fixture_source_path),None)
+        req(source_asset is not None,f'presentation sourceViewer is not registered as an asset: {fixture_source_path}')
+        if source_asset is not None:
+            req(source_asset.get('role')=='source',f'presentation sourceViewer asset must have source role: {fixture_source_path}')
+
 geom=load(F/'geometry/manifest.json')
 req(geom['designRevision']=='1.3.0','geometry manifest revision mismatch')
 req(len(geom['manufacturingAssets'])==6,'expected six external controlled manufacturing assets')
