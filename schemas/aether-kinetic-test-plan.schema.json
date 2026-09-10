@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-test-plan.schema.json",
   "title": "AETHERIA VX4800 kinetic dynamic test plan",
   "type": "object",
   "required": ["schemaVersion", "fixtureId", "planRevision", "status", "authority", "testCases", "stagePromotionRules", "promotionGate"],
