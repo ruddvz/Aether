@@ -1,4 +1,5 @@
 from pathlib import Path
+import copy
 import json
 import subprocess
 import sys
@@ -71,6 +72,24 @@ def test_candidate_evaluator_accepts_complete_synthetic_candidate():
     assert review["counts"]["blocker"] == 0
     assert review["decision"] == "technical-shortlist"
     assert "Photometry candidate review" in render_markdown(review)
+
+
+def test_candidate_evaluator_blocks_duplicate_role_configurations():
+    candidate = json.loads((ROOT / "tests/fixtures/photometry/candidate-pass.json").read_text())
+    candidate["configurations"].append(copy.deepcopy(candidate["configurations"][0]))
+    brief = json.loads((ROOT / "fixtures/vx4800/photometry/selection-brief.json").read_text())
+
+    review = evaluate_candidate(candidate, brief)
+    duplicate_findings = [
+        finding
+        for finding in review["findings"]
+        if finding["code"] == "duplicate-role-configurations"
+    ]
+
+    assert len(duplicate_findings) == 1
+    assert duplicate_findings[0]["severity"] == "blocker"
+    assert duplicate_findings[0]["configuration"] == candidate["configurations"][0]["role"]
+    assert review["decision"] == "reject-for-now"
 
 
 def test_candidate_evaluator_blocks_missing_photometry():
