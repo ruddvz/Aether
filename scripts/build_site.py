@@ -1,6 +1,7 @@
 from pathlib import Path
 import base64
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -15,6 +16,37 @@ def decode_base64_text(encoded: str) -> bytes:
     encoded = ''.join(encoded.split())
     encoded += '=' * (-len(encoded) % 4)
     return base64.b64decode(encoded)
+
+
+def relative_site_asset(page: Path, asset_name: str) -> str:
+    """Return a Pages-prefix-safe relative URL from an HTML page to a root asset."""
+    return os.path.relpath(OUT / asset_name, page.parent).replace(os.sep, '/')
+
+
+def ensure_html_metadata(page: Path) -> None:
+    """Add baseline discovery/install metadata without replacing page-specific copy."""
+    text = page.read_text(encoding='utf-8')
+    if '</head>' not in text:
+        raise ValueError(f'HTML page has no closing head tag: {page.relative_to(OUT)}')
+
+    additions = []
+    if '<meta name="description"' not in text:
+        additions.append(
+            '<meta name="description" content="AETHERIA architectural sculptural lighting, concept studies and controlled product information.">'
+        )
+    if 'rel="manifest"' not in text:
+        additions.append(
+            f'<link rel="manifest" href="{relative_site_asset(page, "site.webmanifest")}">'
+        )
+    if 'rel="icon"' not in text:
+        additions.append(
+            f'<link rel="icon" href="{relative_site_asset(page, "favicon.svg")}" type="image/svg+xml">'
+        )
+
+    if additions:
+        insertion = '\n  '.join(additions)
+        text = text.replace('</head>', f'  {insertion}\n</head>', 1)
+        page.write_text(text, encoding='utf-8')
 
 
 if OUT.exists():
@@ -153,5 +185,10 @@ if brand_assets_src.exists():
             if '/' in target_name or '\\' in target_name or target_name.startswith('.'):
                 raise ValueError(f'Invalid brand asset filename {target_name!r}')
             (brand_assets_out / target_name).write_bytes(decode_base64_text(encoded))
+
+# Every built HTML surface gets baseline description/install metadata. Relative
+# root-asset links keep nested pages valid on project Pages and custom domains.
+for page in sorted(OUT.rglob('*.html')):
+    ensure_html_metadata(page)
 
 print(OUT)
