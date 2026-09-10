@@ -1,38 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-architecture.schema.json",
   "title": "AETHERIA VX4800 kinetic rotating-carrier architecture",
   "type": "object",
   "required": [
-    "schemaVersion",
-    "fixtureId",
-    "architectureRevision",
-    "status",
-    "authority",
-    "finalSystemApproved",
-    "designPrinciple",
-    "controlledBaseline",
-    "authorityBoundaries",
-    "unknownPhysicalInputs",
-    "dependencies",
-    "loadPathArchitecture",
-    "bearingArchitecture",
-    "driveArchitecture",
-    "motionProfile",
-    "brakingArchitecture",
-    "serviceLock",
-    "secondaryRetention",
-    "balanceAndTrim",
-    "feedbackArchitecture",
-    "faultDetection",
-    "powerLossAndRestart",
-    "cableDynamicsValidation",
-    "clearanceValidation",
-    "dynamicTestProgram",
-    "maintenanceArchitecture",
-    "calculationFramework",
-    "researchDiscipline",
-    "promotionGate"
+    "schemaVersion", "fixtureId", "architectureRevision", "status", "authority", "finalSystemApproved", "designPrinciple", "controlledBaseline", "authorityBoundaries", "unknownPhysicalInputs", "dependencies", "loadPathArchitecture", "bearingArchitecture", "driveArchitecture", "motionProfile", "brakingArchitecture", "serviceLock", "secondaryRetention", "balanceAndTrim", "feedbackArchitecture", "faultDetection", "powerLossAndRestart", "cableDynamicsValidation", "clearanceValidation", "dynamicTestProgram", "maintenanceArchitecture", "calculationFramework", "researchDiscipline", "promotionGate"
   ],
   "properties": {
     "$schema": {"type": "string"},
@@ -78,10 +49,7 @@
       }
     },
     "dependencies": {"type": "array", "minItems": 3},
-    "loadPathArchitecture": {
-      "type": "object",
-      "required": ["primaryLoadPath", "secondaryRetentionPath", "driveTorquePath", "brakingPath", "serviceLockPath", "prohibitedAccidentalLoadPaths"]
-    },
+    "loadPathArchitecture": {"type": "object", "required": ["primaryLoadPath", "secondaryRetentionPath", "driveTorquePath", "brakingPath", "serviceLockPath", "prohibitedAccidentalLoadPaths"]},
     "bearingArchitecture": {"type": "object"},
     "driveArchitecture": {"type": "object"},
     "motionProfile": {"type": "object"},
@@ -100,72 +68,22 @@
     "researchDiscipline": {"type": "object"},
     "promotionGate": {
       "type": "object",
-      "required": [
-        "actualRotatingMassControlled",
-        "centerOfGravityControlled",
-        "productionMassVariationControlled",
-        "bearingSelected",
-        "bearingLoadCalculationApproved",
-        "driveSelected",
-        "driveTorqueCalculationApproved",
-        "brakingArchitectureResolved",
-        "serviceLockValidated",
-        "secondaryRetentionValidated",
-        "feedbackArchitectureValidated",
-        "faultHandlingValidated",
-        "dynamicClearanceValidated",
-        "fullPreHangDynamicTestPassed",
-        "maintenancePlanReleased"
-      ],
+      "required": ["actualRotatingMassControlled", "centerOfGravityControlled", "productionMassVariationControlled", "bearingSelected", "bearingLoadCalculationApproved", "driveSelected", "driveTorqueCalculationApproved", "brakingArchitectureResolved", "serviceLockValidated", "secondaryRetentionValidated", "feedbackArchitectureValidated", "faultHandlingValidated", "dynamicClearanceValidated", "fullPreHangDynamicTestPassed", "maintenancePlanReleased"],
       "properties": {
-        "actualRotatingMassControlled": {"type": "boolean"},
-        "centerOfGravityControlled": {"type": "boolean"},
-        "productionMassVariationControlled": {"type": "boolean"},
-        "bearingSelected": {"type": "boolean"},
-        "bearingLoadCalculationApproved": {"type": "boolean"},
-        "driveSelected": {"type": "boolean"},
-        "driveTorqueCalculationApproved": {"type": "boolean"},
-        "brakingArchitectureResolved": {"type": "boolean"},
-        "serviceLockValidated": {"type": "boolean"},
-        "secondaryRetentionValidated": {"type": "boolean"},
-        "feedbackArchitectureValidated": {"type": "boolean"},
-        "faultHandlingValidated": {"type": "boolean"},
-        "dynamicClearanceValidated": {"type": "boolean"},
-        "fullPreHangDynamicTestPassed": {"type": "boolean"},
-        "maintenancePlanReleased": {"type": "boolean"}
+        "actualRotatingMassControlled": {"type": "boolean"}, "centerOfGravityControlled": {"type": "boolean"}, "productionMassVariationControlled": {"type": "boolean"}, "bearingSelected": {"type": "boolean"}, "bearingLoadCalculationApproved": {"type": "boolean"}, "driveSelected": {"type": "boolean"}, "driveTorqueCalculationApproved": {"type": "boolean"}, "brakingArchitectureResolved": {"type": "boolean"}, "serviceLockValidated": {"type": "boolean"}, "secondaryRetentionValidated": {"type": "boolean"}, "feedbackArchitectureValidated": {"type": "boolean"}, "faultHandlingValidated": {"type": "boolean"}, "dynamicClearanceValidated": {"type": "boolean"}, "fullPreHangDynamicTestPassed": {"type": "boolean"}, "maintenancePlanReleased": {"type": "boolean"}
       },
       "additionalProperties": false
     }
   },
-  "allOf": [
-    {
-      "if": {"properties": {"finalSystemApproved": {"const": true}}, "required": ["finalSystemApproved"]},
-      "then": {
-        "properties": {
-          "authority": {"const": "controlled"},
-          "status": {"const": "approved"},
-          "promotionGate": {
-            "properties": {
-              "actualRotatingMassControlled": {"const": true},
-              "centerOfGravityControlled": {"const": true},
-              "productionMassVariationControlled": {"const": true},
-              "bearingSelected": {"const": true},
-              "bearingLoadCalculationApproved": {"const": true},
-              "driveSelected": {"const": true},
-              "driveTorqueCalculationApproved": {"const": true},
-              "brakingArchitectureResolved": {"const": true},
-              "serviceLockValidated": {"const": true},
-              "secondaryRetentionValidated": {"const": true},
-              "feedbackArchitectureValidated": {"const": true},
-              "faultHandlingValidated": {"const": true},
-              "dynamicClearanceValidated": {"const": true},
-              "fullPreHangDynamicTestPassed": {"const": true},
-              "maintenancePlanReleased": {"const": true}
-            }
-          }
-        }
-      }
-    }
-  ],
+  "allOf": [{
+    "if": {"properties": {"finalSystemApproved": {"const": true}}, "required": ["finalSystemApproved"]},
+    "then": {"properties": {
+      "authority": {"const": "controlled"},
+      "status": {"const": "approved"},
+      "promotionGate": {"properties": {
+        "actualRotatingMassControlled": {"const": true}, "centerOfGravityControlled": {"const": true}, "productionMassVariationControlled": {"const": true}, "bearingSelected": {"const": true}, "bearingLoadCalculationApproved": {"const": true}, "driveSelected": {"const": true}, "driveTorqueCalculationApproved": {"const": true}, "brakingArchitectureResolved": {"const": true}, "serviceLockValidated": {"const": true}, "secondaryRetentionValidated": {"const": true}, "feedbackArchitectureValidated": {"const": true}, "faultHandlingValidated": {"const": true}, "dynamicClearanceValidated": {"const": true}, "fullPreHangDynamicTestPassed": {"const": true}, "maintenancePlanReleased": {"const": true}
+      }}
+    }}
+  }],
   "additionalProperties": true
 }
