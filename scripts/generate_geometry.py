@@ -9,12 +9,12 @@ FIX=ROOT/'fixtures/vx4800'
 OUT=ROOT/'build/vx4800/geometry'
 
 
-def _sub_exactly_once(pattern, replacement, text, *, label):
+def _sub_exact_matches(pattern, replacement, text, *, label, expected_count=1):
     """Apply a reproducibility scrub and fail if its expected source shape drifted."""
     scrubbed, count = re.subn(pattern, replacement, text)
-    if count != 1:
+    if count != expected_count:
         raise RuntimeError(
-            f"Deterministic {label} scrub expected exactly one match, found {count}. "
+            f"Deterministic {label} scrub expected {expected_count} match(es), found {count}. "
             "The upstream exporter output may have changed; update the scrub deliberately."
         )
     return scrubbed
@@ -23,7 +23,7 @@ def _sub_exactly_once(pattern, replacement, text, *, label):
 def export_step_deterministic(obj,path):
     cq.exporters.export(obj,str(path))
     txt=Path(path).read_text(errors='strict')
-    txt=_sub_exactly_once(
+    txt=_sub_exact_matches(
         r"(FILE_NAME\('Open CASCADE Shape Model',)'[^']+'",
         r"\1'2026-09-03T00:00:00'",
         txt,
@@ -90,13 +90,14 @@ def build():
     txt=re.sub(r'(\$TDUPDATE\s+40\s+)\S+',r'\g<1>2461287.5',txt)
     txt=re.sub(r'(\$TDUCREATE\s+40\s+)\S+',r'\g<1>0.0',txt)
     txt=re.sub(r'(\$TDUUPDATE\s+40\s+)\S+',r'\g<1>0.0',txt)
-    # ezdxf's banner carries the wall-clock value that issue #50 identified.
-    # It is expected exactly once; drift must fail loudly rather than leak nondeterminism.
-    txt=_sub_exactly_once(
+    # ezdxf writes the version/timestamp banner twice in the current pinned R12 export.
+    # Both copies carry wall-clock data, so a format/count change must fail loudly.
+    txt=_sub_exact_matches(
         r'1\.4\.4 @ [^\r\n]+',
         '1.4.4 @ 2026-09-03T00:00:00+00:00',
         txt,
         label='ezdxf version timestamp',
+        expected_count=2,
     )
     dxf_path.write_text(txt)
     return OUT
