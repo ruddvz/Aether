@@ -10,13 +10,15 @@ A passing web-quality workflow means the tested software routes built, served, p
 
 `scripts/qa_site.py` validates the built `_site` tree against `fixtures/platform/web-quality-v1.json`.
 
-Blocking checks include required routes, document language, viewport and title, resolvable first-party references, forbidden development URLs, controlled external hosts, per-route HTML size, total published-tree size, largest-file size and the repository rule that ZIP packages are not part of the active Pages product workflow.
+Blocking checks include required routes, document language, viewport and title, resolvable first-party references, forbidden development URLs, controlled external runtime hosts, per-route HTML size, total published-tree size, largest-file size and the repository rule that ZIP packages are not part of the active Pages product workflow. Ordinary outbound navigation links are not treated as runtime dependencies.
 
 ## Cross-browser smoke matrix
 
 The browser toolchain pins `@playwright/test` 1.62.1 and exercises Chromium desktop, Firefox desktop, WebKit desktop, iPhone 15 WebKit emulation and Pixel 7 Chromium emulation.
 
-For the catalog, viewer and inspector, the smoke suite verifies an HTTP response, the primary shell, expected control navigation where applicable, no unintended document-level horizontal overflow and no unexpected uncaught page error. It captures screenshots for every route/project pair as QA evidence.
+For the catalog, viewer and inspector, the smoke suite verifies an HTTP response, the primary shell, expected control navigation where applicable, no unintended document-level horizontal overflow and no unexpected uncaught page error.
+
+Screenshots are captured for the non-realtime catalog and inspector shells. The immutable V5.2 viewer is a continuous WebGL route, so screenshot production is deliberately kept outside its blocking smoke assertion. Retained CI traces showed Chromium compositor capture taking roughly 20 seconds after the viewer shell and controls had already passed, which could exhaust the test-wide timeout without identifying a product failure. Viewer failures still retain Playwright traces and error-context snapshots.
 
 Browser/device emulation is regression coverage. It is not proof for every physical handset, operating-system build, browser version or GPU.
 
@@ -41,7 +43,7 @@ Serve `_site` on port 4173 before running the browser matrix.
 
 ## Artifacts
 
-The workflow uploads deterministic static-site QA output, Playwright HTML output, browser/device screenshots, traces and failure screenshots when applicable, and the local HTTP-server log.
+The workflow uploads deterministic static-site QA output, Playwright HTML output, catalog/inspector browser-device screenshots, traces and failure snapshots when applicable, and the local HTTP-server log.
 
 ## Change control
 
