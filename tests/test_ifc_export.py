@@ -8,22 +8,6 @@ from pathlib import Path
 
 import pytest
 
-try:
-    import ifcopenshell
-    import ifcopenshell.util.element as util_element
-except ModuleNotFoundError:
-    ifcopenshell = None
-    util_element = None
-
-IFC_AVAILABLE = ifcopenshell is not None and util_element is not None
-pytestmark = pytest.mark.skipif(
-    not IFC_AVAILABLE,
-    reason=(
-        "requires ifcopenshell from requirements-interchange.txt; "
-        "the dedicated IFC workflow runs this full suite"
-    ),
-)
-
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
 if str(SCRIPTS) not in sys.path:
@@ -33,12 +17,27 @@ SCRIPT_PATH = SCRIPTS / "export_vx4800_ifc.py"
 FIXTURE_PATH = ROOT / "fixtures/vx4800/fixture.json"
 PROFILE_PATH = ROOT / "fixtures/vx4800/interchange/export-profile-v1.json"
 
-module = None
-if IFC_AVAILABLE:
+HAS_IFCOPENSHELL = importlib.util.find_spec("ifcopenshell") is not None
+pytestmark = pytest.mark.skipif(
+    not HAS_IFCOPENSHELL,
+    reason=(
+        "IFC export suite requires ifcopenshell; install the IFC validation dependencies "
+        "or rely on .github/workflows/ifc.yml"
+    ),
+)
+
+if HAS_IFCOPENSHELL:
+    import ifcopenshell
+    import ifcopenshell.util.element as util_element
+
     spec = importlib.util.spec_from_file_location("export_vx4800_ifc", SCRIPT_PATH)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     spec.loader.exec_module(module)
+else:
+    ifcopenshell = None
+    util_element = None
+    module = None
 
 
 def get_fixture(model):
