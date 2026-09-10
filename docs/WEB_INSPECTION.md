@@ -73,7 +73,7 @@ This is still a coordination-model clearance measurement. It is not a final engi
 
 Measurement mode records two surface hits and displays their straight-line 3D distance in millimetres.
 
-Measurements exist only in the current browser review session. They do not modify fixture JSON, CAD, schedules, or release packages.
+Measurements exist only in the current browser review session. They do not modify fixture JSON, CAD, schedules, or generated product artifacts.
 
 ## Annotation mode
 
@@ -83,19 +83,11 @@ Annotations are intentionally local and non-authoritative. Clearing browser stor
 
 A future controlled review workflow may export annotations into a separate review-record schema, but that must remain distinct from product authority.
 
-## V5.2 historical release authority
+## Generated product artifacts
 
-The verified historical V5.2 ZIP is guarded by `releases/vx4800/5.2.0/authority.json`.
+The current repository does not use a `releases/` package tree or `scripts/build_release.py`. `scripts/build_product.py` generates ordinary derived artifacts under `build/vx4800/`, including the V5.2 presentation viewer, coordination STEP/DXF geometry, source and optimized coordination GLBs, the optimization provenance manifest, and interchange loss reports.
 
-During repository recovery, live `fixture.json` formatting was compacted without changing the parsed JSON object. The original V5.2 ZIP had serialized that same object with two-space indentation and one trailing newline. `scripts/build_release.py` reproduces that historical member serialization only inside the frozen V5.2 package, then verifies:
-
-- exact archive SHA-256,
-- exact archive byte length,
-- member order,
-- every member byte length,
-- every member SHA-256.
-
-Live fixture formatting remains non-authoritative. A semantic fixture change would alter the reconstructed member SHA and fail the release gate.
+These generated artifacts remain downstream of canonical fixture data and controlled engineering assets. Rebuilding or publishing them does not promote them to product or manufacturing authority.
 
 ## Public routes
 
@@ -116,5 +108,5 @@ The feature must not merge unless:
 - source web geometry QA passes,
 - optimized web geometry QA passes,
 - the complete pytest suite passes,
-- V5.2 release SHA-256 remains `4cffd5a003a718d359811bf6f3b406d8ad197a92cc3632f9321c6859dca48f79`,
+- product artifacts build successfully,
 - Pages builds the technical inspector and both coordination GLBs.
