@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-test-record.schema.json",
   "title": "AETHERIA VX4800 kinetic physical test record",
   "type": "object",
   "required": ["schemaVersion", "fixtureId", "testCaseId", "recordId", "configuration", "performedAt", "equipment", "acceptanceCriteria", "measurements", "evidence", "result"],
