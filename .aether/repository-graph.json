@@ -1,0 +1,60 @@
+{
+  "protocol": "aether-repository-intelligence/v1",
+  "schema_version": 1,
+  "extractor_version": "1.0.0",
+  "hard_gate_provenance": ["deterministic", "declared"],
+  "declarations": [".aether/repository-graph-declarations.json"],
+  "exclude_prefixes": [
+    ".git/",
+    ".pytest_cache/",
+    ".venv/",
+    "__pycache__/",
+    "node_modules/",
+    "build/",
+    "_site/"
+  ],
+  "generated_output_prefixes": ["build/", "_site/"],
+  "budgets": {
+    "max_nodes": 240,
+    "max_depth": 4,
+    "max_context_chars": 30000
+  },
+  "validation_frontiers": {
+    "presentation": [
+      "python scripts/validate_repository.py",
+      "pytest -q"
+    ],
+    "public_surface": [
+      "python scripts/validate_repository.py",
+      "pytest -q",
+      "python scripts/build_site.py"
+    ],
+    "controlled_engineering": [
+      "python scripts/validate_repository.py",
+      "python scripts/qa_geometry.py",
+      "python scripts/qa_web_geometry.py",
+      "python scripts/qa_optimized_web_geometry.py",
+      "pytest -q",
+      "python scripts/build_product.py",
+      "python scripts/build_site.py"
+    ],
+    "canonical_fixture": [
+      "python scripts/validate_repository.py",
+      "python scripts/qa_geometry.py",
+      "python scripts/qa_web_geometry.py",
+      "python scripts/qa_optimized_web_geometry.py",
+      "pytest -q",
+      "python scripts/build_product.py",
+      "python scripts/build_site.py"
+    ],
+    "release_facing": [
+      "python scripts/validate_repository.py",
+      "python scripts/qa_geometry.py",
+      "python scripts/qa_web_geometry.py",
+      "python scripts/qa_optimized_web_geometry.py",
+      "pytest -q",
+      "python scripts/build_product.py",
+      "python scripts/build_site.py"
+    ]
+  }
+}

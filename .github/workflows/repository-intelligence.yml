@@ -1,0 +1,59 @@
+name: AETHERIA repository intelligence
+
+on:
+  pull_request:
+    paths:
+      - '.aether/repository-graph.json'
+      - '.aether/repository-graph-declarations.json'
+      - 'scripts/repository_intelligence.py'
+      - 'tests/test_repository_intelligence.py'
+      - '.github/workflows/repository-intelligence.yml'
+      - 'fixtures/**'
+      - 'schemas/**'
+      - 'project.json'
+      - 'scripts/build_product.py'
+      - 'scripts/build_site.py'
+      - 'scripts/validate_repository.py'
+      - 'scripts/qa_geometry.py'
+      - 'scripts/qa_web_geometry.py'
+      - 'scripts/qa_optimized_web_geometry.py'
+
+permissions:
+  contents: read
+
+jobs:
+  graph-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install graph and repository validation dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Check repository intelligence syntax
+        run: python -m py_compile scripts/repository_intelligence.py tests/test_repository_intelligence.py
+
+      - name: Run repository intelligence regression suite
+        run: pytest -q tests/test_repository_intelligence.py
+
+      - name: Build fresh graph snapshot
+        run: python scripts/repository_intelligence.py --json build
+
+      - name: Require fresh graph snapshot
+        run: python scripts/repository_intelligence.py --json status
+
+      - name: Preflight canonical VORTEX fixture
+        run: python scripts/repository_intelligence.py --json preflight VX4800-BF-01
+
+      - name: Verify canonical AETHERIA repository authority
+        run: python scripts/validate_repository.py
