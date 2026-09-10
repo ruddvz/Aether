@@ -51,18 +51,15 @@ jobs:
 
           engine = Path('scripts/repository_intelligence.py')
           source = engine.read_text()
-          old = '''        if edge.relation in {"DEPENDS_ON", "GENERATED_FROM", "BUILT_BY"}:
-              downstream.setdefault(edge.target, []).append((edge.source, edge))
-          elif edge.relation in {"VALIDATED_BY", "TESTED_BY", "PRESENTS", "RELEASES_TO", "OBSERVED_IN"}:
-              downstream.setdefault(edge.source, []).append((edge.target, edge))'''
-          new = '''        if edge.relation in {"DEPENDS_ON", "GENERATED_FROM", "BUILT_BY", "PRESENTS"}:
-              downstream.setdefault(edge.target, []).append((edge.source, edge))
-          elif edge.relation in {"VALIDATED_BY", "TESTED_BY", "RELEASES_TO", "OBSERVED_IN"}:
-              downstream.setdefault(edge.source, []).append((edge.target, edge))'''
-          if old in source:
-              engine.write_text(source.replace(old, new))
-          elif new not in source:
-              raise SystemExit('Expected impact traversal block not found; refusing blind rewrite')
+          old_first = 'if edge.relation in {"DEPENDS_ON", "GENERATED_FROM", "BUILT_BY"}:'
+          new_first = 'if edge.relation in {"DEPENDS_ON", "GENERATED_FROM", "BUILT_BY", "PRESENTS"}:'
+          old_second = 'elif edge.relation in {"VALIDATED_BY", "TESTED_BY", "PRESENTS", "RELEASES_TO", "OBSERVED_IN"}:'
+          new_second = 'elif edge.relation in {"VALIDATED_BY", "TESTED_BY", "RELEASES_TO", "OBSERVED_IN"}:'
+          if old_first in source and old_second in source:
+              source = source.replace(old_first, new_first, 1).replace(old_second, new_second, 1)
+              engine.write_text(source)
+          elif not (new_first in source and new_second in source):
+              raise SystemExit('Expected impact traversal clauses not found; refusing blind rewrite')
 
           tests = Path('tests/test_repository_intelligence.py')
           test_source = tests.read_text()
