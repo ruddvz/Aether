@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-hardening.schema.json",
   "title": "AETHERIA VX4800 kinetic safety hardening review",
   "type": "object",
   "required": [
