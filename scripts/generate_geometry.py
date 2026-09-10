@@ -11,7 +11,7 @@ OUT=ROOT/'build/vx4800/geometry'
 
 def scrub_exact(text, pattern, replacement, label, expected=1):
     """Apply a reproducibility scrub and fail if the dependency output shape drifted."""
-    updated, count = re.subn(pattern, replacement, text, count=expected)
+    updated, count = re.subn(pattern, replacement, text)
     if count != expected:
         raise RuntimeError(
             f"Reproducibility scrub {label!r} expected {expected} match(es), found {count}. "
