@@ -1,5 +1,7 @@
 # AETHERIA local implementation snapshot
 
+> Historical snapshot only. This file records the repository state on 2026-09-03 and is not maintained as current status. Use the current source, CI, roadmap and release documentation for present-day repository state.
+
 Date: 2026-09-03
 
 This is a working source snapshot prepared while GitHub write access in the active session was unavailable.
