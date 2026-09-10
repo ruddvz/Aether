@@ -1,11 +1,18 @@
 from copy import deepcopy
+import importlib.util
 import json
 from pathlib import Path
-
-from tools.photometry.candidate_review import evaluate_candidate
+import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MODULE_PATH = ROOT / "tools" / "photometry" / "candidate_review.py"
+SPEC = importlib.util.spec_from_file_location("aether_candidate_review", MODULE_PATH)
+assert SPEC and SPEC.loader
+candidate_review = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = candidate_review
+SPEC.loader.exec_module(candidate_review)
+evaluate_candidate = candidate_review.evaluate_candidate
 
 
 def test_candidate_evaluator_blocks_duplicate_role_configurations():
