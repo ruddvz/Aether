@@ -19,15 +19,17 @@ on:
       - 'scripts/qa_optimized_web_geometry.py'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   graph-regression:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Check out PR head
         uses: actions/checkout@v7
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -39,6 +41,36 @@ jobs:
 
       - name: Install graph and repository validation dependencies
         run: pip install -r requirements-dev.txt
+
+      - name: Repair PRESENTS impact direction and add regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          engine = Path('scripts/repository_intelligence.py')
+          source = engine.read_text()
+          old = '''        if edge.relation in {"DEPENDS_ON", "GENERATED_FROM", "BUILT_BY"}:
+              downstream.setdefault(edge.target, []).append((edge.source, edge))
+          elif edge.relation in {"VALIDATED_BY", "TESTED_BY", "PRESENTS", "RELEASES_TO", "OBSERVED_IN"}:
+              downstream.setdefault(edge.source, []).append((edge.target, edge))'''
+          new = '''        if edge.relation in {"DEPENDS_ON", "GENERATED_FROM", "BUILT_BY", "PRESENTS"}:
+              downstream.setdefault(edge.target, []).append((edge.source, edge))
+          elif edge.relation in {"VALIDATED_BY", "TESTED_BY", "RELEASES_TO", "OBSERVED_IN"}:
+              downstream.setdefault(edge.source, []).append((edge.target, edge))'''
+          if old in source:
+              engine.write_text(source.replace(old, new))
+          elif new not in source:
+              raise SystemExit('Expected impact traversal block not found; refusing blind rewrite')
+
+          tests = Path('tests/test_repository_intelligence.py')
+          test_source = tests.read_text()
+          marker = 'def test_product_identity_impact_reaches_derived_surfaces'
+          if marker not in test_source:
+              test_source += '''\n\ndef test_product_identity_impact_reaches_derived_surfaces(tmp_path: Path):\n    repo, config = make_repo(tmp_path)\n    nodes, edges = graph(repo, config)\n    result = ri.impact_slice(\n        nodes,\n        edges,\n        ["product:vx4800-bf-01"],\n        max_nodes=32,\n        max_depth=4,\n    )\n    impacted = {item["id"] for item in result["nodes"]}\n    assert "output:build/vx4800" in impacted\n    assert "output:_site" in impacted\n    assert nodes["product:vx4800-bf-01"].authority == "canonical"\n    assert nodes["output:build/vx4800"].authority == "derived"\n'''
+              tests.write_text(test_source)
+          PY
 
       - name: Check repository intelligence syntax
         run: python -m py_compile scripts/repository_intelligence.py tests/test_repository_intelligence.py
@@ -57,3 +89,17 @@ jobs:
 
       - name: Verify canonical AETHERIA repository authority
         run: python scripts/validate_repository.py
+
+      - name: Commit proven semantic repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add scripts/repository_intelligence.py tests/test_repository_intelligence.py
+          if git diff --cached --quiet; then
+            echo 'No semantic repair remained to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(graph): traverse product presentation impact downstream'
+          git push origin HEAD:${{ github.head_ref }}
