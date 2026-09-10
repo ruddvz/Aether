@@ -3,11 +3,6 @@
   "brand": "AETHERIA",
   "repository": "ruddvz/Aether",
   "defaultProduct": "vx4800",
-  "schemas": {
-    "fixture": "schemas/aether-fixture.schema.json",
-    "presentationStudy": "schemas/aether-presentation-study.schema.json",
-    "photometry": "schemas/aether-photometry.schema.json"
-  },
   "products": {
     "vx4800": {
       "displayName": "VORTEX",
