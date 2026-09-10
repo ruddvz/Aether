@@ -20,7 +20,7 @@
     "maxSinglePublishedFileBytes": 8388608,
     "zipFilesPermitted": false,
     "forbiddenUrlFragments": ["file://", "localhost:", "127.0.0.1:"],
-    "allowedExternalHosts": ["cdn.jsdelivr.net", "fonts.googleapis.com", "fonts.gstatic.com"]
+    "allowedExternalHosts": ["cdn.jsdelivr.net", "fonts.googleapis.com", "fonts.gstatic.com", "github.com"]
   },
   "routes": [
     {
