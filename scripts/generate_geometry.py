@@ -8,10 +8,27 @@ ROOT=Path(__file__).resolve().parents[1]
 FIX=ROOT/'fixtures/vx4800'
 OUT=ROOT/'build/vx4800/geometry'
 
+
+def _sub_exactly_once(pattern, replacement, text, *, label):
+    """Apply a reproducibility scrub and fail if its expected source shape drifted."""
+    scrubbed, count = re.subn(pattern, replacement, text)
+    if count != 1:
+        raise RuntimeError(
+            f"Deterministic {label} scrub expected exactly one match, found {count}. "
+            "The upstream exporter output may have changed; update the scrub deliberately."
+        )
+    return scrubbed
+
+
 def export_step_deterministic(obj,path):
     cq.exporters.export(obj,str(path))
     txt=Path(path).read_text(errors='strict')
-    txt=re.sub(r"(FILE_NAME\('Open CASCADE Shape Model',)'[^']+'",r"\1'2026-09-03T00:00:00'",txt,count=1)
+    txt=_sub_exactly_once(
+        r"(FILE_NAME\('Open CASCADE Shape Model',)'[^']+'",
+        r"\1'2026-09-03T00:00:00'",
+        txt,
+        label='STEP FILE_NAME timestamp',
+    )
     Path(path).write_text(txt)
 
 def rounded_box(width, depth, height, radius):
@@ -67,11 +84,14 @@ def build():
     m.add_text('AETHERIA VX4800 COORDINATION SETOUT - NOT MANUFACTURING AUTHORITY',dxfattribs={'height':24,'layer':'TEXT'}).set_placement((-1150,-850))
     dxf_path=OUT/'setout-coordination-v1.3.0.dxf'; doc.saveas(dxf_path)
     txt=dxf_path.read_text()
-    txt=re.sub(r'(\$TDCREATE\s+40\s+)\S+',r'\g<1>2461287.5',txt)
-    txt=re.sub(r'(\$TDUPDATE\s+40\s+)\S+',r'\g<1>2461287.5',txt)
-    txt=re.sub(r'(\$TDUCREATE\s+40\s+)\S+',r'\g<1>0.0',txt)
-    txt=re.sub(r'(\$TDUUPDATE\s+40\s+)\S+',r'\g<1>0.0',txt)
-    txt=re.sub(r'1\.4\.4 @ [^\r\n]+', '1.4.4 @ 2026-09-03T00:00:00+00:00', txt)
+    for pattern, replacement, label in [
+        (r'(\$TDCREATE\s+40\s+)\S+', r'\g<1>2461287.5', 'DXF TDCREATE timestamp'),
+        (r'(\$TDUPDATE\s+40\s+)\S+', r'\g<1>2461287.5', 'DXF TDUPDATE timestamp'),
+        (r'(\$TDUCREATE\s+40\s+)\S+', r'\g<1>0.0', 'DXF TDUCREATE timestamp'),
+        (r'(\$TDUUPDATE\s+40\s+)\S+', r'\g<1>0.0', 'DXF TDUUPDATE timestamp'),
+        (r'1\.4\.4 @ [^\r\n]+', '1.4.4 @ 2026-09-03T00:00:00+00:00', 'ezdxf version timestamp'),
+    ]:
+        txt=_sub_exactly_once(pattern, replacement, txt, label=label)
     dxf_path.write_text(txt)
     return OUT
 
