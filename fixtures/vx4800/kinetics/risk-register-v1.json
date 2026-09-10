@@ -1,0 +1,238 @@
+{
+  "$schema": "../../../schemas/aether-kinetic-risk-register.schema.json",
+  "schemaVersion": "1.0.0",
+  "fixtureId": "vx4800-bf-01",
+  "registerRevision": "1.0.0",
+  "status": "hazard-identification-input-not-released",
+  "authority": "engineering-development-input",
+  "finalRiskAssessmentReleased": false,
+  "purpose": "Record kinetic-mechanical hazards and candidate risk-reduction functions without assigning unsupported severity, probability, SIL, PL or safety-category values before the released risk-assessment method and physical evidence exist.",
+  "scopeBoundary": {
+    "owned": ["rotating carrier", "bearing/support interface", "drive transmission", "braking/holding", "mechanical service lock", "secondary retention", "balance/trim", "motion feedback requirements", "abnormal-motion requirements", "power-loss/restart mechanics", "dynamic clearance", "mechanical commissioning/service states"],
+    "interfaces": ["Issue #7 suspension system and dynamic line loads", "Issue #9 butterfly/attachment mass and fragment/failure evidence", "Issue #11 kinetic electrical safety-chain and isolation implementation", "project structural/site interface", "certification/first-article release framework"],
+    "notClaims": ["No hazard has a final risk rating in this register.", "No PL, SIL, category or emergency-stop performance level is assigned.", "No standard is claimed applicable or satisfied merely because it is listed as a review input."]
+  },
+  "standardsInputs": [
+    {
+      "reference": "ISO 12100:2010",
+      "status": "current-published-risk-assessment-methodology-input-subject-to-final-applicability-review",
+      "scopeNote": "ISO describes machinery design risk-assessment/risk-reduction principles. Final VX4800 applicability and the selected risk-assessment method require engineering/certification review.",
+      "source": "https://www.iso.org/standard/51528.html"
+    },
+    {
+      "reference": "ISO 13850:2015",
+      "status": "current-published-emergency-stop-principles-input-subject-to-final-applicability-review",
+      "scopeNote": "ISO describes emergency-stop functional requirements/design principles for machinery. It does not by itself define the VX4800 braking implementation or prove that an emergency stop reduces risk in every condition.",
+      "source": "https://www.iso.org/standard/59970.html"
+    }
+  ],
+  "hazards": [
+    {
+      "id": "KR-001",
+      "hazard": "fall or major downward displacement of the rotating carrier and suspended field",
+      "lifecyclePhases": ["normal operation", "fault", "service", "installation"],
+      "causes": ["primary bearing internal failure", "bearing mounting joint failure", "hub/carrier fracture", "fixed support failure"],
+      "potentialHarm": ["impact/crush injury below fixture", "secondary damage from falling suspended elements"],
+      "existingDesignMeasures": ["engineered primary load path", "normally-clear secondary retention concept", "no false-ceiling structural support"],
+      "furtherAssessmentRequired": ["primary structural calculation", "secondary-retention common-cause coverage", "abnormal engagement loads", "proof test", "site structural interface calculation"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-002",
+      "hazard": "high transient load or component damage when secondary retention engages",
+      "lifecyclePhases": ["fault", "recovery"],
+      "causes": ["primary support separation", "excess catch clearance", "asymmetric catch engagement"],
+      "potentialHarm": ["structural overload", "carrier tilt", "falling fragments/components", "unsafe recovery condition"],
+      "existingDesignMeasures": ["multiple catch sectors under study", "out-of-service state after engagement"],
+      "furtherAssessmentRequired": ["engagement-clearance tolerance stack", "energy/impact load case", "distributed load path", "controlled engagement test", "post-engagement recovery plan"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-003",
+      "hazard": "unexpected start or automatic restart while personnel are near moving components",
+      "lifecyclePhases": ["commissioning", "service", "power restoration", "fault reset"],
+      "causes": ["auto-resume after power return", "fault-reset side effect", "mode confusion", "service-lock state error"],
+      "potentialHarm": ["pinch/shear injury", "entanglement", "impact with moving carrier/service hardware"],
+      "existingDesignMeasures": ["automatic restart prohibited", "fault reset must not command motion", "positive service lock for access", "state model separates held from locked"],
+      "furtherAssessmentRequired": ["control implementation review", "state-transition validation", "operator-interface validation", "reasonable misuse analysis"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-004",
+      "hazard": "uncontrolled or excessive carrier speed",
+      "lifecyclePhases": ["normal operation", "commissioning", "fault"],
+      "causes": ["drive/controller runaway", "feedback failure", "incorrect command/configuration", "brake/holding failure"],
+      "potentialHarm": ["excess pendulum motion", "element collision", "snag/line damage", "structural overload", "service-area motion hazard"],
+      "existingDesignMeasures": ["released speed envelope required", "fixed-side feedback architecture", "overspeed detection requirement", "direct-carrier holding path under study"],
+      "furtherAssessmentRequired": ["independent/diverse speed plausibility need", "overspeed threshold from risk/test evidence", "stop behaviour", "fault injection testing"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-005",
+      "hazard": "pinch, shear or trapping at the fixed/rotating canopy interface",
+      "lifecyclePhases": ["installation", "commissioning", "service", "normal operation"],
+      "causes": ["unguarded bearing/drive/brake interface", "hand/tool entry during motion", "service panel geometry", "carrier runout"],
+      "potentialHarm": ["hand/finger crush or shear", "tool ejection", "component damage"],
+      "existingDesignMeasures": ["guarding required", "no routine access while motion enabled", "service lock plus LOTO for mechanical access"],
+      "furtherAssessmentRequired": ["final pinch-zone drawing", "guard/service-panel validation", "access task analysis", "clearance/tolerance review"],
+      "status": "identified-risk-estimation-pending"
+    },
+    {
+      "id": "KR-006",
+      "hazard": "suspension line, butterfly or foreign-object snag during rotation",
+      "lifecyclePhases": ["normal operation", "commissioning", "service return"],
+      "causes": ["dynamic field interaction", "foreign object", "mis-rigged line", "fixed-head/canopy contact", "replacement error"],
+      "potentialHarm": ["line overload/failure", "butterfly collision/fracture", "drive overload", "secondary falling object"],
+      "existingDesignMeasures": ["abnormal torque/speed detection", "dynamic-clearance programme", "no repeated automatic retry after snag fault"],
+      "furtherAssessmentRequired": ["snag/drag fault testing", "line load consequences from Issue #7", "full-field clearance", "post-service recommission procedure"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-007",
+      "hazard": "butterflies/cables collide with neighbouring elements, fixed accent heads or canopy during transient motion",
+      "lifecyclePhases": ["normal start/stop", "fault stop", "power loss", "commissioning"],
+      "causes": ["pendulum lag", "excess acceleration/jerk", "mass variation", "imbalance", "airflow", "emergency/fault stop"],
+      "potentialHarm": ["element fracture", "line damage", "loss of optical alignment", "falling fragments"],
+      "existingDesignMeasures": ["jerk-limited motion study", "T1-T4 dynamic tests", "all seven clearance categories", "full 240-element pre-hang"],
+      "furtherAssessmentRequired": ["controlled dynamic margins", "worst credible transient", "airflow/project-condition review", "material failure/fragment evidence from Issue #9"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-008",
+      "hazard": "uncontrolled free motion during manual brake/drive release or recovery",
+      "lifecyclePhases": ["fault recovery", "service"],
+      "causes": ["manual brake release before lock", "transmission disengagement", "residual imbalance", "external disturbance"],
+      "potentialHarm": ["pinch/shear", "unexpected field motion", "tool/person impact", "loss of service index"],
+      "existingDesignMeasures": ["zero speed then positive service lock before manual release", "LOTO", "manual freewheel prohibited"],
+      "furtherAssessmentRequired": ["manual recovery physical validation", "reasonably foreseeable incorrect sequence", "recovery procedure for failed service-index alignment"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-009",
+      "hazard": "service lock not fully engaged, false indication or motion command against engaged lock",
+      "lifecyclePhases": ["service", "commissioning", "fault recovery"],
+      "causes": ["misalignment", "partial insertion", "wear", "sensor/indicator disagreement", "control interlock defect"],
+      "potentialHarm": ["unexpected carrier movement during access", "lock/receiver damage", "bearing/frame overload"],
+      "existingDesignMeasures": ["direct physical engagement verification", "captive positive lock", "software may supplement but not replace mechanical verification", "run inhibit required"],
+      "furtherAssessmentRequired": ["partial-engagement test", "proof test", "service-cycle wear", "state/interlock validation"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-010",
+      "hazard": "loose trim mass, fastener or rotating service component becomes a falling/ejected object or causes imbalance",
+      "lifecyclePhases": ["normal operation", "after service", "endurance"],
+      "causes": ["fastener loosening", "incorrect reassembly", "fatigue", "missing secondary capture"],
+      "potentialHarm": ["falling object injury", "carrier imbalance", "contact with fixed canopy", "secondary component damage"],
+      "existingDesignMeasures": ["trim masses positively locked and secondarily captured", "witness/record requirements", "replacement triggers balance review"],
+      "furtherAssessmentRequired": ["fastener retention qualification", "endurance inspection", "service torque/preload control", "foreign-object containment review"],
+      "status": "identified-risk-estimation-pending"
+    },
+    {
+      "id": "KR-011",
+      "hazard": "butterfly material/attachment fracture creates falling fragments or detached element",
+      "lifecyclePhases": ["normal operation", "fault stop", "service", "aging"],
+      "causes": ["attachment failure", "impact/collision", "material defect", "fatigue", "glass/PMMA failure"],
+      "potentialHarm": ["falling fragment injury", "line recoil/snag", "neighbor damage"],
+      "existingDesignMeasures": ["material/attachment proof and fatigue qualification owned by Issue #9/material track", "failure/fragment retention required"],
+      "furtherAssessmentRequired": ["consume final tier failure evidence", "dynamic collision consequences", "replacement/matched-spare procedure"],
+      "status": "identified-risk-estimation-pending"
+    },
+    {
+      "id": "KR-012",
+      "hazard": "suspension gripper/cable/lower bridle failure causes a complete butterfly assembly to fall",
+      "lifecyclePhases": ["normal operation", "fault stop", "service", "aging"],
+      "causes": ["gripper slip", "cable fatigue", "terminal failure", "incorrect adjustment", "off-axis loading"],
+      "potentialHarm": ["falling object injury", "neighbour snag/collision"],
+      "existingDesignMeasures": ["supplier-rated matched system required", "proof/slip/fatigue testing", "Issue #7 dynamic line design load"],
+      "furtherAssessmentRequired": ["exact system selection", "dynamic load factor", "production-equivalent proof/fatigue test", "inspection interval"],
+      "status": "identified-risk-estimation-pending"
+    },
+    {
+      "id": "KR-013",
+      "hazard": "kinetic electrical isolation/control state does not match mechanical state",
+      "lifecyclePhases": ["service", "commissioning", "fault", "power restoration"],
+      "causes": ["wrong isolation point", "control power restored unexpectedly", "brake release command", "interlock wiring/configuration error"],
+      "potentialHarm": ["unexpected motion", "loss of holding", "unsafe service access"],
+      "existingDesignMeasures": ["independent kinetic isolation required", "positive mechanical lock", "no automatic restart", "fixed-side control architecture"],
+      "furtherAssessmentRequired": ["Issue #11 electrical safety-chain implementation", "LOTO procedure", "state-transition test", "power-loss/restore test"],
+      "status": "identified-risk-estimation-pending"
+    },
+    {
+      "id": "KR-014",
+      "hazard": "fault stop or power-loss stop excites the suspended field more severely than normal operation",
+      "lifecyclePhases": ["fault", "power loss"],
+      "causes": ["abrupt brake application", "high jerk", "worst-case phase of 240 pendulums", "imbalance"],
+      "potentialHarm": ["element collision/fracture", "line overload", "clearance violation", "structural transient load"],
+      "existingDesignMeasures": ["fault/power-loss cases separated from normal stop", "physical T1-T4 stop tests required", "braking energy/travel calculation required"],
+      "furtherAssessmentRequired": ["approved stop profiles", "power-loss braking architecture", "worst credible transient testing", "dynamic line loads from Issue #7"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-015",
+      "hazard": "secondary retention unintentionally rubs or contacts during ordinary rotation",
+      "lifecyclePhases": ["normal operation", "after service", "endurance"],
+      "causes": ["runout", "support deflection", "tolerance stack", "loosened catch/capture hardware", "bearing wear"],
+      "potentialHarm": ["wear/debris", "unexpected braking/torque", "heat/noise", "damage that compromises later emergency retention"],
+      "existingDesignMeasures": ["normally-clear non-load-sharing intent", "contact triggers out-of-service inspection"],
+      "furtherAssessmentRequired": ["clearance tolerance stack", "runout/endurance evidence", "contact witness/inspection method"],
+      "status": "risk-reduction-defined-validation-pending"
+    },
+    {
+      "id": "KR-016",
+      "hazard": "maintenance or installation at height creates access and dropped-object hazards outside the normal rotating mechanism",
+      "lifecyclePhases": ["installation", "service", "inspection", "decommissioning"],
+      "causes": ["overhead work", "removed canopy panels/components", "tool handling", "site access method"],
+      "potentialHarm": ["fall from height", "dropped tool/component injury", "damage to suspended field"],
+      "existingDesignMeasures": ["serviceable components must be accessible without destructive canopy work", "mechanical lock/LOTO before kinetic service"],
+      "furtherAssessmentRequired": ["project installation method statement", "safe access equipment", "tool/component retention practice", "site-specific work-at-height controls"],
+      "status": "identified-risk-estimation-pending"
+    }
+  ],
+  "safetyRelatedFunctionCandidates": [
+    {
+      "id": "SRF-CAND-01",
+      "function": "prevent unexpected automatic restart after power restoration or fault reset",
+      "allocationStatus": "candidate-function-risk-assessment-pending",
+      "performanceLevelOrSil": null,
+      "note": "No performance level is assigned until the released risk assessment and final electrical architecture allocate the function."
+    },
+    {
+      "id": "SRF-CAND-02",
+      "function": "stop or inhibit motion on overspeed/feedback disagreement",
+      "allocationStatus": "candidate-function-risk-assessment-pending",
+      "performanceLevelOrSil": null,
+      "note": "Independent/diverse sensing need remains to be determined."
+    },
+    {
+      "id": "SRF-CAND-03",
+      "function": "inhibit powered motion while the mechanical service lock is engaged",
+      "allocationStatus": "candidate-function-risk-assessment-pending",
+      "performanceLevelOrSil": null,
+      "note": "The electrical interlock supplements the positive mechanical restraint; it does not replace it."
+    },
+    {
+      "id": "SRF-CAND-04",
+      "function": "stop or inhibit repeated motion when abnormal drag/jam is detected",
+      "allocationStatus": "candidate-function-risk-assessment-pending",
+      "performanceLevelOrSil": null,
+      "note": "Thresholds and response require physical rig evidence."
+    },
+    {
+      "id": "SRF-CAND-05",
+      "function": "establish a held non-moving state after loss of normal propulsion power",
+      "allocationStatus": "candidate-function-risk-assessment-pending",
+      "performanceLevelOrSil": null,
+      "note": "Final braking/holding architecture and stop transient are unresolved."
+    }
+  ],
+  "promotionGate": {
+    "intendedUseAndReasonableMisuseDefined": false,
+    "hazardIdentificationReviewed": false,
+    "riskEstimationMethodApproved": false,
+    "riskReductionMeasuresVerified": false,
+    "emergencyStopNeedAndBehaviorResolved": false,
+    "safetyRelatedControlFunctionsAllocated": false,
+    "residualRiskDocumentationReleased": false,
+    "validationEvidenceLinked": false
+  }
+}
