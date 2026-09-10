@@ -1,0 +1,12 @@
+{
+  "name": "aetheria-web-qa",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Pinned cross-browser smoke QA for AETHERIA Pages outputs.",
+  "devDependencies": {
+    "@playwright/test": "1.62.1"
+  },
+  "scripts": {
+    "test:e2e": "playwright test --config=playwright.config.mjs"
+  }
+}

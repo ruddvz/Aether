@@ -1,0 +1,54 @@
+{
+  "$schema": "../../schemas/aether-web-quality-budget.schema.json",
+  "schemaVersion": "1.0.0",
+  "status": "active",
+  "authority": "repository-quality-gate",
+  "purpose": "Define deterministic static-site and cross-browser smoke gates for the published AETHERIA catalog, VX4800 viewer and VX4800 technical inspector without changing product engineering authority.",
+  "toolchain": {
+    "nodeMajor": 24,
+    "playwright": "1.62.1"
+  },
+  "browserMatrix": [
+    "chromium-desktop",
+    "firefox-desktop",
+    "webkit-desktop",
+    "iphone-webkit-emulation",
+    "android-chromium-emulation"
+  ],
+  "global": {
+    "maxPublishedTreeBytes": 16777216,
+    "maxSinglePublishedFileBytes": 8388608,
+    "zipFilesPermitted": false,
+    "forbiddenUrlFragments": ["file://", "localhost:", "127.0.0.1:"],
+    "allowedExternalHosts": ["cdn.jsdelivr.net", "fonts.googleapis.com", "fonts.gstatic.com"]
+  },
+  "routes": [
+    {
+      "id": "catalog",
+      "path": "/",
+      "htmlFile": "index.html",
+      "requiredSelector": "main",
+      "maxHtmlBytes": 131072
+    },
+    {
+      "id": "vx4800-viewer",
+      "path": "/products/vx4800/",
+      "htmlFile": "products/vx4800/index.html",
+      "requiredSelector": "#dock",
+      "maxHtmlBytes": 3145728
+    },
+    {
+      "id": "vx4800-inspector",
+      "path": "/products/vx4800/inspect/",
+      "htmlFile": "products/vx4800/inspect/index.html",
+      "requiredSelector": ".toolbar",
+      "maxHtmlBytes": 262144
+    }
+  ],
+  "notes": [
+    "Playwright iPhone and Android projects are browser/device emulations, not physical-device certification.",
+    "Lighthouse is intentionally staged outside the active blocking gate until its audit runner is reliable.",
+    "The immutable V5.2 presentation is tested as published and is not modified merely to improve software QA results.",
+    "Performance and browser QA are software-delivery evidence only and do not change VX4800 engineering, manufacturing, photometry or certification authority."
+  ]
+}

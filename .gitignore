@@ -9,4 +9,6 @@ __pycache__/
 *.blend1
 *.blend2
 renders/
+qa/node_modules/
+qa/artifacts/
 fixtures/vx4800/presentation/v5.2.0/assets/architectural-background.webp
