@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ruddvz.github.io/Aether/schemas/aether-kinetic-qualification.schema.json",
+  "title": "AETHERIA VX4800 kinetic component qualification shortlist",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "fixtureId",
+    "qualificationRevision",
+    "status",
+    "authority",
+    "finalKineticComponentSetApproved",
+    "reviewedAt",
+    "selectionRule",
+    "bearingCandidates",
+    "driveCandidates",
+    "brakeReferenceCandidates",
+    "feedbackCandidates",
+    "selectionGates",
+    "promotionGate"
+  ],
+  "properties": {
+    "fixtureId": {"const": "vx4800-bf-01"},
+    "authority": {"enum": ["research-and-rfq-input", "controlled"]},
+    "finalKineticComponentSetApproved": {"type": "boolean"},
+    "bearingCandidates": {"type": "array", "minItems": 3},
+    "driveCandidates": {"type": "array", "minItems": 3},
+    "brakeReferenceCandidates": {"type": "array", "minItems": 1},
+    "feedbackCandidates": {"type": "array", "minItems": 2},
+    "promotionGate": {
+      "type": "object",
+      "required": [
+        "bearingSelected",
+        "driveSelected",
+        "brakeSelected",
+        "feedbackSelected",
+        "manufacturerApplicationReviewsAccepted",
+        "exactVariantDataControlled",
+        "prototypeEvidenceAccepted",
+        "finalKineticComponentSetApproved"
+      ],
+      "properties": {
+        "bearingSelected": {"type": "boolean"},
+        "driveSelected": {"type": "boolean"},
+        "brakeSelected": {"type": "boolean"},
+        "feedbackSelected": {"type": "boolean"},
+        "manufacturerApplicationReviewsAccepted": {"type": "boolean"},
+        "exactVariantDataControlled": {"type": "boolean"},
+        "prototypeEvidenceAccepted": {"type": "boolean"},
+        "finalKineticComponentSetApproved": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"finalKineticComponentSetApproved": {"const": true}}, "required": ["finalKineticComponentSetApproved"]},
+      "then": {
+        "properties": {
+          "authority": {"const": "controlled"},
+          "status": {"const": "approved"},
+          "promotionGate": {
+            "properties": {
+              "bearingSelected": {"const": true},
+              "driveSelected": {"const": true},
+              "brakeSelected": {"const": true},
+              "feedbackSelected": {"const": true},
+              "manufacturerApplicationReviewsAccepted": {"const": true},
+              "exactVariantDataControlled": {"const": true},
+              "prototypeEvidenceAccepted": {"const": true},
+              "finalKineticComponentSetApproved": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": true
+}
