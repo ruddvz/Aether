@@ -52,6 +52,17 @@ def evaluate_candidate(candidate: dict, brief: dict) -> dict:
         if not role_cfgs:
             findings.append(Finding("blocker", "role-missing", f"No exact configuration supplied for {role}.", role))
             continue
+        if len(role_cfgs) > 1:
+            labels = [cfg.get("exactModelCode") or "<unconfirmed>" for cfg in role_cfgs]
+            findings.append(
+                Finding(
+                    "blocker",
+                    "duplicate-role-configurations",
+                    f"Multiple configurations supplied for {role}: {', '.join(labels)}. Candidate review requires exactly one configuration per controlled role.",
+                    role,
+                )
+            )
+            continue
 
         cfg = role_cfgs[0]
         label = cfg.get("exactModelCode") or role
