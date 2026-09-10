@@ -1,10 +1,12 @@
 # AETHERIA local implementation snapshot
 
+> Historical record only. Frozen on 2026-09-03 and not maintained as current repository status. Use `README.md`, `ROADMAP.md`, current validation output and open GitHub issues for the live state.
+
 Date: 2026-09-03
 
 This is a working source snapshot prepared while GitHub write access in the active session was unavailable.
 
-## Current verified state
+## Current verified state at the snapshot date
 
 - Canonical VORTEX design revision: 1.3.0
 - Presentation revision: 5.2.0
@@ -16,7 +18,7 @@ This is a working source snapshot prepared while GitHub write access in the acti
 - Repository CAD authority: coordination only
 - Manufacturing geometry remains external controlled authority
 
-## Implemented platform capabilities
+## Implemented platform capabilities at the snapshot date
 
 - canonical fixture schema and validation
 - engineering/presentation authority separation
@@ -37,7 +39,7 @@ This is a working source snapshot prepared while GitHub write access in the acti
 - honest-null candidate schema for unverified exact fields
 - dormant measured-distribution browser adapter with SHA/provenance gating
 
-## Verification
+## Verification recorded at the snapshot date
 
 - repository validation: PASS
 - engineering geometry QA: PASS
@@ -47,7 +49,7 @@ This is a working source snapshot prepared while GitHub write access in the acti
 - deterministic product release: byte-identical across rebuilds
 - current deterministic product release SHA-256: `4cffd5a003a718d359811bf6f3b406d8ad197a92cc3632f9321c6859dca48f79`
 
-## Important limitations
+## Important limitations recorded at the snapshot date
 
 - Current lighting remains conceptual until exact supplier/laboratory IES data is approved.
 - Precision official IES URLs are registered as linked evidence only; raw bytes are not yet controlled or parsed.
