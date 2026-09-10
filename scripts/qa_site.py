@@ -14,10 +14,23 @@ DEFAULT_CONFIG = ROOT / "fixtures/platform/web-quality-v1.json"
 DEFAULT_SCHEMA = ROOT / "schemas/aether-web-quality-budget.schema.json"
 
 
+RUNTIME_LINK_RELS = {
+    "stylesheet",
+    "preload",
+    "modulepreload",
+    "prefetch",
+    "dns-prefetch",
+    "preconnect",
+    "icon",
+    "manifest",
+}
+
+
 class SiteParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self.refs: list[str] = []
+        self.runtime_refs: list[str] = []
         self.html_attrs: dict[str, str] = {}
         self.has_viewport = False
         self.title_text = ""
@@ -37,10 +50,19 @@ class SiteParser(HTMLParser):
         if tag == "script" and values.get("type", "").lower() == "importmap":
             self._in_importmap = True
             self._importmap_data = []
-        for key in ("href", "src"):
-            value = values.get(key)
-            if value:
-                self.refs.append(value)
+
+        href = values.get("href")
+        if href:
+            self.refs.append(href)
+            if tag == "link":
+                rels = {item.lower() for item in values.get("rel", "").split()}
+                if rels & RUNTIME_LINK_RELS:
+                    self.runtime_refs.append(href)
+
+        src = values.get("src")
+        if src:
+            self.refs.append(src)
+            self.runtime_refs.append(src)
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "title":
@@ -52,7 +74,9 @@ class SiteParser(HTMLParser):
                 imports = payload.get("imports", {})
                 if not isinstance(imports, dict):
                     raise ValueError("imports must be an object")
-                self.refs.extend(value for value in imports.values() if isinstance(value, str))
+                import_refs = [value for value in imports.values() if isinstance(value, str)]
+                self.refs.extend(import_refs)
+                self.runtime_refs.extend(import_refs)
             except (json.JSONDecodeError, ValueError) as exc:
                 self.importmap_errors.append(str(exc))
             finally:
@@ -153,11 +177,11 @@ def validate_site(site_root: Path, config_path: Path, schema_path: Path) -> dict
             errors.append(f"{route_id}: invalid import map: {'; '.join(parser.importmap_errors)}")
 
         for forbidden in global_cfg["forbiddenUrlFragments"]:
-            matching = [ref for ref in parser.refs if forbidden in ref]
+            matching = [ref for ref in parser.runtime_refs if forbidden in ref]
             if matching:
                 errors.append(f"{route_id}: runtime references contain forbidden fragment {forbidden!r}: {matching}")
 
-        hosts = external_hosts(parser.refs)
+        hosts = external_hosts(parser.runtime_refs)
         route_result["externalHosts"] = sorted(hosts)
         unexpected = sorted(hosts - allowed_hosts)
         if unexpected:
