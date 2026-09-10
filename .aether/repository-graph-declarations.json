@@ -1,0 +1,84 @@
+{
+  "protocol": "aether-repository-intelligence/v1",
+  "nodes": [
+    {
+      "id": "output:build/vx4800",
+      "kind": "derived_output_group",
+      "label": "VX4800 product build",
+      "path": "build/vx4800/",
+      "authority": "derived"
+    },
+    {
+      "id": "output:_site",
+      "kind": "derived_output_group",
+      "label": "GitHub Pages site",
+      "path": "_site/",
+      "authority": "derived"
+    }
+  ],
+  "edges": [
+    {
+      "source": "output:build/vx4800",
+      "target": "file:scripts/build_product.py",
+      "relation": "BUILT_BY",
+      "provenance": "declared",
+      "authority": "build-contract"
+    },
+    {
+      "source": "output:build/vx4800",
+      "target": "file:fixtures/vx4800/fixture.json",
+      "relation": "GENERATED_FROM",
+      "provenance": "declared",
+      "authority": "canonical-to-derived"
+    },
+    {
+      "source": "output:_site",
+      "target": "file:scripts/build_site.py",
+      "relation": "BUILT_BY",
+      "provenance": "declared",
+      "authority": "build-contract"
+    },
+    {
+      "source": "output:_site",
+      "target": "output:build/vx4800",
+      "relation": "GENERATED_FROM",
+      "provenance": "declared",
+      "authority": "derived-chain"
+    },
+    {
+      "source": "output:_site",
+      "target": "file:project.json",
+      "relation": "GENERATED_FROM",
+      "provenance": "declared",
+      "authority": "catalog-presentation"
+    },
+    {
+      "source": "file:fixtures/vx4800/fixture.json",
+      "target": "file:scripts/validate_repository.py",
+      "relation": "VALIDATED_BY",
+      "provenance": "declared",
+      "authority": "repository-validation"
+    },
+    {
+      "source": "file:fixtures/vx4800/geometry/manifest.json",
+      "target": "file:scripts/qa_geometry.py",
+      "relation": "TESTED_BY",
+      "provenance": "declared",
+      "authority": "geometry-qa"
+    },
+    {
+      "source": "file:fixtures/vx4800/geometry/manifest.json",
+      "target": "file:scripts/qa_web_geometry.py",
+      "relation": "TESTED_BY",
+      "provenance": "declared",
+      "authority": "web-geometry-qa"
+    },
+    {
+      "source": "file:fixtures/vx4800/geometry/manifest.json",
+      "target": "file:scripts/qa_optimized_web_geometry.py",
+      "relation": "TESTED_BY",
+      "provenance": "declared",
+      "authority": "optimized-web-geometry-qa"
+    }
+  ]
+}
