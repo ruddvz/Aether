@@ -8,6 +8,7 @@
     "designRevision",
     "presentationRevision",
     "authority",
+    "sourceViewer",
     "expectedViewerDataSha256",
     "sizeAllocation",
     "declaredDivergences"
@@ -18,6 +19,7 @@
     "designRevision": {"type": "string"},
     "presentationRevision": {"type": "string"},
     "authority": {"const": "presentation-only"},
+    "sourceViewer": {"type": "string", "minLength": 1},
     "expectedViewerDataSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "sizeAllocation": {
       "type": "object",
