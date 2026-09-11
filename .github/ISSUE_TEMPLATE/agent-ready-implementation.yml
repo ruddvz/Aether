@@ -1,0 +1,129 @@
+name: Agent-ready implementation
+description: Create a bounded implementation issue that an independent agent can execute safely end-to-end.
+title: "[Implementation] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for one bounded implementation lane. Broad programmes should be split into child issues before parallel mutation. Repository coordination never replaces AETHERIA engineering or evidence authority.
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: State the exact user, repository, engineering or operational result this issue must produce and why it matters.
+      placeholder: Describe the result, not only the files to edit.
+    validations:
+      required: true
+
+  - type: textarea
+    id: source_truth
+    attributes:
+      label: Controlling sources of truth
+      description: List the exact canonical files, schemas, engineering records, issue evidence or repository rules that govern this work. Mark unknown external evidence explicitly.
+      placeholder: "Example: fixtures/vx4800/fixture.json; schema X; issue #Y; external evidence remains TBD"
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: In-scope work
+      description: Describe the smallest complete implementation slice this issue owns.
+    validations:
+      required: true
+
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Explicit non-goals
+      description: Name adjacent work this lane must not absorb.
+      placeholder: State what must remain unchanged.
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and blockers
+      description: List issues, PRs, external evidence, approvals or preceding work that must exist first. Write "none known" only after checking.
+    validations:
+      required: true
+
+  - type: textarea
+    id: ownership
+    attributes:
+      label: Expected files and shared interfaces
+      description: List likely files/globs and any shared contract/interface this lane may affect. This is planning input, not an ownership claim by itself.
+      placeholder: "files: path/a; path/b/**\ninterfaces: viewer route contract; none"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: authority_surface
+    attributes:
+      label: Primary authority surface
+      description: Choose the highest-impact surface this issue may change. Final classification still follows .aether/FAST-KERNEL.md.
+      options:
+        - Documentation / repository prose
+        - Presentation / visual study
+        - Public inspector / interaction
+        - Builder / validator
+        - Canonical fixture data
+        - Schema / data contract
+        - Source geometry
+        - Photometry evidence
+        - Release / manufacturing
+        - Mixed or not yet classified
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Give observable pass conditions. Include error/edge states, UI/UX/accessibility/responsive requirements and evidence honesty where relevant.
+      placeholder: "- [ ] ...\n- [ ] ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: Required validation and evidence
+      description: List exact commands, browser/device checks, independent review, live verification or controlled external evidence required before the requested stop point can be called green.
+      placeholder: "python scripts/validate_repository.py\npytest -q\n..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: rollout_recovery
+    attributes:
+      label: Rollout, live verification and recovery
+      description: For public, persistent or destructive changes, state deployment/live verification and rollback/recovery needs. Otherwise state why not applicable.
+    validations:
+      required: true
+
+  - type: textarea
+    id: completion
+    attributes:
+      label: Completion condition
+      description: Define the authorised stop point. An open PR alone is not end-to-end completion.
+      placeholder: "Example: merged after required CI/review, live route verified, issue reconciled, claim released"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: readiness
+    attributes:
+      label: Readiness check
+      options:
+        - label: I checked the active-work board, target/related issues and open PRs for duplicate or overlapping work.
+          required: true
+        - label: This is one bounded implementation lane, or the broad programme has been split into child issues.
+          required: true
+        - label: Unknown or externally controlled engineering evidence is left unknown rather than invented.
+          required: true
+        - label: Out-of-scope findings will become deduplicated follow-up issues instead of silent scope expansion.
+          required: true
