@@ -2,13 +2,15 @@ name: Validate AETHERIA web quality
 
 on:
   push:
-    branches: [main, "feat/**"]
+    branches: [main, "feat/**", "fix/**"]
     paths:
       - ".github/workflows/web-quality.yml"
       - "qa/**"
       - "fixtures/platform/web-quality-v1.json"
       - "schemas/aether-web-quality-budget.schema.json"
       - "scripts/qa_site.py"
+      - "scripts/run_lighthouse.py"
+      - "scripts/enforce_lighthouse.py"
       - "scripts/build_site.py"
       - "scripts/build_product.py"
       - "scripts/build_viewer.py"
@@ -25,6 +27,8 @@ on:
       - "fixtures/platform/web-quality-v1.json"
       - "schemas/aether-web-quality-budget.schema.json"
       - "scripts/qa_site.py"
+      - "scripts/run_lighthouse.py"
+      - "scripts/enforce_lighthouse.py"
       - "scripts/build_site.py"
       - "scripts/build_product.py"
       - "scripts/build_viewer.py"
@@ -73,12 +77,13 @@ jobs:
           python scripts/qa_site.py _site \
             --report qa/artifacts/static-site-qa.report.json
 
-      - name: Install pinned browser QA toolchain
+      - name: Install pinned browser and Lighthouse QA toolchain
         working-directory: qa
         run: |
           npm install --no-audit --no-fund
           ./node_modules/.bin/playwright install --with-deps chromium firefox webkit
           node -e "const p=require('./node_modules/@playwright/test/package.json'); if(p.version!=='1.62.1') process.exit(2); console.log('Playwright',p.version)"
+          node -e "const p=require('./node_modules/lighthouse/package.json'); if(p.version!=='13.4.1') process.exit(2); console.log('Lighthouse',p.version)"
 
       - name: Start local Pages server
         run: |
@@ -99,7 +104,34 @@ jobs:
           AETHERIA_QA_BASE_URL: http://127.0.0.1:4173
         run: ./node_modules/.bin/playwright test --config=playwright.config.mjs
 
-      - name: Upload browser QA evidence
+      - name: Resolve Playwright Chromium for Lighthouse
+        shell: bash
+        run: |
+          CHROME_PATH="$(find "$HOME/.cache/ms-playwright" -type f -name chrome -perm -111 -print -quit)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "Unable to resolve Playwright Chromium executable" >&2
+            find "$HOME/.cache/ms-playwright" -maxdepth 4 -type f -perm -111 -print || true
+            exit 1
+          fi
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          "$CHROME_PATH" --version
+
+      - name: Produce all Lighthouse reports with transport diagnostics
+        env:
+          AETHERIA_QA_BASE_URL: http://127.0.0.1:4173
+        run: |
+          python scripts/run_lighthouse.py \
+            --report-dir qa/artifacts/lighthouse \
+            --summary qa/artifacts/lighthouse-production-summary.json \
+            --attempts 2 \
+            --timeout-seconds 120
+
+      - name: Enforce unchanged Lighthouse score budgets
+        run: |
+          python scripts/enforce_lighthouse.py qa/artifacts/lighthouse \
+            --output qa/artifacts/lighthouse-budget-summary.json
+
+      - name: Upload browser and performance evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
