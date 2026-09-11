@@ -25,14 +25,6 @@ function errorMessage(error) {
   return String(error);
 }
 
-function withTimeout(promise, timeoutMs, label) {
-  let timer;
-  const timeout = new Promise((_, reject) => {
-    timer = setTimeout(() => reject(new Error(`${label} exceeded ${timeoutMs} ms`)), timeoutMs);
-  });
-  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
-}
-
 function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`);
 }
@@ -41,6 +33,7 @@ const config = readJson(CONFIG_PATH);
 const lighthousePolicy = config.lighthouse;
 const baseUrl = process.env.AETHERIA_QA_BASE_URL || 'http://127.0.0.1:4174';
 const chromePath = process.env.CHROME_PATH;
+const realtimeRouteIds = new Set(lighthousePolicy.realtimeRouteIds || []);
 
 fs.mkdirSync(ARTIFACT_ROOT, { recursive: true });
 
@@ -55,10 +48,12 @@ const summary = {
   toolchain: config.toolchain,
   categories: lighthousePolicy.categories,
   formFactors: lighthousePolicy.formFactors,
+  realtimeRouteIds: [...realtimeRouteIds],
   audits: [],
   failures: [],
   notes: [
     'This stage proves Lighthouse report production and records scores.',
+    'The real-time V5.2 viewer uses zero post-load quiet windows because its render loop is intentionally continuous; normal FCP, load and network completion still apply.',
     'Score enforcement is intentionally disabled until canonical historical floors are recovered or deliberately re-approved.',
     'Lighthouse output is software-delivery evidence only and does not qualify VX4800 engineering or physical product performance.'
   ]
@@ -78,13 +73,25 @@ function recordFailure({ route, formFactor, attempt, phase, error }) {
     path.join(ARTIFACT_ROOT, `${safeId(route.id)}-${formFactor}-attempt-${attempt}.failure.json`),
     failure
   );
+  console.error(`[lighthouse] ${route.id}/${formFactor} attempt ${attempt} ${phase}: ${failure.message}`);
   return failure;
+}
+
+function loadProfileFor(route) {
+  if (!realtimeRouteIds.has(route.id)) return { name: 'standard', flags: {} };
+  return {
+    name: 'realtime-continuous-render',
+    flags: { ...lighthousePolicy.realtimeLoadProfile }
+  };
 }
 
 async function runAuditAttempt(route, formFactor, attempt) {
   const url = new URL(route.path, baseUrl).toString();
   const startedAt = new Date().toISOString();
+  const loadProfile = loadProfileFor(route);
   let chrome;
+
+  console.log(`[lighthouse] starting ${route.id}/${formFactor} attempt ${attempt} (${loadProfile.name})`);
 
   try {
     chrome = await chromeLauncher.launch({
@@ -95,7 +102,6 @@ async function runAuditAttempt(route, formFactor, attempt) {
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
-        '--disable-gpu',
         '--no-first-run',
         '--no-default-browser-check'
       ]
@@ -112,14 +118,11 @@ async function runAuditAttempt(route, formFactor, attempt) {
       output: ['json', 'html'],
       onlyCategories: lighthousePolicy.categories,
       maxWaitForFcp: lighthousePolicy.maxWaitForFcpMs,
-      maxWaitForLoad: lighthousePolicy.maxWaitForLoadMs
+      maxWaitForLoad: lighthousePolicy.maxWaitForLoadMs,
+      ...loadProfile.flags
     };
     const activeConfig = formFactor === 'desktop' ? desktopConfig : undefined;
-    const result = await withTimeout(
-      lighthouse(url, flags, activeConfig),
-      lighthousePolicy.auditTimeoutMs,
-      `${route.id}/${formFactor} Lighthouse audit`
-    );
+    const result = await lighthouse(url, flags, activeConfig);
 
     if (!result?.lhr) {
       throw new Error('Lighthouse returned no LHR payload');
@@ -143,6 +146,7 @@ async function runAuditAttempt(route, formFactor, attempt) {
     fs.writeFileSync(path.join(ARTIFACT_ROOT, `${prefix}.report.json`), reportOutputs[0]);
     fs.writeFileSync(path.join(ARTIFACT_ROOT, `${prefix}.report.html`), reportOutputs[1]);
 
+    const settings = result.lhr.configSettings || {};
     const audit = {
       routeId: route.id,
       path: route.path,
@@ -150,16 +154,27 @@ async function runAuditAttempt(route, formFactor, attempt) {
       formFactor,
       attempt,
       status: 'produced',
+      loadProfile: loadProfile.name,
       startedAt,
       completedAt: new Date().toISOString(),
       fetchTime: result.lhr.fetchTime || null,
       finalDisplayedUrl: result.lhr.finalDisplayedUrl || null,
       lighthouseVersion: result.lhr.lighthouseVersion || null,
       userAgent: result.lhr.userAgent || null,
+      loadSettings: {
+        maxWaitForFcp: settings.maxWaitForFcp ?? null,
+        maxWaitForLoad: settings.maxWaitForLoad ?? null,
+        pauseAfterFcpMs: settings.pauseAfterFcpMs ?? null,
+        pauseAfterLoadMs: settings.pauseAfterLoadMs ?? null,
+        networkQuietThresholdMs: settings.networkQuietThresholdMs ?? null,
+        cpuQuietThresholdMs: settings.cpuQuietThresholdMs ?? null,
+        disableFullPageScreenshot: settings.disableFullPageScreenshot ?? null
+      },
       scores
     };
     summary.audits.push(audit);
     writeJson(path.join(ARTIFACT_ROOT, `${prefix}.summary.json`), audit);
+    console.log(`[lighthouse] produced ${route.id}/${formFactor}: ${JSON.stringify(scores)}`);
     return audit;
   } catch (error) {
     recordFailure({ route, formFactor, attempt, phase: 'audit-production', error });
@@ -207,6 +222,10 @@ for (const route of config.routes) {
     }
     if (!produced) summary.status = 'fail';
   }
+}
+
+if (summary.failures.some(failure => failure.phase === 'browser-cleanup')) {
+  summary.status = 'fail';
 }
 
 writeJson(path.join(ARTIFACT_ROOT, 'summary.json'), summary);

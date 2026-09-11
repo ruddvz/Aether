@@ -32,6 +32,14 @@ The report-production job audits the catalog, V5.2 viewer and inspector in both 
 
 Browser startup failures are recorded as `browser-launch`. Failures after Chrome is available but before Lighthouse returns a valid report are recorded as `audit-production`. Browser shutdown failures are recorded separately as `browser-cleanup`. This makes runner/transport instability distinguishable from genuine audit findings.
 
+### Continuous-render viewer profile
+
+The first pinned production run proved that catalog mobile and desktop audits complete normally, but the V5.2 viewer does not satisfy Lighthouse's default CPU-idle assumption because its WebGL render loop is intentionally continuous. A generic outer Promise timeout was also the wrong control because terminating Chrome while Lighthouse was still gathering could leave protocol work in flight.
+
+The viewer therefore uses a declared Lighthouse load profile instead of modifying the V5.2 page. It retains normal first-contentful-paint, load-event and network-completion requirements, but sets the post-load FCP, load, network-quiet and CPU-quiet windows to zero and disables the full-page Lighthouse screenshot. In Lighthouse itself, a zero CPU-quiet interval bypasses the page-side CPU-idle probe, which is the protocol path that failed under the hot renderer. Catalog and inspector continue to use Lighthouse's normal load profile.
+
+This is a route-specific measurement contract for an always-rendering application, not a hidden waiver. Every generated route summary records the actual load profile and Lighthouse load settings used for that audit. The Chrome launch no longer forces `--disable-gpu`, so the viewer is not deliberately pushed into a slower software-only rendering path by this QA harness.
+
 Report production is blocking in this phase. Score enforcement is not. The force-pushed pre-salvage history no longer exposes the canonical score floors on current `main`, so this repository does not invent replacements. Issue #110 remains open until the historical floors are recovered or a deliberate score-budget review approves replacements and the resulting score gate is proven reliable. Score floors must not be lowered merely to make CI green.
 
 The immutable V5.2 presentation must not be changed merely to improve an audit score.
@@ -64,4 +72,4 @@ The workflow uploads deterministic static-site QA output, Playwright HTML output
 
 ## Change control
 
-Catalog shell, viewer source/build path, inspector, public routing, public asset loading, WebGL/CDN dependencies, optimization pipeline, browser version pins, Lighthouse version pins and quality budgets all require web-quality review. New external runtime hosts require explicit allowlist review.
+Catalog shell, viewer source/build path, inspector, public routing, public asset loading, WebGL/CDN dependencies, optimization pipeline, browser version pins, Lighthouse version pins, Lighthouse route load profiles and quality budgets all require web-quality review. New external runtime hosts require explicit allowlist review.

@@ -49,12 +49,32 @@ def test_lighthouse_report_production_is_explicit_and_not_fake_score_enforcement
     assert set(policy["categories"]) == {"performance", "accessibility", "best-practices", "seo"}
     assert set(policy["formFactors"]) == {"mobile", "desktop"}
     assert policy["maxAttempts"] == 2
+    assert policy["maxWaitForFcpMs"] == 30000
+    assert policy["maxWaitForLoadMs"] == 45000
 
     runner = LIGHTHOUSE_RUNNER.read_text()
     assert "browser-launch" in runner
     assert "audit-production" in runner
     assert "browser-cleanup" in runner
     assert "CHROME_PATH" in runner
+    assert "withTimeout" not in runner
+
+
+def test_realtime_viewer_has_an_explicit_non_idle_lighthouse_profile():
+    policy = load_json(CONFIG)["lighthouse"]
+    assert policy["realtimeRouteIds"] == ["vx4800-viewer"]
+    assert policy["realtimeLoadProfile"] == {
+        "pauseAfterFcpMs": 0,
+        "pauseAfterLoadMs": 0,
+        "networkQuietThresholdMs": 0,
+        "cpuQuietThresholdMs": 0,
+        "disableFullPageScreenshot": True,
+    }
+
+    runner = LIGHTHOUSE_RUNNER.read_text()
+    assert "realtime-continuous-render" in runner
+    assert "realtimeLoadProfile" in runner
+    assert "--disable-gpu" not in runner
 
 
 def test_browser_and_route_matrix_cover_required_review_surfaces():

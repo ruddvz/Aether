@@ -24,9 +24,16 @@
     "categories": ["performance", "accessibility", "best-practices", "seo"],
     "formFactors": ["mobile", "desktop"],
     "maxAttempts": 2,
-    "auditTimeoutMs": 120000,
     "maxWaitForFcpMs": 30000,
-    "maxWaitForLoadMs": 45000
+    "maxWaitForLoadMs": 45000,
+    "realtimeRouteIds": ["vx4800-viewer"],
+    "realtimeLoadProfile": {
+      "pauseAfterFcpMs": 0,
+      "pauseAfterLoadMs": 0,
+      "networkQuietThresholdMs": 0,
+      "cpuQuietThresholdMs": 0,
+      "disableFullPageScreenshot": true
+    }
   },
   "global": {
     "maxPublishedTreeBytes": 16777216,
@@ -60,6 +67,7 @@
   ],
   "notes": [
     "Playwright iPhone and Android projects are browser/device emulations, not physical-device certification.",
+    "The V5.2 viewer is an intentional continuous-render route. Its Lighthouse load profile keeps normal FCP/load/network requirements but sets Lighthouse post-load quiet windows to zero so a perpetual animation loop is not misclassified as a page that must become CPU-idle.",
     "Lighthouse report production is blocking, but score enforcement remains disabled until the repository's canonical historical score floors are recovered or deliberately re-approved; new score floors must not be invented merely to make CI green.",
     "The immutable V5.2 presentation is tested as published and is not modified merely to improve software QA results.",
     "Performance and browser QA are software-delivery evidence only and do not change VX4800 engineering, manufacturing, photometry or certification authority."
