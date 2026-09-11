@@ -2,11 +2,14 @@
   "name": "aetheria-web-qa",
   "private": true,
   "version": "1.0.0",
-  "description": "Pinned cross-browser smoke QA for AETHERIA Pages outputs.",
+  "description": "Pinned cross-browser smoke and Lighthouse report-production QA for AETHERIA Pages outputs.",
   "devDependencies": {
-    "@playwright/test": "1.62.1"
+    "@playwright/test": "1.62.1",
+    "chrome-launcher": "1.2.1",
+    "lighthouse": "13.4.1"
   },
   "scripts": {
-    "test:e2e": "playwright test --config=playwright.config.mjs"
+    "test:e2e": "playwright test --config=playwright.config.mjs",
+    "audit:lighthouse": "node lighthouse-audit.mjs"
   }
 }
