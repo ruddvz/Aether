@@ -12,6 +12,7 @@ from scripts.qa_site import validate_site
 
 CONFIG = ROOT / "fixtures/platform/web-quality-v1.json"
 SCHEMA = ROOT / "schemas/aether-web-quality-budget.schema.json"
+LIGHTHOUSE_RUNNER = ROOT / "qa/lighthouse-audit.mjs"
 
 
 def load_json(path: Path):
@@ -24,13 +25,36 @@ def test_web_quality_budget_schema_and_pinned_toolchain():
     errors = list(Draft202012Validator(schema).iter_errors(config))
     assert not errors, [error.message for error in errors]
     assert config["authority"] == "repository-quality-gate"
-    assert config["toolchain"] == {"nodeMajor": 24, "playwright": "1.62.1"}
+    assert config["toolchain"] == {
+        "nodeMajor": 24,
+        "playwright": "1.62.1",
+        "lighthouse": "13.4.1",
+        "chromeLauncher": "1.2.1",
+    }
     assert config["global"]["zipFilesPermitted"] is False
     assert set(config["global"]["allowedExternalHosts"]) == {
         "cdn.jsdelivr.net",
         "fonts.googleapis.com",
         "fonts.gstatic.com",
     }
+
+
+def test_lighthouse_report_production_is_explicit_and_not_fake_score_enforcement():
+    config = load_json(CONFIG)
+    policy = config["lighthouse"]
+    assert policy["enabled"] is True
+    assert policy["mode"] == "report-production"
+    assert policy["scoreEnforcement"] is False
+    assert "scoreFloors" not in policy
+    assert set(policy["categories"]) == {"performance", "accessibility", "best-practices", "seo"}
+    assert set(policy["formFactors"]) == {"mobile", "desktop"}
+    assert policy["maxAttempts"] == 2
+
+    runner = LIGHTHOUSE_RUNNER.read_text()
+    assert "browser-launch" in runner
+    assert "audit-production" in runner
+    assert "browser-cleanup" in runner
+    assert "CHROME_PATH" in runner
 
 
 def test_browser_and_route_matrix_cover_required_review_surfaces():

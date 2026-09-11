@@ -3,7 +3,7 @@
   "title": "AETHERIA web quality budget",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "schemaVersion", "status", "authority", "purpose", "toolchain", "browserMatrix", "global", "routes", "notes"],
+  "required": ["$schema", "schemaVersion", "status", "authority", "purpose", "toolchain", "browserMatrix", "lighthouse", "global", "routes", "notes"],
   "properties": {
     "$schema": {"type": "string"},
     "schemaVersion": {"const": "1.0.0"},
@@ -13,10 +13,12 @@
     "toolchain": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["nodeMajor", "playwright"],
+      "required": ["nodeMajor", "playwright", "lighthouse", "chromeLauncher"],
       "properties": {
         "nodeMajor": {"type": "integer", "minimum": 22},
-        "playwright": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+        "playwright": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "lighthouse": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "chromeLauncher": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
       }
     },
     "browserMatrix": {
@@ -24,6 +26,34 @@
       "minItems": 5,
       "uniqueItems": true,
       "items": {"type": "string", "minLength": 3}
+    },
+    "lighthouse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "mode", "scoreEnforcement", "categories", "formFactors", "maxAttempts", "auditTimeoutMs", "maxWaitForFcpMs", "maxWaitForLoadMs"],
+      "properties": {
+        "enabled": {"const": true},
+        "mode": {"const": "report-production"},
+        "scoreEnforcement": {"const": false},
+        "categories": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"enum": ["performance", "accessibility", "best-practices", "seo"]}
+        },
+        "formFactors": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"enum": ["mobile", "desktop"]}
+        },
+        "maxAttempts": {"type": "integer", "minimum": 1, "maximum": 3},
+        "auditTimeoutMs": {"type": "integer", "minimum": 30000, "maximum": 180000},
+        "maxWaitForFcpMs": {"type": "integer", "minimum": 10000, "maximum": 60000},
+        "maxWaitForLoadMs": {"type": "integer", "minimum": 10000, "maximum": 90000}
+      }
     },
     "global": {
       "type": "object",

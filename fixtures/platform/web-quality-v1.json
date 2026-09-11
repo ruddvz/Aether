@@ -3,10 +3,12 @@
   "schemaVersion": "1.0.0",
   "status": "active",
   "authority": "repository-quality-gate",
-  "purpose": "Define deterministic static-site and cross-browser smoke gates for the published AETHERIA catalog, VX4800 viewer and VX4800 technical inspector without changing product engineering authority.",
+  "purpose": "Define deterministic static-site, cross-browser smoke and Lighthouse report-production gates for the published AETHERIA catalog, VX4800 viewer and VX4800 technical inspector without changing product engineering authority.",
   "toolchain": {
     "nodeMajor": 24,
-    "playwright": "1.62.1"
+    "playwright": "1.62.1",
+    "lighthouse": "13.4.1",
+    "chromeLauncher": "1.2.1"
   },
   "browserMatrix": [
     "chromium-desktop",
@@ -15,6 +17,17 @@
     "iphone-webkit-emulation",
     "android-chromium-emulation"
   ],
+  "lighthouse": {
+    "enabled": true,
+    "mode": "report-production",
+    "scoreEnforcement": false,
+    "categories": ["performance", "accessibility", "best-practices", "seo"],
+    "formFactors": ["mobile", "desktop"],
+    "maxAttempts": 2,
+    "auditTimeoutMs": 120000,
+    "maxWaitForFcpMs": 30000,
+    "maxWaitForLoadMs": 45000
+  },
   "global": {
     "maxPublishedTreeBytes": 16777216,
     "maxSinglePublishedFileBytes": 8388608,
@@ -47,7 +60,7 @@
   ],
   "notes": [
     "Playwright iPhone and Android projects are browser/device emulations, not physical-device certification.",
-    "Lighthouse is intentionally staged outside the active blocking gate until its audit runner is reliable.",
+    "Lighthouse report production is blocking, but score enforcement remains disabled until the repository's canonical historical score floors are recovered or deliberately re-approved; new score floors must not be invented merely to make CI green.",
     "The immutable V5.2 presentation is tested as published and is not modified merely to improve software QA results.",
     "Performance and browser QA are software-delivery evidence only and do not change VX4800 engineering, manufacturing, photometry or certification authority."
   ]
