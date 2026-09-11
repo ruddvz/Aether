@@ -4,7 +4,7 @@
 
 This QA layer protects the public repository Pages experience without changing product engineering authority. It covers the AETHERIA catalog, the stable VX4800 VORTEX viewer and the VX4800 technical inspector.
 
-A passing web-quality workflow means the tested software routes built, served, passed the configured browser smoke matrix and stayed within deterministic repository budgets. It does not qualify physical product performance, manufacturing geometry, photometry, structure, kinetics, installation or certification.
+A passing web-quality workflow means the tested software routes built, served, passed the configured browser smoke matrix, produced the complete Lighthouse audit set and stayed within deterministic repository and Lighthouse regression budgets. It does not qualify physical product performance, manufacturing geometry, photometry, structure, kinetics, installation or certification.
 
 ## Deterministic published-tree QA
 
@@ -24,11 +24,19 @@ Retained CI traces showed those renderer-adjacent operations taking many seconds
 
 Browser/device emulation is regression coverage. It is not proof for every physical handset, operating-system build, browser version or GPU.
 
-## Lighthouse status
+## Lighthouse audit production and score enforcement
 
-Lighthouse score enforcement is deliberately not an active blocking gate in this version. The earlier draft proved the static and five-browser layers but its Lighthouse audit-production step was not reliable on the shared GitHub Actions runner. Score floors must not be lowered merely to make CI green. Lighthouse can return as a blocking layer after the runner produces all configured reports reliably with route-specific diagnostics.
+Lighthouse is pinned to 13.4.1. The workflow audits all three configured routes in mobile and desktop modes, producing six raw JSON reports.
 
-The immutable V5.2 presentation must not be changed merely to improve an audit score.
+Audit production and score enforcement are intentionally separate phases. `scripts/run_lighthouse.py` launches the pinned Playwright Chromium executable, runs each route/mode audit sequentially, retries report-production failures once, and writes route-specific attempt logs plus `lighthouse-production-summary.json`. Browser launch, DevTools transport, timeout, missing-report, malformed-report and version-mismatch failures are classified as audit-production failures. They are not reported as score regressions.
+
+Only after all six reports are present and structurally valid does `scripts/enforce_lighthouse.py` evaluate category scores. Existing floors are preserved:
+
+- catalog: performance 0.90, accessibility 0.90, best practices 0.90, SEO 0.90;
+- VX4800 viewer: performance 0.55, accessibility 0.75, best practices 0.75, SEO 0.70;
+- VX4800 inspector: performance 0.55, accessibility 0.80, best practices 0.75, SEO 0.70.
+
+Score floors are regression budgets, not marketing or physical-product claims. They must not be lowered merely to make CI green. The immutable V5.2 presentation must not be changed merely to improve an audit score.
 
 ## Running locally
 
@@ -41,12 +49,17 @@ npx playwright install chromium firefox webkit
 AETHERIA_QA_BASE_URL=http://127.0.0.1:4173 npm run test:e2e
 ```
 
-Serve `_site` on port 4173 before running the browser matrix.
+Serve `_site` on port 4173 before running the browser matrix or Lighthouse. For Lighthouse, set `CHROME_PATH` to the pinned Playwright Chromium executable, then run:
+
+```text
+python scripts/run_lighthouse.py --report-dir qa/artifacts/lighthouse
+python scripts/enforce_lighthouse.py qa/artifacts/lighthouse --output qa/artifacts/lighthouse-budget-summary.json
+```
 
 ## Artifacts
 
-The workflow uploads deterministic static-site QA output, Playwright HTML output, catalog/inspector browser-device screenshots, traces and failure snapshots when applicable, and the local HTTP-server log.
+The workflow uploads deterministic static-site QA output, Playwright HTML output, catalog/inspector browser-device screenshots, traces and failure snapshots, the local HTTP-server log, all six raw Lighthouse reports, per-attempt Lighthouse logs, the Lighthouse production summary and the score-budget summary.
 
 ## Change control
 
-Catalog shell, viewer source/build path, inspector, public routing, public asset loading, WebGL/CDN dependencies, optimization pipeline, browser version pins and quality budgets all require web-quality review. New external runtime hosts require explicit allowlist review.
+Catalog shell, viewer source/build path, inspector, public routing, public asset loading, WebGL/CDN dependencies, optimization pipeline, browser/Lighthouse version pins and quality budgets all require web-quality review. New external runtime hosts require explicit allowlist review.
